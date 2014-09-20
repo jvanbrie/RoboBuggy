@@ -42,7 +42,7 @@ public final class Gui extends JFrame {
 		try {
 			//cameraPanel = new CameraPanel( CAMERA_ID );
 			gpsPanel = new GpsPanel();
-			//arduinoPanel = new ArduinoPanel();
+			arduinoPanel = new ArduinoPanel();
 			controlsPanel = new ControlsPanel();
 			imuPanel = new ImuPanel();
 		} catch (Exception e) {
@@ -61,7 +61,7 @@ public final class Gui extends JFrame {
 		// Add panels to window
 		//window.add(cameraPanel);
 		window.add(gpsPanel);
-		//window.add(arduinoPanel);
+		window.add(arduinoPanel);
 		window.add(controlsPanel);
 		window.add(imuPanel);
 		
