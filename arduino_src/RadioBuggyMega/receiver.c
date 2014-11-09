@@ -25,8 +25,8 @@
 #define AIL_RECEIVER_PIN 2
 #define AIL_RECEIVER_INT 0
 
-#define THR_RECEIVER_PIN 3
-#define THR_RECEIVER_INT 1
+#define THR_RECEIVER_PIN 21
+#define THR_RECEIVER_INT 2
 
 //For 72 MHz RC reciever
 //#define PWM_TIME 21800
