@@ -28,6 +28,18 @@
 #define THR_RECEIVER_PIN 21
 #define THR_RECEIVER_INT 2
 
+////////////////////////////////////////
+#define MIN_PULSE_WIDTH       544     // the shortest pulse sent to a servo  
+#define MAX_PULSE_WIDTH      2400     // the longest pulse sent to a servo 
+#define SERVO_MIN() (MIN_PULSE_WIDTH - 0 * 4)  // minimum value in uS for this servo
+#define SERVO_MAX() (MAX_PULSE_WIDTH - 0 * 4)  // maximum value in uS for this servo 
+
+long map(long x, long in_min, long in_max, long out_min, long out_max)
+{
+  return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+}
+////////////////////////////////////////
+
 //For 72 MHz RC reciever
 //#define PWM_TIME 21800
 //#define PWM_THRESH 130
@@ -132,6 +144,18 @@ int receiver_get_angle(int index) {
   int ret_val = (int)(rc_value[index]-AIL_RIGHTMOST)*3/17;
   rc_available[index] = 0;
   return ret_val;
+}
+
+int receiver_get_steering(int index) {
+  // Math to convert nThrottleIn to 0-180.
+  int out = (int)(1800-rc_value[index])*3/68;
+  // int rc_angle = receiver_get_angle(index);
+  // rc_angle = 180-rc_angle;
+  // int out = (rc_angle/4)+(90*3/4)+36;
+
+  int value = map(out, 0, 180, SERVO_MIN(),  SERVO_MAX()); // what the servo library thinks is us
+  rc_available[index] = 0;
+  return value;
 }
 
 

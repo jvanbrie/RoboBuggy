@@ -29,6 +29,7 @@ extern "C"{
   // returns an angle strictly between 0 and 180,
   // with 90 being the center position.
   int receiver_get_angle(int int_pin);
+  int receiver_get_steering(int int_pin);
 
 #ifdef __cplusplus
 } // extern "C"
