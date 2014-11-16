@@ -5,7 +5,7 @@
 #  1. Download and install cygwin with svn and wget
 #  1b. Download Arduino 1.0.6+. 
 #      DO NOT INSTALL IT IN THE DEFAULT LOCATION
-#      Install it into C:/Arduino
+#      !!!! Install it into C:/Arduino !!!!
 #  2. We will install apt-cyg, the cygwin package manager
 #  3. We will install make through apt-cyg
 #  4. We will confirm we installed python
@@ -31,8 +31,7 @@ wget https://bootstrap.pypa.io/get-pip.py
 rm get-pip.py
 
 # 6. Install pyserial
-
-
+pip install pyserial
 
 # Compiling should work!
 
