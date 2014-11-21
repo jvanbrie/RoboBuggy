@@ -14,13 +14,15 @@
 #include <Arduino.h>
 #include "receiver.h"
 
-#define AIL_LEFTMOST 2000
+// legacy: needed by receiver_get_angle
 #define AIL_RIGHTMOST 980
-#define AIL_CENTERMOST 1480
 
-#define THR_LEFTMOST -1
-#define THR_RIGHTMOST -1
-#define THR_CENTERMOST -1
+#define PWM_OFFSET_RC_IN 1510
+#define PWM_SCALE_RC_IN 350
+#define PWM_OFFSET_STEERING_OUT 1789
+#define PWM_SCALE_STEERING_OUT -150
+#define PWM_OFFSET_STORED_ANGLE 0
+#define PWM_SCALE_STORED_ANGLE 1000 // in hundredths of a degree for precision
 
 #define AIL_RECEIVER_PIN 2
 #define AIL_RECEIVER_INT 0
@@ -28,16 +30,14 @@
 #define THR_RECEIVER_PIN 21
 #define THR_RECEIVER_INT 2
 
-////////////////////////////////////////
-#define MIN_PULSE_WIDTH       544     // the shortest pulse sent to a servo  
-#define MAX_PULSE_WIDTH      2400     // the longest pulse sent to a servo 
-#define SERVO_MIN() (MIN_PULSE_WIDTH - 0 * 4)  // minimum value in uS for this servo
-#define SERVO_MAX() (MAX_PULSE_WIDTH - 0 * 4)  // maximum value in uS for this servo 
-
-long map(long x, long in_min, long in_max, long out_min, long out_max)
-{
-  return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+inline long map_signal(long x,
+                       long in_offset,
+                       long in_scale,
+                       long out_offset,
+                       long out_scale) {
+  return ((x - in_offset) * out_scale / in_scale) + out_offset;
 }
+
 ////////////////////////////////////////
 
 //For 72 MHz RC reciever
@@ -146,9 +146,13 @@ int receiver_get_angle(int index) {
   return ret_val;
 }
 
-int receiver_get_steering(int index) {
-  // Math to convert nThrottleIn to 0-180.
-  int value = (int)((5542 - rc_value[index])*45/100);
+int receiver_get_steering_angle(int index) {
+  // Scale the received signal into hundredths of a degree
+  int value = (int)map_signal(rc_value[index],
+                              PWM_OFFSET_RC_IN,
+                              PWM_SCALE_RC_IN,
+                              PWM_OFFSET_STORED_ANGLE,
+                              PWM_SCALE_STORED_ANGLE);
   rc_available[index] = 0;
   return value;
 }

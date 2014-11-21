@@ -88,7 +88,7 @@ void loop() {
   // find the new steering angle, if available
   if(rc_available[AIL_INDEX]) {
     watchdog_feed();
-    smoothed_angle = receiver_get_steering(AIL_INDEX);
+    smoothed_angle = receiver_get_steering_angle(AIL_INDEX);
     steer_angle = filter_loop(&ail_state, smoothed_angle);
   }
 
