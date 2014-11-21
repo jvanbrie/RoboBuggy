@@ -148,9 +148,7 @@ int receiver_get_angle(int index) {
 
 int receiver_get_steering(int index) {
   // Math to convert nThrottleIn to 0-180.
-  int out = (int)(4346 - rc_value[index])*3/68;
-
-  int value = map(out, 0, 180, SERVO_MIN(),  SERVO_MAX()); // what the servo library thinks is us
+  int value = (int)((5542 - rc_value[index])*45/100);
   rc_available[index] = 0;
   return value;
 }
