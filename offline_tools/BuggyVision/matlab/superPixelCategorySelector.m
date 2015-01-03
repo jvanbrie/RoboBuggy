@@ -4,14 +4,20 @@
 
 function outI =  superPixelCategorySelector(I,outI,T,filterBank,wordMaps,labels,dictionary,colors)
 seg = segmentIMG(I);
+numSegs = max(max(seg));
+
+outI(:,:,:)  = 0;
 'segmentation done'
+
+
+
+
 description = createDescriptor(I,filterBank);
 
 %TODO speed up  createDescriptor,
 % maybe we could just calulate the descriptor for parts of the image which
 % we are planing to smaple 
 'description calulated'
-numSegs = max(max(seg));
 for s = 1:numSegs
     [s/numSegs s numSegs]
    mask = seg == s;

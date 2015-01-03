@@ -71,7 +71,7 @@ function [wordMaps,labels,dictionary] =  trainSuperPixelCategorySelector(filterB
         DMatrix = pdist2(descriptions{i},dictionary);
 
         %Chosing the closest one
-        [C,wordVector] = min(DMatrix,[],2);
+        [wordVector,index] = min(DMatrix,[],2);
 
         %Building the output matrix
         wordmap = vec2mat(wordVector,T)'; 

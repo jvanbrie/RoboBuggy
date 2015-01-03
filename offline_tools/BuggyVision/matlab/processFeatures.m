@@ -1,4 +1,4 @@
-function [ I_out ] = processFeatures(I_in,I_out)
+function [ I_out ] = surfDetector(I_in,I_out)
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
 

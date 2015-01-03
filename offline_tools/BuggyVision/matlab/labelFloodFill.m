@@ -1,31 +1,46 @@
 %assumes m starts at 2 1 is for boundires
 function I = labelFloodFill(I,m,x,y)
-Frontier = [x,y];
-count = 0;
-while(size(Frontier,1) > 0)
-    count = count+1;
-    %  if( m >400 && mod(count,100) == 0)
-    %  imshow(I)
-    %   pause()
-    %  end
-    this_x = Frontier(1,1);
-    this_y = Frontier(1,2);
-    Frontier = Frontier(2:size(Frontier,1),:);
-    if(I(this_x,this_y) == -1)
-        new = [
-            % this_x+1,this_y+1;
-            this_x+1,this_y;
-            % this_x+1,this_y-1;
-            this_x  ,this_y+1;
-            this_x  ,this_y-1;
-            %  this_x-1,this_y+1;
-            this_x-1,this_y;
-            %  this_x-1,this_y-1
-            ];
-        Frontier = cat(1,Frontier,new);
+Frontier_head = dlnode(x,y);
+I(x,y) = -2;
+listSize = 1;
+while(listSize > 0)
+    [this_x,this_y] = getData(Frontier_head);
+    %-2 is will visit 
+    %-1 is not assigned and not in visit list 
+    if(I(this_x,this_y) == -2)
         I(this_x,this_y) = m;
-    end
-end
+        if(I(this_x+1,this_y) == -1)
+         I(this_x+1,this_y) = -2;
+         A = dlnode(this_x+1,this_y);
+         insertAfter(A,Frontier_head);
+         listSize = listSize + 1;
+        end
+        
+        if(I(this_x,this_y+1) == -1)
+         I(this_x,this_y+1) = -2;
+         B = dlnode(this_x,this_y+1);
+         insertAfter(B,Frontier_head);
+         listSize = listSize + 1;
+        end
+        
+        if(I(this_x,this_y-1) == -1)
+         I(this_x,this_y-1) = -2;
+         C = dlnode(this_x,this_y-1);
+         insertAfter(C,Frontier_head);
+         listSize = listSize + 1;
+        end        
 
+        if(I(this_x-1,this_y) == -1)
+         I(this_x-1,this_y) = -2;
+         B = dlnode(this_x-1,this_y);
+         insertAfter(B,Frontier_head);
+         listSize = listSize + 1;
+        end
+    end
+    listSize = listSize - 1;
+    old_Frontier_head = Frontier_head;
+    Frontier_head = Frontier_head.Next;
+    removeNode(old_Frontier_head);
+end
 
 end

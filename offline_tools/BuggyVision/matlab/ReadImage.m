@@ -28,77 +28,24 @@ colors = [128,128,128; %gray
          
 filterBank = createFilterBank();
 T = 100;%number of pixels to sample per segment 
-k = 18; %k must be greater then the size of the data set we are training with 
+k = 60; %k must be greater then the size of the data set we are training with 
 if(~exist('CategoryML.mat'))
     %so we do not need to retrain every time 
     [wordMaps,labels,dictionary] = trainSuperPixelCategorySelector(filterBank,options,T,k);
     save('CategoryML.mat','wordMaps','labels','dictionary');
 end
 load('CategoryML.mat');
-testI = imread('training_Log/20141227306.3963/I.jpg');
-seg = segmentIMG(testI);
-description = createDescriptor(testI,filterBank);
-numSegs = max(max(seg));
-outI = testI;
-for s = 1:numSegs
-   mask = seg == s;
-   ValidPixels = find(mask);
-   %an alterntive to this would be to remove or merge sections of an image
-   %that are too small 
-   while(size(ValidPixels,1) < T)
-     %concat validPixels on to itself to allow for repeates so we have at
-     %aleast T pixels to choose from
-     ValidPixels = cat(1,ValidPixels,ValidPixels);
-   end
-   
-   % Random permutation of the descrip
-   randind = randperm(size(ValidPixels,1));
-    
-   %Getting the first T responses and adding them to the selected set;
-   thisDescription = description(randind(1:T),:);
+%testI = imread('training_Log/20141227306.3963/I.jpg');
 
-   %Getting the filter responses
-    DMatrix = pdist2(thisDescription,dictionary);
 
-   %Chosing the closest one
-    [C,wordVector] = min(DMatrix,[],2)   
-    minDist = 100000; %TODO rewrite
-    minL = -1; 
-    for j = 1:size(wordMaps,1)
-       d = sum((wordVector-wordMaps{j}).^2);
-       if minDist > d
-           minDist = d;
-           minL = j
-       end
-    end
-    l = labels(minL);
-    for x = 1:size(mask,1)
-        for y = 1:size(mask,2)
-            if(mask(x,y) == 1)
-               outI(x,y,1) = colors(l,1);
-               outI(x,y,2) = colors(l,2);
-               outI(x,y,3) = colors(l,3);
-            end
-        end
-    end
-end
-   %todo find histogram which is closest to the description
-
-    subplot(1,2,1)
-    imshow(outI)
-    subplot(1,2,2)
-    imshow(testI)
-    pause()
+%trainSignDetector();
 
 
 
-imshow(testI)
-trainSignDetector();
-
-
-
-start = 4000;%3730;
-numFrames_to_get = 30;
+%start = 6000;
+%start = 4500;
+start = 4000;
+numFrames_to_get = 3500;
 
 movObj = VideoReader('run1-cam0.avi');
 step = 1;
@@ -115,27 +62,34 @@ mkdir('training_Log')
 % Create a MATLAB movie struct from the video frames.
 for k = 1:numFrames_to_get %: numFrames
     I = vidFrames(:,:,:,k);
-    if mod(k,step) == 0
+  
         outI = I;  %outI is the image which is saved for every frame 
-        outI = surfDetector(I,outI);
-        outI = signDetector(I,outI);
-        outI = SuperPixelCategorySelector(I,outI);
+    if mod(k,step) == 0
+     %   learn_new_superPixel(I,options);
+      outI = superPixelCategorySelectorManul(I,outI,T,filterBank,wordMaps,labels,dictionary,colors);  %Is the slow part
+  %      'outI'
+   %    outI = surfDetector(I,outI);
+        subplot(1,2,1)
+        imshow(outI)
+        subplot(1,2,2)
+        imshow(I)
+        pause(.01);
+%        outI = signDetector(I,outI);
+%        outI = SuperPixelCategorySelector(I,outI);
         %TODO Visual Odom 
-    else
-        I_post = I;
     end
     mov(k).cdata = outI;
     mov(k).colormap = [];
 end
  
 % Create a figure
-%hf = figure; 
+hf = figure; 
        
 % Resize figure based on the video's width and height
-%set(hf, 'position', [150 150 movObj.Width movObj.Height])
+set(hf, 'position', [150 150 movObj.Width movObj.Height])
 
 % Playback movie once at the video's frame rate
-%movie(hf, mov, 1, movObj.FrameRate);
-%movie2avi(mov, 'out.avi')
+movie(hf, mov, 1, movObj.FrameRate);
+movie2avi(mov, 'out.avi')
 end
 
