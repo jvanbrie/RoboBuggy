@@ -24,6 +24,7 @@ colors = [128,128,128; %gray
             0,  0,  0; %black
             0,  0,255; %blue
             0,255,  0; %green
+          255,165,  0;%orange
             ];
          
 filterBank = createFilterBank();
@@ -44,8 +45,8 @@ load('CategoryML.mat');
 
 %start = 6000;
 %start = 4500;
-start = 4000;
-numFrames_to_get = 3500;
+start = 6500;
+numFrames_to_get = 2;
 
 movObj = VideoReader('run1-cam0.avi');
 step = 1;
@@ -66,7 +67,8 @@ for k = 1:numFrames_to_get %: numFrames
         outI = I;  %outI is the image which is saved for every frame 
     if mod(k,step) == 0
      %   learn_new_superPixel(I,options);
-      outI = superPixelCategorySelectorManul(I,outI,T,filterBank,wordMaps,labels,dictionary,colors);  %Is the slow part
+  %    outI = superPixelCategorySelectorManul(I,outI,T,filterBank,wordMaps,labels,dictionary,colors); 
+   outI = superPixelCategorySelector(I,outI,T,filterBank,wordMaps,labels,dictionary,colors);  %Is the slow part
   %      'outI'
    %    outI = surfDetector(I,outI);
         subplot(1,2,1)
