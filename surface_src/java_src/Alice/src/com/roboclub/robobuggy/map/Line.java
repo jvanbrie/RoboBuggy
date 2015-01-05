@@ -151,4 +151,10 @@ public class Line implements MapObject {
 		return true;
 	}
 
+	@Override
+	public MapObject mergeWith(MapObject thisObject) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

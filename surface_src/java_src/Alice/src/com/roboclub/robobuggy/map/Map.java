@@ -2,49 +2,25 @@ package com.roboclub.robobuggy.map;
 
 import java.util.ArrayList;
 
-public class Map {
+public interface Map {
 	// TODO
 	
-	public MapObject getCLosestObject(Point aPoint){
-		//TODO
-		return null;
-	}
-	
-	public ArrayList<MapObject> getClosestNObjects(Point aPoint){
-		//TODO
-		return null;
-	}
+	public void displayMap();
+	public MapObject getCLosestObject(Point aPoint);
+	public ArrayList<MapObject> getClosestNObjects(Point aPoint);
 	
 	// @REQUIER num(Points) > 2
-	public ArrayList<MapObject> getPointsInRange(ArrayList<Point> Points){
-		//TODO
-		return null;
-	}
+	public ArrayList<MapObject> getPointsInRange(ArrayList<Point> Points);
 	
 	//@REQUIER num(Points) >2
-	public ArrayList<MapObject> getPointsOutSideRange(ArrayList<Point> Points){
-		//TODO
-		return null;
-	}
+	public ArrayList<MapObject> getPointsOutSideRange(ArrayList<Point> Points);
 	
 	//@REQUIER num(Points) > 2
-	public ArrayList<MapObject> getPointsOnRange(ArrayList<Point> Points){
-		//TODO
-		return null;
-	}
-	
-	public boolean isObjectOnMap(MapObject anObject){
-		//TODO
-		return false;
-	}
+	public ArrayList<MapObject> getPointsOnRange(ArrayList<Point> Points);
+	public boolean isObjectOnMap(MapObject anObject);
 	
 	//Add Objects 
-	public void AddObject(MapObject anObject){
-		//TODO
-	}
-	
-	public void removeObject(MapObject anObject){
-		//TODO
-	}
+	public void AddObject(MapObject anObject);
+	public void removeObject(MapObject anObject);
 	
 }

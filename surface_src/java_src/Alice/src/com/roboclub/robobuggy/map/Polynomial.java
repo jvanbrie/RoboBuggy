@@ -11,5 +11,11 @@ package com.roboclub.robobuggy.map;
  */
 
 public class Polynomial implements MapObject {
+
+	@Override
+	public MapObject mergeWith(MapObject thisObject) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	// TODO
 }

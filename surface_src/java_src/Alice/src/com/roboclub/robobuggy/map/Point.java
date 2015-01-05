@@ -33,4 +33,10 @@ public class Point implements MapObject {
 	public double dotProduct(Point aPoint) {
 		return this.x * aPoint.x + this.y * aPoint.y;
 	}
+
+	@Override
+	public MapObject mergeWith(MapObject thisObject) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

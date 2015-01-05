@@ -33,4 +33,10 @@ public class Rect implements MapObject {
 
 		return false;
 	}
+
+	@Override
+	public MapObject mergeWith(MapObject thisObject) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
