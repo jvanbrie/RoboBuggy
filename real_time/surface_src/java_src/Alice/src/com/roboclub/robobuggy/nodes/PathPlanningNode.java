@@ -2,6 +2,8 @@ package com.roboclub.robobuggy.nodes;
 
 
 import java.sql.Date;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import com.roboclub.robobuggy.messages.EncoderMeasurement;
 import com.roboclub.robobuggy.messages.GpsMeasurement;
@@ -32,72 +34,27 @@ public class PathPlanningNode implements Node, Runnable {
 	// Spawned thread
 	Thread thread;
 	
+	// Locks
+	Lock l;
+	
 	// TODO: array that stores waypoints
+	
 	
 	public PathPlanningNode(String waypointFile) {
 		this.waypointFile = waypointFile;
+		l = new ReentrantLock();
 		
 		// TODO: function: get the way points out of the waypoint file
-		
-		
-		// spawn a new thread that listens to the subscribers, and runs continuously
-		thread = new Thread(this);
-		thread.start();
-		
-
-		
-		/********* Do Path planning Computation ********/
-		// Function: caculate Beizer curve
-		
-		// Function: find next closest waypoint to Beizer curve via cost function
-		
-		// Put waypoint onto publisher
-		
-		/*
-		this.directoryPath  = directoryPath;
-		// Start the subscriber
-		s = new Subscriber(topicName, new MessageListener() {
-			@Override
-			public void actionPerformed(String topicName, Message m) {
-				if(outputFile == null) {
-					return;
-				}
-				
-				try {
-					outputFile.write(m.toLogString().getBytes());
-					outputFile.write('\n');
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		});*/
-	
-		
-	}
-
-
-
-
-	
-	@Override
-	public boolean shutdown() {
-		// TODO: kill spawned thread
-		return false;
-	}
-
-	@Override
-	public void run() {
-		// TODO: Complete the runnable thread
-		
-		/******* Add new subscribers ********/
+			
 		// add a new subscriber that listens to the velocity message
 		Subscriber velocity_sub = new Subscriber(SensorChannel.ENCODER.getMsgPath(), new MessageListener(){
 			@Override
 			public void actionPerformed(String topicName, Message m){
 				// do something with encoder data
 				// throws a flag to show just updated
+				l.lock();
 				velocity = (EncoderMeasurement)m;
+				l.unlock();
 				velocity_update = true;
 			}
 		});
@@ -107,30 +64,69 @@ public class PathPlanningNode implements Node, Runnable {
 			@Override
 			public void actionPerformed(String topicName, Message m){
 				// do something with the GPS data
+				l.lock();
 				gps = (GpsMeasurement)m;
+				l.unlock();
 				// throws a flag when just updated
 				gps_update = true;
 			}
 		});
 		
+		// spawn a new thread that listens to the subscribers, and runs continuously
+		thread = new Thread(this);
+		thread.start();
+		
+	}
+
+	@Override
+	public boolean shutdown() {
+		// TODO: kill spawned thread
+		return false;
+	}
+
+	@Override
+	public void run() {
 		while(true){
 			long start_time = System.currentTimeMillis();
 			// Start of runnable loop
+			if(gps_update == true && velocity_update == true){
+				// new gps and velocity - update model 
+				update_model();
+			}else if(gps_update == true){
+				// new gps data - update model
+				update_model();
+			}else if(velocity_update == true){
+				// new velocity data - update model
+				update_model();
+			}
 			
+			/********* Do Path planning Computation ********/
+			// Function: caculate Beizer curve
 			
+			// Function: find next closest waypoint to Beizer curve via cost function
 			
+			// Put waypoint onto publisher
+			
+			gps_update = false;
+			velocity_update = false;
 			// Do the timing control
 			long stop_time = System.currentTimeMillis();
 			long millis = stop_time - start_time;
 			if((stop_time - start_time) < time_step){
-				this.sleep(millis);
+				try {
+					Thread.sleep(millis); // is this how we make a thread sleep?
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} 
+				
 			}
 		}
 		
 		/* TODO: in thread
-		 * listen to subscribers and store values
-		 * make control loop with constant time steps
-		 * Use variables and unflag each subscriber last updated flag
+		 * listen to subscribers and store values (done)
+		 * make control loop with constant time steps (done)
+		 * Use variables and unflag each subscriber last updated flag (done)
 		 *  - if not last updated value, extoporlate data based on previous values and 
 		 * system mode
 		 *  - if is last updated value, use value to update the model 
@@ -143,13 +139,21 @@ public class PathPlanningNode implements Node, Runnable {
 		
 	}
 
-
-
-
-
-	private void sleep(long millis) {
-		// TODO Auto-generated method stub
+	/* update_model
+	 * This is an internal model of the buggy
+	 * It is used to give a more 'current' state of the buggy to the controller because
+	 * not all the sensors can be updated as frequently as needed
+	 * So we try to take the next best estimate of state
+	 */
+	private void update_model(){
+		// TODO: Complete buggy model
+		// what is needed for buggy model?
+		// position + time it was updated
+		// velocity + time it was updated
+		// steering angle + time it was updated
+		// 
 		
+		
+		return;
 	}
-
 }
