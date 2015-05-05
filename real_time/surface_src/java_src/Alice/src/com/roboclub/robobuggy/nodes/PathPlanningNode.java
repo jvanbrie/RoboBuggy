@@ -1,15 +1,10 @@
 package com.roboclub.robobuggy.nodes;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 
-import com.roboclub.robobuggy.messages.BaseMessage;
+import java.sql.Date;
+
 import com.roboclub.robobuggy.messages.EncoderMeasurement;
 import com.roboclub.robobuggy.messages.GpsMeasurement;
-import com.roboclub.robobuggy.messages.GuiLoggingButton;
 import com.roboclub.robobuggy.ros.Message;
 import com.roboclub.robobuggy.ros.MessageListener;
 import com.roboclub.robobuggy.ros.Node;
@@ -22,6 +17,9 @@ public class PathPlanningNode implements Node, Runnable {
 	// Get the folder that we're going to use
 	String waypointFile;
 
+	// Timestep (in ms)
+	long time_step = 100;
+	
 	// list of subscribers
 	GpsMeasurement gps;
 	EncoderMeasurement velocity;
@@ -29,7 +27,9 @@ public class PathPlanningNode implements Node, Runnable {
 	// list of subscribers 'just updated' flags
 	boolean velocity_update;
 	boolean gps_update;
+	Date last_update_time;
 	
+	// Spawned thread
 	Thread thread;
 	
 	// TODO: array that stores waypoints
@@ -114,8 +114,17 @@ public class PathPlanningNode implements Node, Runnable {
 		});
 		
 		while(true){
-			// do stuff in the loop
+			long start_time = System.currentTimeMillis();
+			// Start of runnable loop
 			
+			
+			
+			// Do the timing control
+			long stop_time = System.currentTimeMillis();
+			long millis = stop_time - start_time;
+			if((stop_time - start_time) < time_step){
+				this.sleep(millis);
+			}
 		}
 		
 		/* TODO: in thread
@@ -131,6 +140,15 @@ public class PathPlanningNode implements Node, Runnable {
 		 * get next waypoint and publish to publisher
 		 * 
 		 */
+		
+	}
+
+
+
+
+
+	private void sleep(long millis) {
+		// TODO Auto-generated method stub
 		
 	}
 
