@@ -1,6 +1,6 @@
 package com.roboclub.robobuggy.map;
 
-/**
+/***
  * @author Trevor Decker
  * 
  * @deprecated use polygon
@@ -11,18 +11,28 @@ package com.roboclub.robobuggy.map;
  * 
  *          DESCRIPTION: TODO
  */
-
 public class Rect implements MapObject {
 	private Point uR;
 	private Point uL;
 	private Point lL;
 
+	/***
+	 * TODO document
+	 * @param uR_
+	 * @param uL_
+	 * @param lL_
+	 */
 	public Rect(Point uR_, Point uL_, Point lL_) {
 		this.uR = uR_;
 		this.uL = uL_;
 		this.lL = lL_;
 	}
 
+	/*** 
+	 * TODO document
+	 * @param marker
+	 * @return
+	 */
 	public boolean within(Point marker) {
 		if (marker != null) {
 			return (marker.getX() >= this.uL.getX())
@@ -35,6 +45,9 @@ public class Rect implements MapObject {
 	}
 
 	@Override
+	/***
+	 * TODO document
+	 */
 	public MapObject mergeWith(MapObject thisObject) {
 		// TODO Auto-generated method stub
 		return null;

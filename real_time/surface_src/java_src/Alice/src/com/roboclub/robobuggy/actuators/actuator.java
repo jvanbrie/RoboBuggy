@@ -27,7 +27,7 @@ abstract class actuator {
 	 *            of error to throw
 	 * @throws Exception
 	 */
-	public void notifyBrakeError(String error) throws Exception {
+	public void notifySystemOfError(String error) throws Exception {
 		setErrorState(true);
 		throw new Exception(error);
 	}

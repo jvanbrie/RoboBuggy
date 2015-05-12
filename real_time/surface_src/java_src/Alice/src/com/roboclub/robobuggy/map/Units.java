@@ -1,0 +1,5 @@
+package com.roboclub.robobuggy.map;
+
+public enum Units {
+CENTIMETERS,MILIMETERS,METERS,KILIOMETERS,MILES,FEET,INCHES,DEGREES,RADIANS,UNITLESS
+}

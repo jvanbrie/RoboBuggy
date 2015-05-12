@@ -8,7 +8,7 @@ package com.roboclub.robobuggy.actuators;
  * 
  *          CHANGELOG: NONE
  * 
- *          DESCRIPTION: TODO
+ *          DESCRIPTION: class for controlling the state of the front wheel steering servo 
  */
 
 public class Servo extends actuator {
