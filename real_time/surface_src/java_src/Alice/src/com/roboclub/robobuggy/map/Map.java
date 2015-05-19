@@ -9,20 +9,25 @@ import java.util.ArrayList;
  */
 public interface Map {
 
-
 	/***
-	 * TODO document
-	 * @param aPoint
-	 * @return
+	 * evaluates to the number of elements currently on the map 
+	 * 
 	 */
-	public MapObject getCLosestObject(Point aPoint);
+	public int getNumberOfElements();
 	
 	/***
 	 * TODO document
 	 * @param aPoint
 	 * @return
 	 */
-	public ArrayList<MapObject> getClosestNObjects(Point aPoint);
+	public MapObject getClosestObject(Point aPoint);
+	
+	/***
+	 * TODO document
+	 * @param aPoint
+	 * @return
+	 */
+	public MapObject[] getClosestNObjects(Point aPoint,int numPoints);
 	
 	// @REQUIER num(Points) > 2
 	/*** 

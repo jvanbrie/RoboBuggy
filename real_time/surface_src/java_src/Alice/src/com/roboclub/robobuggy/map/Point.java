@@ -1,5 +1,12 @@
 package com.roboclub.robobuggy.map;
 
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Graphics;
+
+import javax.swing.JComponent;
+
  
 
 /***
@@ -8,7 +15,7 @@ package com.roboclub.robobuggy.map;
  * @author trevordecker
  *
  */
-public class Point implements MapObject {
+public class Point extends MapObject  {
 	private double x;
 	private double y;
 	private Units pointUnits;
@@ -20,10 +27,41 @@ public class Point implements MapObject {
 	 * @param unit
 	 */
 	public Point(double x_,double y_,Units unit){
-		this.x = x_;
-		this.y = y_;
 		this.pointUnits = unit;
+		x = x_;
+		y = y_;
+		setBounds((int)x_, (int)y_, 20, 20);//TODO make dynamic
 	}
+	
+	/***
+	 * TODO document
+	 * @return
+	 */
+	public double getX_corr(){
+		return x;
+	}
+	/***
+	 * TODO document
+	 * @return
+	 */
+	public double getY_corr(){
+		return y;
+	}
+	/***
+	 * TODO document 
+	 * @param x
+	 */
+	public void setX_corr(double x){
+		this.x = x;
+	}
+	/***
+	 * TODO document 
+	 * @param y
+	 */
+	public void setY_corr(double y){
+		this.y = y;
+	}
+	
 	
 	/***
 	 * TODO document 
@@ -31,9 +69,7 @@ public class Point implements MapObject {
 	 * @param y_
 	 */
 	public Point(double x_, double y_) {
-		this.x = x_;
-		this.y = y_;
-		this.pointUnits = Units.UNITLESS;
+		this(x_,y_,Units.UNITLESS);
 	}
 	
 
@@ -55,49 +91,14 @@ public class Point implements MapObject {
 	}
 	
 	//TODO add a conversion function that will convert the point between different types of units for example miles to feet
+
 	
 
 
-	/***
-	 * TODO document
-	 * @return
-	 */
-	public double getX() {
-		return this.x;
-	}
 
-	/*** 
-	 * TODO document
-	 * @return
-	 */
-	public double getY() {
-		return this.y;
-	}
-
-	/***
-	 * TODO document
-	 * @param x_
-	 */
-	public void setX(float x_) {
-		this.x = x_;
-	}
-
-	/*** 
-	 * TODO document
-	 * @param y_
-	 */
-	public void setY(float y_) {
-		this.y = y_;
-	}
-
-	// ues L2 distance
-	/*** 
-	 * TODO document
-	 * @param closestPoint
-	 * @return
-	 */
-	public double getDistance(Point closestPoint) {
-		return Math.sqrt(x * x + y * y);
+	/* TODO figureout why this is nesassery */
+	public void setX(float x){
+		//TODO
 	}
 
 	//TODO 
@@ -118,4 +119,97 @@ public class Point implements MapObject {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	/**
+	 * TODO documnet
+	 * TODO implment
+	 */
+	public void paintComponent(Graphics g){
+		super.paintComponent(g);
+        g.setColor(Color.GRAY);
+        g.fillOval(0, 0, 20, 20);
+	}
+	
+	@Override
+	/**
+	 * TODO documnet
+	 * TODO implment
+	 */
+public Dimension	getPreferredSize(){
+		Dimension thisDimension = new Dimension();
+		thisDimension.setSize(20, 20);//TODO make dynamic
+	return thisDimension;
+		
+	}
+
+	@Override
+	/**
+	 * Compares the object with another object to see if they are equivalent
+	 * if the two objects are deemed to be equivalent by having the same x,y
+	 *  coordinates and units then true is returned, otherwise false is returned 
+	 */
+	boolean Equals(Object obj) {
+		if(obj.getClass() != this.getClass()){
+			return false;
+		}
+		Point other = (Point)obj;
+		if(this.x != other.x){
+			return false;
+		}
+		
+		if(this.y != other.y){
+			return false;
+		}
+		
+		if(this.pointUnits != other.pointUnits){
+			return false;
+		}
+		
+		return true;
+	}
+
+	/***
+	 * TODO document 
+	 */
+	@Override
+	boolean isGreater(Object obj) {
+		//it does not make sense for objects of diffrent types to be greater then the other
+		//TODO throw an error 
+		//TODO think about units
+		if(obj.getClass() != this.getClass()){
+			return false;
+		}
+		Point other = (Point)obj;
+		if(this.x > other.x){
+			return true;
+		}else if(this.y > other.y){
+			return true;
+		}else{
+			return false;
+		}		
+	}
+
+	@Override
+	/***
+	 * TODO document
+	 */
+	boolean isLess(Object obj) {
+		//it does not make sense for objects of different types to be greater then the other
+		//TODO throw an error 
+		//TODO think about units
+		if(obj.getClass() != this.getClass()){
+			return false;
+		}
+		Point other = (Point)obj;
+		if(this.x < other.x){
+			return true;
+		}else if(this.y < other.y){
+			return true;
+		}else{
+			return false;
+		}		
+	}
+
+
 }

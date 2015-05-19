@@ -1,5 +1,7 @@
 package com.roboclub.robobuggy.map;
 
+import java.awt.Component;
+import java.awt.Graphics;
 import java.util.ArrayList;
 
 /***
@@ -8,7 +10,7 @@ import java.util.ArrayList;
  * computer repersentation of a line (a series of points) 
  * TODO add further documentation 
  */
-public class Line implements MapObject {
+public class Line extends MapObject {
 	ArrayList<Point> points = new ArrayList<Point>();
 	final static double ON_LINE_DISTANCE = .1; // meters
 	boolean validLine = false;
@@ -218,6 +220,30 @@ public class Line implements MapObject {
 	public MapObject mergeWith(MapObject thisObject) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	boolean Equals(Object obj) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	boolean isGreater(Object obj) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	boolean isLess(Object obj) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	double getDistince(MapObject obj) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 }

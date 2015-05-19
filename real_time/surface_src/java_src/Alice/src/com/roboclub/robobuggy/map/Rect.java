@@ -1,5 +1,8 @@
 package com.roboclub.robobuggy.map;
 
+import java.awt.Component;
+import java.awt.Graphics;
+
 /***
  * @author Trevor Decker
  * 
@@ -11,7 +14,7 @@ package com.roboclub.robobuggy.map;
  * 
  *          DESCRIPTION: TODO
  */
-public class Rect implements MapObject {
+public class Rect extends MapObject {
 	private Point uR;
 	private Point uL;
 	private Point lL;
@@ -51,5 +54,29 @@ public class Rect implements MapObject {
 	public MapObject mergeWith(MapObject thisObject) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	boolean Equals(Object obj) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	boolean isGreater(Object obj) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	boolean isLess(Object obj) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	double getDistince(MapObject obj) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 }
