@@ -20,12 +20,12 @@ public class Point_Test {
 		assert(y_b == b_point.getY());
 		
 		//distince between points is being returned correctly 
-		assert(1 == a_point.getDistance(b_point));
-		assert(a_point.getDistance(b_point) == b_point.getDistance(a_point));
+		assert(1 == a_point.getDistince(b_point));
+		assert(a_point.getDistince(b_point) == b_point.getDistince(a_point));
 
 		//distince between any point and itself is 0 
-		assert(a_point.getDistance(a_point) == 0);
-		assert(b_point.getDistance(b_point) == 0);
+		assert(a_point.getDistince(a_point) == 0);
+		assert(b_point.getDistince(b_point) == 0);
 
 		//make sure that the point is drawn correctly TODO 
 		

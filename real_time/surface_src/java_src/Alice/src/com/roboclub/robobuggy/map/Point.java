@@ -7,7 +7,15 @@ import java.awt.Graphics;
 
 import javax.swing.JComponent;
 
- 
+//TODO clean up point
+//TODO add color 
+//TODO clean up linkedList map
+//TODO clean up visulizeMap
+//TODO finish writeing test cases
+//TODO fix travis ci
+//TODO implment all of the other mapObject types 
+//TODO merge into master and show the rest of the team
+ //GOAL get done by july 1
 
 /***
  * Representation of a point on the map 
@@ -18,64 +26,61 @@ import javax.swing.JComponent;
 public class Point extends MapObject  {
 	private double x;
 	private double y;
-	private Units pointUnits;
+	private double scale; //the size to draw the point
+	private Units pointUnits; 
 
 	/***
-	 * TODO document
-	 * @param x_
-	 * @param y_
-	 * @param unit
+	 * Constructor for point class.  
+	 * @param x_ the x corrdinate of the point 
+	 * @param y_ the y corrdinate of the point
+	 * @param unit what units the corrdinates are in 
 	 */
 	public Point(double x_,double y_,Units unit){
 		this.pointUnits = unit;
 		x = x_;
 		y = y_;
-		setBounds((int)x_, (int)y_, 20, 20);//TODO make dynamic
+		scale = 20; //TODO make dynamic
+		int thisScale = (int)scale;
+		setBounds((int)x_-thisScale/2, (int)y_-thisScale/2, thisScale, thisScale);
 	}
 	
 	/***
-	 * TODO document
+	 * A constructor for the point class, assumes that units are meters
+	 * @param x_
+	 * @param y_
+	 */
+	public Point(double x_, double y_) {
+		this(x_,y_,Units.METERS);
+	}
+	
+	/***
 	 * @return
 	 */
 	public double getX_corr(){
 		return x;
 	}
 	/***
-	 * TODO document
 	 * @return
 	 */
 	public double getY_corr(){
 		return y;
 	}
 	/***
-	 * TODO document 
 	 * @param x
 	 */
 	public void setX_corr(double x){
 		this.x = x;
 	}
 	/***
-	 * TODO document 
 	 * @param y
 	 */
 	public void setY_corr(double y){
 		this.y = y;
 	}
 	
-	
 	/***
-	 * TODO document 
-	 * @param x_
-	 * @param y_
-	 */
-	public Point(double x_, double y_) {
-		this(x_,y_,Units.UNITLESS);
-	}
-	
-
-	/***
-	 * TODO document
-	 * @return
+	 * returns the units that this point uses for its corrdinates 
+	 * @return Units
 	 */
 	public Units getUnits(){
 		return this.pointUnits;
@@ -83,7 +88,7 @@ public class Point extends MapObject  {
 	
 	
 	/***
-	 * TODO document 
+	 * sets the units that the point uses for its corrdiantes 
 	 */
 	public void setUnits(Units newUnits)
 	{
@@ -96,14 +101,8 @@ public class Point extends MapObject  {
 
 
 
-	/* TODO figureout why this is nesassery */
-	public void setX(float x){
-		//TODO
-	}
-
-	//TODO 
 	/*** 
-	 * TODO document
+	 * evaluates to the cross product of this point and the point passed in (aPoint)
 	 * @param aPoint
 	 * @return
 	 */
@@ -111,34 +110,27 @@ public class Point extends MapObject  {
 		return this.x * aPoint.x + this.y * aPoint.y;
 	}
 
-	@Override
-	/*** 
-	 * TODO document 
-	 */
-	public MapObject mergeWith(MapObject thisObject) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	@Override
 	/**
-	 * TODO documnet
-	 * TODO implment
+	 * drawing function for the point, will draw the object on the
+	 *  jcomponent that the point is added to
 	 */
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
         g.setColor(Color.GRAY);
-        g.fillOval(0, 0, 20, 20);
+        int thisScale = (int)scale;
+        g.fillOval(0, 0, thisScale, thisScale); 
 	}
 	
 	@Override
 	/**
 	 * TODO documnet
-	 * TODO implment
 	 */
 public Dimension	getPreferredSize(){
 		Dimension thisDimension = new Dimension();
-		thisDimension.setSize(20, 20);//TODO make dynamic
+		int thisScale = (int)scale;
+		thisDimension.setSize(thisScale, thisScale);
 	return thisDimension;
 		
 	}

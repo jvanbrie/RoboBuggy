@@ -1,7 +1,11 @@
 package com.roboclub.robobuggy.localization;
 
+//TODO implment
+//TODO change mapping library to use a coordianteFrame as its positioning peice 
+
 public class CoordinateFrame {
 	// TODO
+	
 }
 
 /*

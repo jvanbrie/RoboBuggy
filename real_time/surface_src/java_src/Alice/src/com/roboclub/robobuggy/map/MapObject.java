@@ -10,7 +10,7 @@ import javax.swing.JComponent;
  * @author trevordecker
  *
  */
-abstract class  MapObject extends  JComponent{
+public abstract class  MapObject extends  JComponent{
 	
 	
 	/***	
@@ -22,7 +22,6 @@ abstract class  MapObject extends  JComponent{
 	/**
 	 * TODO document
 	 */
-	abstract MapObject mergeWith(MapObject thisObject);
 	abstract boolean Equals(Object obj);
 	abstract boolean isGreater(Object obj);
 	abstract boolean isLess(Object obj);
@@ -50,23 +49,16 @@ abstract class  MapObject extends  JComponent{
 	 * @param obj
 	 * @return
 	 */
-	double getDistince(MapObject obj) {
-		Point otherPoint;
+	public double getDistince(Point aPoint) {
 		Point thisPoint;
-		
-		if(obj.getClass() == Point.class){
-			otherPoint = (Point)obj;
-		}else{
-			otherPoint = obj.refrenceFrame;
-		}
 		
 		if(this.getClass() == Point.class){
 			thisPoint = (Point)this;
 		}else{
 			thisPoint = this.refrenceFrame;
 		}
-		double dx = otherPoint.getX_corr() - thisPoint.getX_corr();
-		double dy = otherPoint.getY_corr() - thisPoint.getY_corr();
+		double dx = aPoint.getX_corr() - thisPoint.getX_corr();
+		double dy = aPoint.getY_corr() - thisPoint.getY_corr();
 		return Math.sqrt(dx*dx + dy*dy);
 	}
 

@@ -1,5 +1,6 @@
 package com.roboclub.robobuggy.map;
 
+import java.io.File;
 import java.util.ArrayList;
 
 /***
@@ -70,4 +71,18 @@ public interface Map {
 	 * @param anObject
 	 */
 	public void removeObject(MapObject anObject);
+	
+	/***
+	 * TODO document 
+	 * @param mapData
+	 */
+	public void loadMap(File mapData);
+	
+	/***
+	 * TODO document
+	 * @param mapData
+	 */
+	public void saveMap(File mapData);
+	
+	
 }

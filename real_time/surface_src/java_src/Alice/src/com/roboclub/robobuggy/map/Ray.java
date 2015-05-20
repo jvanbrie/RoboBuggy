@@ -14,38 +14,43 @@ import java.awt.Graphics;
 public class Ray extends MapObject {
     Point startPoint;   //meters
     double angle;       //radians
-
-    @Override
-	/***
-	 * TODO document 
-	 */
-	public MapObject mergeWith(MapObject thisObject) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
+    
+    /***
+     * TODO document
+     * TODO implement
+     */
+    public Ray(){
+    	
+    }
+    
 	@Override
+	/***
+	 * TODO document
+	 * TODO impelment
+	 */
 	boolean Equals(Object obj) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
+	/***
+	 * TODO document
+	 * TODO implement
+	 */
 	boolean isGreater(Object obj) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
+	/***
+	 * TODO document
+	 * TODO implement
+	 */
 	boolean isLess(Object obj) {
 		// TODO Auto-generated method stub
 		return false;
-	}
-
-	@Override
-	double getDistince(MapObject obj) {
-		// TODO Auto-generated method stub
-		return 0;
 	}
 
 

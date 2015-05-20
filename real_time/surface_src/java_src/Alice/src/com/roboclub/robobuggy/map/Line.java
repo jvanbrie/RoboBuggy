@@ -17,7 +17,11 @@ public class Line extends MapObject {
 
 	// if the line is not valid then all operations are not valid
 	// must have at least two points
-
+	/***
+	 * TODO document
+	 * TODO implement
+	 * @param newPoints
+	 */
 	Line(ArrayList<Point> newPoints) {
 		for (int i = 0; i < newPoints.size(); i++) {
 			points.add(newPoints.get(i));
@@ -214,15 +218,6 @@ public class Line extends MapObject {
 	}
 
 	@Override
-	/***
-	 * TODO document 
-	 */
-	public MapObject mergeWith(MapObject thisObject) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	boolean Equals(Object obj) {
 		// TODO Auto-generated method stub
 		return false;
@@ -238,12 +233,6 @@ public class Line extends MapObject {
 	boolean isLess(Object obj) {
 		// TODO Auto-generated method stub
 		return false;
-	}
-
-	@Override
-	double getDistince(MapObject obj) {
-		// TODO Auto-generated method stub
-		return 0;
 	}
 
 }

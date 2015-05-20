@@ -1,32 +1,19 @@
 package com.roboclub.robobuggy.map;
 
-import java.awt.Component;
-import java.awt.Graphics;
-import java.util.ArrayList;
-
-/***
- * @author Trevor Decker
- *
- * @version 0.5
- * 
- *          CHANGELOG: NONE
- * 
- *          DESCRIPTION: Computer repersentation of a polynomial
- */
-public class Polynomial extends MapObject {
+public class Image extends MapObject{
 
 	/***
+	 * TODO document
 	 * TODO implement
-	 * TODO document 
 	 */
-	public Polynomial(){
-		
+	public Image(){
+		//TODO
 	}
-
+	
 	@Override
 	/***
-	 * TODO implement
 	 * TODO document
+	 * TODO implement
 	 */
 	boolean Equals(Object obj) {
 		// TODO Auto-generated method stub
@@ -35,8 +22,8 @@ public class Polynomial extends MapObject {
 
 	@Override
 	/***
-	 * TODO implement
 	 * TODO document
+	 * TODO implement
 	 */
 	boolean isGreater(Object obj) {
 		// TODO Auto-generated method stub
@@ -45,8 +32,8 @@ public class Polynomial extends MapObject {
 
 	@Override
 	/***
+	 * TODO document 
 	 * TODO implement
-	 * TODO document
 	 */
 	boolean isLess(Object obj) {
 		// TODO Auto-generated method stub

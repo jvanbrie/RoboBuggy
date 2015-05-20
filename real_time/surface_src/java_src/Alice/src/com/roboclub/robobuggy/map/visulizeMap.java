@@ -8,6 +8,12 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
+// TODO make dynamic when user resizes 
+// TODO add scale to mapping 
+// TODO add moving options
+// TODO add save image 
+
+
 /** 
  * library for visulizing the map
  * Author: Trevor Decker
@@ -30,6 +36,7 @@ public class VisulizeMap{
 		frame.setVisible(true); //TODO move this to an option so that the jframe can be created even if it is not displayed 
 		//call updateDisplay which will redraw the map
 		updateDisplay();
+		drawGUI();
 	}
 	
 	/***
@@ -49,6 +56,16 @@ public class VisulizeMap{
 		for (MapObject thisMapObject : mapObjects) {
 			frame.add(thisMapObject);  //TODO update objects that are already on the frame 
 		}
+		frame.setSize(500, 500); //TODO make dynamic
+	}
+	
+	public void drawGUI(){
+		JButton testButton = new JButton("this is a test");
+		int x = frame.getWidth() - 100;
+		testButton.setBounds(x, 0, 100, 100);
+		frame.add(testButton);
+		
+		
 	}
 	
 	

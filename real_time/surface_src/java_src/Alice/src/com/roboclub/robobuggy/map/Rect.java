@@ -48,15 +48,6 @@ public class Rect extends MapObject {
 	}
 
 	@Override
-	/***
-	 * TODO document
-	 */
-	public MapObject mergeWith(MapObject thisObject) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	boolean Equals(Object obj) {
 		// TODO Auto-generated method stub
 		return false;
@@ -72,11 +63,5 @@ public class Rect extends MapObject {
 	boolean isLess(Object obj) {
 		// TODO Auto-generated method stub
 		return false;
-	}
-
-	@Override
-	double getDistince(MapObject obj) {
-		// TODO Auto-generated method stub
-		return 0;
 	}
 }
