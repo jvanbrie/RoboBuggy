@@ -6,5 +6,15 @@
 	<classpathentry kind="lib" path="library/orsoncharts-1.4-eval-nofx.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/3"/>
 	<classpathentry kind="lib" path="library/RXTXcomm.jar"/>
+	<classpathentry kind="lib" path="/Users/trevordecker/Desktop/myWork/roboBuggy/RoboBuggy/real_time/surface_src/java_src/libs/ejml/jars/EJML-core-0.27-sources.jar"/>
+	<classpathentry kind="lib" path="/Users/trevordecker/Desktop/myWork/roboBuggy/RoboBuggy/real_time/surface_src/java_src/libs/ejml/jars/EJML-core-0.27.jar"/>
+	<classpathentry kind="lib" path="/Users/trevordecker/Desktop/myWork/roboBuggy/RoboBuggy/real_time/surface_src/java_src/libs/ejml/jars/EJML-dense64-0.27-sources.jar"/>
+	<classpathentry kind="lib" path="/Users/trevordecker/Desktop/myWork/roboBuggy/RoboBuggy/real_time/surface_src/java_src/libs/ejml/jars/EJML-dense64-0.27.jar"/>
+	<classpathentry kind="lib" path="/Users/trevordecker/Desktop/myWork/roboBuggy/RoboBuggy/real_time/surface_src/java_src/libs/ejml/jars/EJML-denseC64-0.27-sources.jar"/>
+	<classpathentry kind="lib" path="/Users/trevordecker/Desktop/myWork/roboBuggy/RoboBuggy/real_time/surface_src/java_src/libs/ejml/jars/EJML-denseC64-0.27.jar"/>
+	<classpathentry kind="lib" path="/Users/trevordecker/Desktop/myWork/roboBuggy/RoboBuggy/real_time/surface_src/java_src/libs/ejml/jars/EJML-equation-0.27-sources.jar"/>
+	<classpathentry kind="lib" path="/Users/trevordecker/Desktop/myWork/roboBuggy/RoboBuggy/real_time/surface_src/java_src/libs/ejml/jars/EJML-equation-0.27.jar"/>
+	<classpathentry kind="lib" path="/Users/trevordecker/Desktop/myWork/roboBuggy/RoboBuggy/real_time/surface_src/java_src/libs/ejml/jars/EJML-simple-0.27-sources.jar"/>
+	<classpathentry kind="lib" path="/Users/trevordecker/Desktop/myWork/roboBuggy/RoboBuggy/real_time/surface_src/java_src/libs/ejml/jars/EJML-simple-0.27.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
