@@ -1,0 +1,6 @@
+package com.roboclub.robobuggy.localization;
+
+public enum UNITS {
+CENTIMETERS,MILLIMETERS,METERS,KILIOMETERS,INCHES,FEET,MILES,DEGREES,RADIANS,UNITLESS
+}
+

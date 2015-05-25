@@ -124,7 +124,16 @@ public class Quaternion {
 	 * TODO document
 	 * @return
 	 */
-	public RotationMatrix toRotationMatrix(){
+	public RotationMatrix_SO2 toRotationMatrix_SO2(){
+		return null;
+	}
+	
+	/**
+	 * TODO implement
+	 * TODO document
+	 * @return
+	 */
+	public RotationMatrix_SO3 toRotationMatrix_SO3(){
 		return null;
 	}
 	

@@ -7,6 +7,8 @@ import java.awt.Graphics;
 
 import javax.swing.JComponent;
 
+import com.roboclub.robobuggy.localization.UNITS;
+
 //TODO clean up point
 //TODO add color 
 //TODO clean up linkedList map
@@ -27,7 +29,7 @@ public class Point extends MapObject  {
 	private double x;
 	private double y;
 	private double scale; //the size to draw the point
-	private Units pointUnits; 
+	private UNITS pointUnits; 
 
 	/***
 	 * Constructor for point class.  
@@ -35,7 +37,7 @@ public class Point extends MapObject  {
 	 * @param y_ the y corrdinate of the point
 	 * @param unit what units the corrdinates are in 
 	 */
-	public Point(double x_,double y_,Units unit){
+	public Point(double x_,double y_,UNITS unit){
 		this.pointUnits = unit;
 		x = x_;
 		y = y_;
@@ -50,7 +52,7 @@ public class Point extends MapObject  {
 	 * @param y_
 	 */
 	public Point(double x_, double y_) {
-		this(x_,y_,Units.METERS);
+		this(x_,y_,UNITS.METERS);
 	}
 	
 	/***
@@ -82,7 +84,7 @@ public class Point extends MapObject  {
 	 * returns the units that this point uses for its corrdinates 
 	 * @return Units
 	 */
-	public Units getUnits(){
+	public UNITS getUnits(){
 		return this.pointUnits;
 	}
 	
@@ -90,7 +92,7 @@ public class Point extends MapObject  {
 	/***
 	 * sets the units that the point uses for its corrdiantes 
 	 */
-	public void setUnits(Units newUnits)
+	public void setUnits(UNITS newUnits)
 	{
 		this.pointUnits = newUnits; 
 	}
