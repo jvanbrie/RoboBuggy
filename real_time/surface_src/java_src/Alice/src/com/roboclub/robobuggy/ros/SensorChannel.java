@@ -15,7 +15,8 @@ public enum SensorChannel {
 	VISION("vision"),
 	ENCODER("encoder"),
 	GUI_LOGGING_BUTTON("logging_button"),
-	GUI_CONSOLE_TEXT("console_text");
+	GUI_CONSOLE_TEXT("console_text"),
+	AUTO("auto");
 	
 	private String rstPath;
 	private String msgPath;

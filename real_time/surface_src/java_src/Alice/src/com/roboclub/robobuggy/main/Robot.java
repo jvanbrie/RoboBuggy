@@ -2,11 +2,9 @@ package com.roboclub.robobuggy.main;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import com.roboclub.robobuggy.drivers.Alice;
 import com.roboclub.robobuggy.localization.KalmanFilter;
 import com.roboclub.robobuggy.logging.RobotLogger;
-import com.roboclub.robobuggy.messages.BrakeCommand;
 import com.roboclub.robobuggy.messages.EncoderMeasurement;
 import com.roboclub.robobuggy.messages.GpsMeasurement;
 import com.roboclub.robobuggy.messages.ImuMeasurement;
@@ -155,8 +153,12 @@ public class Robot implements RosMaster {
 	
 	// shuts down the robot and all of its child sensors
 	public static void ShutDown() {
-		for (Node thisSensor : sensorList) {
-			thisSensor.shutdown();
+		if (sensorList != null && !sensorList.isEmpty()) {
+			for (Node sensor : sensorList) {
+				if (sensor != null) {
+					sensor.shutdown();
+				}
+			}
 		}
 		System.exit(0);
 	}
@@ -194,7 +196,8 @@ public class Robot implements RosMaster {
 	
 	public void writeBrakes(boolean brakesDown) {
 		if (autonomous) {
-			brakePub.publish(new BrakeCommand(brakesDown));
+			// TODO new pub/sub for command messages
+			//brakePub.publish(new BrakeCommand(brakesDown));
 		} else {
 			System.out.println("Can only control steering in Autonomous mode!");
 		}

@@ -136,7 +136,7 @@ public class VisionNode {
 		return false;
 	}
 
-	public void setDisplay(boolean value) {
+public void setDisplay(boolean value) {
 		if (connected) {
 			frontPanel.setVisible(value);
 			rearPanel.setVisible(value);
