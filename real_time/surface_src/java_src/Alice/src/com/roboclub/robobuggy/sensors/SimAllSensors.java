@@ -63,7 +63,7 @@ public class SimAllSensors {
 			encoderPub.publish(new EncoderMeasurement(10, 2));
 			// TODO fix gps sim
 			//gpsPub.publish(new GpsMeasurement(42.00f, -76.00f));
-			imuPub.publish(new ImuMeasurement(0, 0, 1, 2, 3, 4, 5, 6, 7));
+			imuPub.publish(new ImuMeasurement(0,0,0));
 			reqAnglePub.publish(new RemoteWheelAngleRequest(0.5));
 			try {
 				Thread.sleep(5000);

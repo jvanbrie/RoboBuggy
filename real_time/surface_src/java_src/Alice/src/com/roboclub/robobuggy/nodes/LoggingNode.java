@@ -11,6 +11,7 @@ import com.roboclub.robobuggy.messages.GuiLoggingButton;
 import com.roboclub.robobuggy.ros.Message;
 import com.roboclub.robobuggy.ros.MessageListener;
 import com.roboclub.robobuggy.ros.Node;
+import com.roboclub.robobuggy.ros.Publisher;
 import com.roboclub.robobuggy.ros.SensorChannel;
 import com.roboclub.robobuggy.ros.Subscriber;
 
@@ -25,6 +26,7 @@ public class LoggingNode implements Node {
 	Subscriber s;
 	Subscriber logging_button_sub;
 	// Get the folder that we're going to use
+	public Publisher brakePub;
 
 	// TODO get folder name from file.
 	public LoggingNode(String topicName, final String directoryPath) {

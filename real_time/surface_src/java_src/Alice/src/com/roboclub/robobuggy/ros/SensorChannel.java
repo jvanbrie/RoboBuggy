@@ -1,5 +1,10 @@
 package com.roboclub.robobuggy.ros;
 
+/**
+ * TODO document 
+ * @author Matt Sebek
+ *
+ */
 public enum SensorChannel {
 	GPS("gps"),
 	IMU("imu"),
@@ -9,7 +14,8 @@ public enum SensorChannel {
 	DRIVE_CTRL("drive_ctrl"),
 	VISION("vision"),
 	ENCODER("encoder"),
-	GUI_LOGGING_BUTTON("logging_button");
+	GUI_LOGGING_BUTTON("logging_button"),
+	GUI_CONSOLE_TEXT("console_text");
 	
 	private String rstPath;
 	private String msgPath;

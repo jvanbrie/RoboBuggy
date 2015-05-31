@@ -2,7 +2,7 @@ package com.roboclub.robobuggy.map;
 
 /***
  * TODO document 
- * @author trevordecker
+ * @author Trevor Decker
  *
  */
 public enum Order {

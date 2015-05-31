@@ -20,9 +20,9 @@ import com.roboclub.robobuggy.serial.SerialNode;
  */
 
 public class SteeringNode extends SerialNode implements Node {
-	public Publisher brakePub;
 	public Publisher steeringPub;
 	public Publisher statePub;
+	public Publisher brakePub;
 	
 	public SteeringNode(SensorChannel sensor) {
 		super("Steering");
@@ -31,7 +31,7 @@ public class SteeringNode extends SerialNode implements Node {
 		steeringPub = new Publisher(SensorChannel.STEERING.getMsgPath());
 		statePub = new Publisher(sensor.getStatePath());
 		
-		
+		//TODO clean up
 		// Subscriber for Steering commands
 		/*new Subscriber(ActuatorChannel.STEERING.getMsgPath(),
 				new MessageListener() {
@@ -120,9 +120,12 @@ public class SteeringNode extends SerialNode implements Node {
 	}
 
 	@Override
+	/**
+	 * TODO document
+	 */
 	public int peel(byte[] buffer, int start, int bytes_available) {
 		RBPair rbp = RBSerial.peel(buffer, start, bytes_available);
-		int bytes_read = rbp.get_num_bytes_read();
+		int bytes_read = rbp.getNumberOfBytesRead();
 		RBSerialMessage message = rbp.getMessage();
 	
 		byte b = message.getHeaderByte();

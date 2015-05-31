@@ -1,5 +1,8 @@
 package com.roboclub.robobuggy.localization;
 
+import linearAlgebra.UNITS;
+import linearAlgebra.Units_Number;
+
 import org.ejml.simple.SimpleMatrix;
 //TODO merge with SO3
 
@@ -91,7 +94,8 @@ public class RotationMatrix_SO2 {
 	 * @return
 	 */
 	public EulerAngles toEulerAngles(){
-		return new EulerAngles(Math.atan2(R.get(1,0),R.get(0,0)));
+		double angle = Math.atan2(R.get(1,0), R.get(0,0));
+		return new EulerAngles(new Units_Number(UNITS.DEGREES, angle));
 	}
 	
 	

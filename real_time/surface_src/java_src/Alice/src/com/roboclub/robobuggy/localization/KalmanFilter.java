@@ -1,5 +1,9 @@
 package com.roboclub.robobuggy.localization;
-
+/**
+ * TODO document
+ * @author trevordecker
+ *
+ */
 public class KalmanFilter {
 
     public KalmanFilter() {

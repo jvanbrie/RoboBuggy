@@ -7,7 +7,7 @@ import java.awt.Graphics;
 
 import javax.swing.JComponent;
 
-import com.roboclub.robobuggy.localization.UNITS;
+import linearAlgebra.UNITS;
 
 //TODO clean up point
 //TODO add color 
@@ -22,7 +22,7 @@ import com.roboclub.robobuggy.localization.UNITS;
 /***
  * Representation of a point on the map 
  * for now this value will be stored as a 2d(x,y) pair 
- * @author trevordecker
+ * @author Trevor Decker
  *
  */
 public class Point extends MapObject  {
@@ -30,6 +30,8 @@ public class Point extends MapObject  {
 	private double y;
 	private double scale; //the size to draw the point
 	private UNITS pointUnits; 
+	Color backgroundColor;
+	Color outlineColor;
 
 	/***
 	 * Constructor for point class.  
@@ -122,7 +124,10 @@ public class Point extends MapObject  {
 		super.paintComponent(g);
         g.setColor(Color.GRAY);
         int thisScale = (int)scale;
+        g.setColor(backgroundColor);
         g.fillOval(0, 0, thisScale, thisScale); 
+        g.setColor(outlineColor);
+        g.drawOval(0, 0, thisScale, thisScale);
 	}
 	
 	@Override

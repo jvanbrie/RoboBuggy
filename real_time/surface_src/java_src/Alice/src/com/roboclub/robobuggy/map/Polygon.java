@@ -9,7 +9,7 @@ import java.util.EmptyStackException;
 
 /**
  * TODO
- * @author trevordecker
+ * @author Trevor Decker
  *
  */
 public class Polygon extends MapObject {

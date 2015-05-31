@@ -7,7 +7,7 @@ import javax.swing.JComponent;
 
 /***
  * 
- * @author trevordecker
+ * @author Trevor Decker
  *
  */
 public abstract class  MapObject extends  JComponent{

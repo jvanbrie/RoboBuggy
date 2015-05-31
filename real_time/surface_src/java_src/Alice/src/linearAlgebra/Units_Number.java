@@ -1,4 +1,4 @@
-package com.roboclub.robobuggy.localization;
+package linearAlgebra;
 
 import com.roboclub.robobuggy.map.LogicException;
 
@@ -10,9 +10,9 @@ import com.roboclub.robobuggy.map.LogicException;
  * @author Trevor Decker
  * @version 1.0
  * CHANGELOG:         NONE 
- *
+ * 
  */
-public class Units_class {
+public class Units_Number implements Number{
 double value;
 UNITS unit;
 
@@ -22,7 +22,7 @@ UNITS unit;
  * @param units
  * @param value
  */
-public Units_class(UNITS units,double value){
+public Units_Number(UNITS units,double value){
 	setUNITS(units);
 	setMeassurmentValue(value);
 }
@@ -33,8 +33,8 @@ public Units_class(UNITS units,double value){
  * @return
  * @throws LogicException 
  */
-public Units_class toMillimeters() throws LogicException{
-	Units_class result = this.toMeters();
+public Units_Number toMillimeters() throws LogicException{
+	Units_Number result = this.toMeters();
 	result.setMeassurmentValue(1000*getMeassurmentValue());
 	result.setUNITS(UNITS.MILLIMETERS);
 	return result;
@@ -46,8 +46,8 @@ public Units_class toMillimeters() throws LogicException{
  * @return
  * @throws LogicException 
  */
-public Units_class toCentimeters() throws LogicException{
-	Units_class result = this.toMeters();
+public Units_Number toCentimeters() throws LogicException{
+	Units_Number result = this.toMeters();
 	result.setMeassurmentValue(100*getMeassurmentValue());
 	result.setUNITS(UNITS.CENTIMETERS);
 	return result;	
@@ -59,8 +59,8 @@ public Units_class toCentimeters() throws LogicException{
  * @return
  * @throws LogicException 
  */
-public Units_class toMeters() throws LogicException{
-	Units_class result = new Units_class(this.unit, this.value);
+public Units_Number toMeters() throws LogicException{
+	Units_Number result = new Units_Number(this.unit, this.value);
 	switch(getUnits()){
 		case CENTIMETERS:
 			result.setMeassurmentValue(.01*getMeassurmentValue());
@@ -96,8 +96,8 @@ public Units_class toMeters() throws LogicException{
  * @return
  * @throws LogicException 
  */
-public Units_class toKilometers() throws LogicException{
-	Units_class result = this.toMeters();
+public Units_Number toKilometers() throws LogicException{
+	Units_Number result = this.toMeters();
 	result.setMeassurmentValue(.001*getMeassurmentValue());
 	result.setUNITS(UNITS.KILIOMETERS);
 	return result;
@@ -109,8 +109,8 @@ public Units_class toKilometers() throws LogicException{
  * @return
  * @throws LogicException 
  */
-public Units_class toInches() throws LogicException{
-	Units_class result = this.toMeters();
+public Units_Number toInches() throws LogicException{
+	Units_Number result = this.toMeters();
 	result.setMeassurmentValue(39.3700787*getMeassurmentValue());
 	result.setUNITS(UNITS.INCHES);
 	return result;
@@ -122,8 +122,8 @@ public Units_class toInches() throws LogicException{
  * @return
  * @throws LogicException 
  */
-public Units_class toFeet() throws LogicException{
-	Units_class result = this.toMeters();
+public Units_Number toFeet() throws LogicException{
+	Units_Number result = this.toMeters();
 	result.setMeassurmentValue(3.28084*getMeassurmentValue());
 	result.setUNITS(UNITS.FEET);
 	return result;
@@ -135,8 +135,8 @@ public Units_class toFeet() throws LogicException{
  * @return
  * @throws LogicException 
  */
-public Units_class toMiles() throws LogicException{
-	Units_class result = this.toMeters();
+public Units_Number toMiles() throws LogicException{
+	Units_Number result = this.toMeters();
 	result.setMeassurmentValue(0.000621371*getMeassurmentValue());
 	result.setUNITS(UNITS.MILES);
 	return result;
@@ -148,8 +148,8 @@ public Units_class toMiles() throws LogicException{
  * @return
  * @throws LogicException 
  */
-public Units_class toDegrees() throws LogicException{
-	Units_class result = new Units_class(this.unit, this.value);
+public Units_Number toDegrees() throws LogicException{
+	Units_Number result = new Units_Number(this.unit, this.value);
 	switch(getUnits()){
 	case DEGREES:
 		//already in degree so do nothing 
@@ -171,8 +171,8 @@ public Units_class toDegrees() throws LogicException{
  * @return
  * @throws LogicException 
  */
-public Units_class toRadians() throws LogicException{
-	Units_class result = toDegrees();
+public Units_Number toRadians() throws LogicException{
+	Units_Number result = toDegrees();
 	result.setMeassurmentValue(0.0174532925*getMeassurmentValue());
 	return null;
 }
@@ -181,8 +181,8 @@ public Units_class toRadians() throws LogicException{
  *  sets the new unit to be unitless with the some value 
  * @return
  */
-public Units_class toUnitless(){
-	return new Units_class(UNITS.UNITLESS, this.value);
+public Units_Number toUnitless(){
+	return new Units_Number(UNITS.UNITLESS, this.value);
 }
 
 /***
@@ -218,6 +218,30 @@ public double getMeassurmentValue(){
  */
 public UNITS getUnits(){
 	return this.unit;
+}
+
+@Override
+public Number add(Number otherNumber) {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+@Override
+public Number sub(Number otherNumber) {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+@Override
+public Number mult(Number otherNumber) {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+@Override
+public Number div(Number othterNumber) {
+	// TODO Auto-generated method stub
+	return null;
 }
 
 

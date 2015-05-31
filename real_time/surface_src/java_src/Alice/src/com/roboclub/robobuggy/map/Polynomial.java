@@ -14,7 +14,9 @@ import java.util.ArrayList;
  *          DESCRIPTION: Computer repersentation of a polynomial
  */
 public class Polynomial extends MapObject {
-
+	// not that this representation can only handle positive whole number coefficients 
+	// TODO fix this 
+	ArrayList<Double> coefcients;  	
 	/***
 	 * TODO implement
 	 * TODO document 
@@ -42,7 +44,7 @@ public class Polynomial extends MapObject {
 		// TODO Auto-generated method stub
 		return false;
 	}
-
+ 
 	@Override
 	/***
 	 * TODO implement

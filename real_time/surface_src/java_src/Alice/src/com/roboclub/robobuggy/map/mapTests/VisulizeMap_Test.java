@@ -11,7 +11,7 @@ import com.roboclub.robobuggy.map.LinkedListMap;
 
 /***
  * 
- * @author trevordecker
+ * @author Trevor decker
  * A driver for testing and verfying that the map visulizer works correctly 
  */
 public class VisulizeMap_Test {
@@ -27,6 +27,8 @@ public class VisulizeMap_Test {
 		Point aPoint = new Point(20,20);
 		Point bPoint = new Point(20,100);
 		Point cPoint = new Point(60,60);
+		Point dPoint = new Point(200,200);
+		thisMap.AddObject(dPoint);
 		ArrayList<Point> v = new ArrayList<Point>();
 		v.add(aPoint);
 		v.add(bPoint);

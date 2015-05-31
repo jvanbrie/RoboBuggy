@@ -3,6 +3,7 @@ package com.roboclub.robobuggy.serial;
 import gnu.io.CommPortIdentifier;
 import gnu.io.PortInUseException;
 import gnu.io.SerialPort;
+import gnu.io.SerialPortEventListener;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -76,7 +77,7 @@ public class SerialFather implements Node {
 					inputBuffer = new char[BUFFER_SIZE];
 					index = 0;
 					connected = true;
-					port.addEventListener(this);
+					port.addEventListener((SerialPortEventListener) this);
 					System.out.println("Connected to port: "
 							+ port.getName());
 					return;

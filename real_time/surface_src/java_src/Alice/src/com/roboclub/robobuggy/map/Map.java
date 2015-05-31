@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 /***
  * 
- * @author trevordecker
+ * @author Trevor Decker
  *	TODO
  */
 public interface Map {
