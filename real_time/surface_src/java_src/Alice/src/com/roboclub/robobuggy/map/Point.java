@@ -4,7 +4,11 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.JComponent;
 
 import linearAlgebra.UNITS;
@@ -128,6 +132,8 @@ public class Point extends MapObject  {
         g.fillOval(0, 0, thisScale, thisScale); 
         g.setColor(outlineColor);
         g.drawOval(0, 0, thisScale, thisScale);
+        
+        
 	}
 	
 	@Override

@@ -3,6 +3,7 @@ package com.roboclub.robobuggy.main;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.roboclub.robobuggy.drivers.Alice;
 import com.roboclub.robobuggy.localization.KalmanFilter;
 import com.roboclub.robobuggy.logging.RobotLogger;
 import com.roboclub.robobuggy.messages.BrakeCommand;
@@ -24,6 +25,12 @@ import com.roboclub.robobuggy.ros.SensorChannel;
 import com.roboclub.robobuggy.ros.Subscriber;
 import com.roboclub.robobuggy.ui.Gui;
 
+/**
+ * 
+ * TODO document
+ * manages all of the saftey systems of the buggy 
+ *
+ */
 public class Robot implements RosMaster {
 	private static Robot instance;
 	private static Thread alice;
@@ -125,8 +132,8 @@ public class Robot implements RosMaster {
 				System.out.println("Initialize Drive Controls for Autonomous");
 			} else {
 				System.out.println("Alice is in control!");
-				alice = new Thread(new Planner());
-				alice.start();
+				alice = new Thread(new Alice());
+				alice.start(); 
 				
 				// Initialize publishers for sending commands
 				steerPub = new Publisher(ActuatorChannel.STEERING.getMsgPath());

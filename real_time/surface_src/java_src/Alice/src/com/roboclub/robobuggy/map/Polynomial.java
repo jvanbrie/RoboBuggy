@@ -16,7 +16,8 @@ import java.util.ArrayList;
 public class Polynomial extends MapObject {
 	// not that this representation can only handle positive whole number coefficients 
 	// TODO fix this 
-	ArrayList<Double> coefcients;  	
+	ArrayList<Double> coefcients;
+	
 	/***
 	 * TODO implement
 	 * TODO document 

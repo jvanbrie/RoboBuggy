@@ -64,7 +64,7 @@ public class NDimensionalArray<CELL_TYPE> {
 	 * Sets the element in the array at the ith location in memory if
 	 * all elements were stored in a 1d row. 
 	 */
-	public void setIndex(int index){
+	public void setIndex(int index,CELL_TYPE newValue){
 		//TODO
 	}
 	

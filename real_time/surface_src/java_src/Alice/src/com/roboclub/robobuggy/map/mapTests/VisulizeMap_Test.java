@@ -3,6 +3,7 @@ package com.roboclub.robobuggy.map.mapTests;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 
+import com.roboclub.robobuggy.map.Image;
 import com.roboclub.robobuggy.map.MapObject;
 import com.roboclub.robobuggy.map.Point;
 import com.roboclub.robobuggy.map.Polygon;
@@ -24,7 +25,9 @@ public class VisulizeMap_Test {
 		// TODO Auto-generated method stub
 		System.out.println("Starting VisulizeMap Tests");
 		LinkedListMap thisMap = new LinkedListMap();
+		
 		Point aPoint = new Point(20,20);
+		/*
 		Point bPoint = new Point(20,100);
 		Point cPoint = new Point(60,60);
 		Point dPoint = new Point(200,200);
@@ -34,14 +37,22 @@ public class VisulizeMap_Test {
 		v.add(bPoint);
 		v.add(cPoint);
 		Polygon aPolygon = new Polygon(v);
-		
+		*/
+		Image testImg = new Image();
+		thisMap.AddObject(testImg);
 		java.util.Date date= new java.util.Date();
-		 System.out.println(new Timestamp(date.getTime()));
-		 thisMap.AddObject(aPolygon);
+		 //System.out.println(new Timestamp(date.getTime()));
+		 //thisMap.AddObject(aPolygon);
+		 
+		 //TODO add test for a moving object 
+		 //TODO add test for objects that have frames of refrence 
+		 
+		 
 		//thisMap.AddObject(aPoint);
 		//thisMap.AddObject(bPoint);
 		//thisMap.AddObject(cPoint);
-	/*	for(int x= 0;x<20;x++){
+		/*
+		for(int x= 0;x<20;x++){
 			for(int y = 0;y<500;y++){
 				thisMap.AddObject(new Point(x,y));
 		}
@@ -49,7 +60,7 @@ public class VisulizeMap_Test {
 		
 		VisulizeMap thisDisplay = new VisulizeMap(thisMap);
 		java.util.Date date2= new java.util.Date();
-		 System.out.println(new Timestamp(date2.getTime()));
+		// System.out.println(new Timestamp(date2.getTime()));
 		
 		System.out.println("finished VisulizeMap Tests");
 	}

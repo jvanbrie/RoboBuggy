@@ -2,14 +2,31 @@ package com.roboclub.robobuggy.map;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
 
 public class Image extends MapObject{
+	BufferedImage img = null;
 
 	/***
 	 * TODO document
 	 * TODO implement
 	 */
 	public Image(){
+		 Point p = new  Point(0, 0);
+		 refrenceFrame = p;
+		 //need to have a nonzero setBounds so that the system trys to draw something 
+		 setBounds(1,1,100,100);
+			File imgFile = new File("/Users/trevordecker/Desktop/test.jpg");
+			try{ 
+				img = ImageIO.read(imgFile);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		//TODO
 	}
 	
@@ -61,7 +78,9 @@ public class Image extends MapObject{
 	 *  TODO implement 
 	 */
 	public void paintComponent(Graphics g){
-		//TODO
+		super.paintComponent(g);
+	    g.drawImage(img, 0, 0, this);
+	    //TODO add refrence frame stuff for the image
 	}
 
 }

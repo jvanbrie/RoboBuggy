@@ -5,11 +5,11 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 /***
  * 
- * @author trevordecker
+ * @author Trevor Decker
  * an implemention of a map that uses a linked list store the map nodes 
  */
 //TODO change to a sorted linked list 
-public class LinkedListMap implements Map{
+public class LinkedListMap extends Map{
 	LinkedList<MapObject> map;
 	
 	/***

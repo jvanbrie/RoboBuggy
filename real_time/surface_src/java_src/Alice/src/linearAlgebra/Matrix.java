@@ -39,12 +39,12 @@ public class Matrix<TYPE extends Number> {
 	}
 	
 	/**
-	 * TODO implement
 	 * TODO document
 	 * @return
 	 */
 	public Matrix<TYPE> add(Matrix<TYPE> b){
 		assert(this.data.getDimensions() == b.data.getDimensions()); //TODO check this
+		Matrix<TYPE> result =this.clone();
 		int numCells = 1;
 		int[] dimensions = this.data.getDimensions();
 		for(int dim = 0;dim<dimensions.length;dim++){
@@ -52,20 +52,19 @@ public class Matrix<TYPE extends Number> {
 		}
 		
 		for(int i = 0;i<numCells;i++){
-			this.data.getIndex(i).add(b.data.getIndex(i));  //todo set result
-		}
+				TYPE newValue = (TYPE) this.data.getIndex(i).add(b.data.getIndex(i));
+				result.data.setIndex(i,newValue);
+			}
 		
-		return null;
+		return result;
 	}
 	
 	/**
-	 * TODO implement
 	 * TODO document
 	 * @return
 	 */
 	public int[] dimensions(){
-		//TODO
-		return null;
+		return data.getDimensions();
 	}
 	
 	/**
@@ -79,9 +78,15 @@ public class Matrix<TYPE extends Number> {
 	}
 	
 	
+	/**
+	 * TODO implement
+	 * TODO document 
+	 * @return
+	 */
+	@Override
+	public Matrix<TYPE> clone(){
+		//TODO
+		return null;
+	}
 	
-	//TODO replace the EJMT library with this library since it is more general and capable 
-	//of holding arrays of arbeatray data types
-	
-	//TODO
 }

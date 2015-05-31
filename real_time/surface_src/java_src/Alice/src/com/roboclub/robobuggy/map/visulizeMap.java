@@ -54,6 +54,9 @@ public class VisulizeMap{
 		Point orgin = new Point(0,0);
 		MapObject[] mapObjects = thisMap.getClosestNObjects(orgin,thisMap.getNumberOfElements());
 		for (MapObject thisMapObject : mapObjects) {
+		//	System.out.println(mapObjects[0].getClass());
+		//	Image a = (Image) mapObjects[0];//.paintComponent(frame.getGraphics());
+		//	a.paintComponent(frame.getGraphics());
 			frame.add(thisMapObject);  //TODO update objects that are already on the frame 
 		}
 		frame.setSize(500, 500); //TODO make dynamic
