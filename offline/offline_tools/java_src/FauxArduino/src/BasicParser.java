@@ -3,6 +3,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Timer;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
@@ -11,7 +12,7 @@ public class BasicParser implements FauxParser {
 
 	BlockingQueue<String> q;
 	boolean parserStarted = false;
-	long offset = 0;	
+	static long offset = 0;	
 	
 	public BasicParser() {
 		q = new ArrayBlockingQueue<String>(50);
@@ -37,9 +38,8 @@ public class BasicParser implements FauxParser {
 		return;
 	}
 	
-	@Override
-	public void setOffset(long offset) {
-		this.offset = offset;		
+	public static void setOffset(long offset) {
+		BasicParser.offset = offset;		
 	}
 	
 	protected void sleep(Date target) {
@@ -53,7 +53,7 @@ public class BasicParser implements FauxParser {
 			e.printStackTrace();
 		}
 	}
-	
+		
 	public static Date makeDate(String string) {
 		try {
 			DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);

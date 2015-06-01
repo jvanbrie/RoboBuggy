@@ -12,7 +12,7 @@ public class Runner {
 		SteeringParser sp = new SteeringParser();
 		
 		try {
-			System.setOut(new PrintStream(new FileOutputStream("test2.txt")));
+			System.setOut(new PrintStream(new FileOutputStream("test4.txt")));
 		} catch (FileNotFoundException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -25,7 +25,7 @@ public class Runner {
 			String line = br.readLine();
 			
 			long offset = getOffset(line);
-			imp.setOffset(offset);
+			BasicParser.setOffset(offset);
 			
 			while (true) {
 				if (line == null) { 
