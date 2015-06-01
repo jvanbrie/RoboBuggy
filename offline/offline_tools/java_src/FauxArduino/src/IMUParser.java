@@ -30,7 +30,7 @@ public class IMUParser extends BasicParser {
 						sleep(date);
 						
 						//publish value here
-						System.out.println(String.format("Current Date: %s, Date: %s, aX: %f, aY: %f, aZ: %f,"
+						System.out.println(String.format("IMU:           Current Date: %s, Date: %s, aX: %f, aY: %f, aZ: %f,"
 								+ "rX: %f, rY: %f, rZ: %f, mX: %f, mY: %f, mZ: %f", new Date(), date, aX, aY, aZ,
 								rX, rY, rZ, mX, mY, mZ));						
 						

@@ -23,7 +23,7 @@ public class SteeringParser extends BasicParser {
 						sleep(date);
 						
 						//publish value here
-						System.out.println(String.format("Current Date: %s, Date: %s, Steer Angle: %f", new Date(), date, angle));						
+						System.out.println(String.format("Steering:      Current Date: %s, Date: %s, Steer Angle: %f", new Date(), date, angle));						
 						
 					} catch (InterruptedException e) {
 						System.out.println("Interrupted");

@@ -10,9 +10,12 @@ public class Runner {
 	public static void main(String[] args) {
 		IMUParser imp = new IMUParser();
 		SteeringParser sp = new SteeringParser();
+		EncoderParser ep = new EncoderParser();
+		GPSParser gpsp = new GPSParser();
+		LoggingStartParser lsp = new LoggingStartParser();
 		
 		try {
-			System.setOut(new PrintStream(new FileOutputStream("test4.txt")));
+			System.setOut(new PrintStream(new FileOutputStream("test10.txt")));
 		} catch (FileNotFoundException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -21,7 +24,7 @@ public class Runner {
 		System.out.println("Starting to read from file!");
 
 		//TODO: Make this take in a file argument instead of being hardcoded
-		try(BufferedReader br = new BufferedReader(new FileReader("src\\sensors.txt"))) {
+		try(BufferedReader br = new BufferedReader(new FileReader("logs\\2015-03-21-07-12-46\\sensors.txt"))) {
 			String line = br.readLine();
 			
 			long offset = getOffset(line);
@@ -45,8 +48,17 @@ public class Runner {
 					case "sensors/steering":
 						sp.qAdd(line);
 						break;
+					case "sensors/encoder":
+						ep.qAdd(line);
+						break;
+					case "sensors/gps":
+						gpsp.qAdd(line);
+						break;
+					case "sensors/logging_button":
+						lsp.qAdd(line);
+						break;
 					default:
-						System.out.println("Unknown sensor type");
+						System.out.println("Unknown sensor type: " + sensor.toLowerCase());
 					}
 					line = br.readLine();
 				}
