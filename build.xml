@@ -8,7 +8,7 @@
 
 <project name="HelloWorld" basedir="." default="main">
 
-    <property name="src.dir"     value="surface_src/java_src/Alice/src/com/roboclub/robobuggy/testing"/> 
+    <property name="src.dir"     value="real_time/surface_src/java_src/Alice/src/com/roboclub/robobuggy/testing"/> 
 
     <property name="build.dir"   value="build"/>
     <property name="classes.dir" value="${build.dir}/classes"/>
@@ -34,13 +34,13 @@
       </condition>
       
       <target name="mvn_windows" if="isWindows">
-	<exec dir="./surface_src/java_src/libs/junit" executable="cmd">
+	<exec dir="./real_time/surface_src/java_src/libs/junit" executable="cmd">
           <arg line="/c mvn clean install" />
 	</exec>
       </target>
       
       <target name="mvn_unix" if="isUnix">
-	<exec dir="./surface_src/java_src/libs/junit" executable="sh">
+	<exec dir="./real_time/surface_src/java_src/libs/junit" executable="sh">
           <arg line="-c 'mvn clean install'" />
 	</exec>
       </target>
@@ -50,19 +50,19 @@
       <target name="compile" ><!-- depends="mvn_windows, mvn_unix" > -->
         <mkdir dir="${classes.dir}"/>
         <javac  destdir="${classes.dir}" >
-	  <src path="surface_src/java_src/Alice/src/com/roboclub/robobuggy/actuators"/>
-	  <src path="surface_src/java_src/Alice/src/com/roboclub/robobuggy/localization"/>
-	  <src path="surface_src/java_src/Alice/src/com/roboclub/robobuggy/logging"/>
-	  <src path="surface_src/java_src/Alice/src/com/roboclub/robobuggy/main"/>
-	  <src path="surface_src/java_src/Alice/src/com/roboclub/robobuggy/map"/>
-	  <src path="surface_src/java_src/Alice/src/com/roboclub/robobuggy/messages"/>
-	  <src path="surface_src/java_src/Alice/src/com/roboclub/robobuggy/ros"/>
-	  <src path="surface_src/java_src/Alice/src/com/roboclub/robobuggy/sensors"/>
-	  <src path="surface_src/java_src/Alice/src/com/roboclub/robobuggy/serial"/>
-	  <src path="surface_src/java_src/Alice/src/com/roboclub/robobuggy/testing"/>
-	  <src path="surface_src/java_src/Alice/src/com/roboclub/robobuggy/ui"/>
+	  <src path="real_time/surface_src/java_src/Alice/src/com/roboclub/robobuggy/actuators"/>
+	  <src path="real_time/surface_src/java_src/Alice/src/com/roboclub/robobuggy/localization"/>
+	  <src path="real_time/surface_src/java_src/Alice/src/com/roboclub/robobuggy/logging"/>
+	  <src path="real_time/surface_src/java_src/Alice/src/com/roboclub/robobuggy/main"/>
+	  <src path="real_time/surface_src/java_src/Alice/src/com/roboclub/robobuggy/map"/>
+	  <src path="real_time/surface_src/java_src/Alice/src/com/roboclub/robobuggy/messages"/>
+	  <src path="real_time/surface_src/java_src/Alice/src/com/roboclub/robobuggy/ros"/>
+	  <src path="real_time/surface_src/java_src/Alice/src/com/roboclub/robobuggy/sensors"/>
+	  <src path="real_time/surface_src/java_src/Alice/src/com/roboclub/robobuggy/serial"/>
+	  <src path="real_time/surface_src/java_src/Alice/src/com/roboclub/robobuggy/testing"/>
+	  <src path="real_time/surface_src/java_src/Alice/src/com/roboclub/robobuggy/ui"/>
 	  <classpath>
-	    <pathelement location="surface_src/java_src/libs/junit/target/junit-4.12-SNAPSHOT.jar" /> 
+	    <pathelement location="real_time/surface_src/java_src/libs/junit/target/junit-4.12-SNAPSHOT.jar" /> 
             <path refid="application"/>
           </classpath>
 	</javac>
@@ -83,7 +83,7 @@
 <target name="test_fast" >
       <junit printsummary="yes" haltonfailure="true" showoutput="true" >
 	<classpath>
-	<pathelement location="surface_src/java_src/libs/junit/target/junit-4.12-SNAPSHOT.jar" /> 
+	<pathelement location="real_time/surface_src/java_src/libs/junit/target/junit-4.12-SNAPSHOT.jar" /> 
           <path refid="application"/>
         </classpath>
         
