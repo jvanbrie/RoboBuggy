@@ -1,7 +1,7 @@
 language: java
 install: ant
 jdk:
-	- oraclejdk8
+- oraclejdk8
 notifications:
 #Email notifications are disabled to not annoy anybody 
 email: false
