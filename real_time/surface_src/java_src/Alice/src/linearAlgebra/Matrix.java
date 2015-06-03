@@ -19,13 +19,34 @@ public class Matrix<TYPE extends Number> {
 	}
 	
 	/**
-	 * TODO implement
 	 * TODO document
 	 * @return
 	 */
-	public Matrix<TYPE> mult(){
-		//TODO
+	public Matrix<TYPE> mult(Matrix<TYPE> otherMatrix){
+		Matrix<TYPE> result = this.clone();
+		for(int x = 0;x<getNumCols();x++)
+		{
+			for(int y = 0;y<getNumRows();y++)
+			{
+				result.set(getRow(x).mult(otherMatrix.getCol(y)),x,y);
+			}
+		}
+				
 		return null;
+	}
+	
+	public void set(TYPE value, int row,int col){
+		//TODO 
+	}
+	
+	public Vector<TYPE> getRow(int row){
+		return null;
+		//TODO
+	}
+	
+	public Vector<TYPE> getCol(int col){
+		return null;
+		//TODO
 	}
 	
 	/**
@@ -43,19 +64,8 @@ public class Matrix<TYPE extends Number> {
 	 * @return
 	 */
 	public Matrix<TYPE> add(Matrix<TYPE> b){
-		assert(this.data.getDimensions() == b.data.getDimensions()); //TODO check this
 		Matrix<TYPE> result =this.clone();
-		int numCells = 1;
-		int[] dimensions = this.data.getDimensions();
-		for(int dim = 0;dim<dimensions.length;dim++){
-			numCells *= dimensions[dim];
-		}
-		
-		for(int i = 0;i<numCells;i++){
-				TYPE newValue = (TYPE) this.data.getIndex(i).add(b.data.getIndex(i));
-				result.data.setIndex(i,newValue);
-			}
-		
+		result.data = this.data.add(b.data);
 		return result;
 	}
 	
@@ -63,8 +73,18 @@ public class Matrix<TYPE extends Number> {
 	 * TODO document
 	 * @return
 	 */
-	public int[] dimensions(){
-		return data.getDimensions();
+	public int getNumRows(){
+		int[] dim = data.getDimensions();
+		return dim[0];
+	}
+	
+	/**
+	 * TODO document
+	 * @return
+	 */
+	public int getNumCols(){
+		int[] dim = data.getDimensions();
+		return dim[1];
 	}
 	
 	/**

@@ -26,4 +26,10 @@ public class Integer_Number implements Number{
 		return null;
 	}
 
+	@Override
+	public Number zero() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

@@ -27,4 +27,9 @@ public class Vector<TYPE  extends Number> extends Matrix<TYPE> {
 		//TODO
 		return null;
 	}
+	
+	public TYPE mult(Vector<TYPE> b){
+		//TODO
+		return null;
+	}
 }

@@ -221,25 +221,47 @@ public UNITS getUnits(){
 }
 
 @Override
+/**
+ * TODO implement
+ * TODO document 
+ */
 public Number add(Number otherNumber) {
 	// TODO Auto-generated method stub
 	return null;
 }
 
 @Override
+/**
+ * TODO implement
+ * TODO document
+ */
 public Number sub(Number otherNumber) {
 	// TODO Auto-generated method stub
 	return null;
 }
 
 @Override
+/**
+ * TODO implement
+ * TODO document 
+ */
 public Number mult(Number otherNumber) {
 	// TODO Auto-generated method stub
 	return null;
 }
 
 @Override
+/**
+ * TODO implement
+ * TODO document
+ */
 public Number div(Number othterNumber) {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+@Override
+public Number zero() {
 	// TODO Auto-generated method stub
 	return null;
 }

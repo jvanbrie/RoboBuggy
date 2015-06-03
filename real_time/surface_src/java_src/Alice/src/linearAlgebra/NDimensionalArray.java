@@ -9,7 +9,7 @@ import java.lang.reflect.Array;
  * @author Trevor Decker
  *
  */
-public class NDimensionalArray<CELL_TYPE> {
+public class NDimensionalArray<CELL_TYPE  extends Number> {
 	private int[] dimensions;
 	private CELL_TYPE[] array;
 	private int[] offsetMultipliers;
@@ -87,6 +87,37 @@ public class NDimensionalArray<CELL_TYPE> {
 			offset += offsetMultipliers[i]*indices[i];
 		}
 		return offset;
+	}
+	
+	/**
+	 * TODO document 
+	 * @return
+	 */
+	public NDimensionalArray<CELL_TYPE> add(NDimensionalArray<CELL_TYPE> b){
+		assert(this.getDimensions() == b.getDimensions()); //TODO check this
+		NDimensionalArray<CELL_TYPE> result =this.clone();
+		int numCells = 1;
+		int[] dimensions = this.getDimensions();
+		for(int dim = 0;dim<dimensions.length;dim++){
+			numCells *= dimensions[dim];
+		}
+		
+		for(int i = 0;i<numCells;i++){
+			@SuppressWarnings("unchecked")
+			CELL_TYPE newValue = (CELL_TYPE) this.getIndex(i).add(b.getIndex(i));
+				result.setIndex(i,newValue);
+			}
+		
+		return result;
+	}
+	
+	/**
+	 * TODO document 
+	 * TODO implement 
+	 */
+	public NDimensionalArray<CELL_TYPE> clone(){
+		//TODO
+		return null;
 	}
 	
 }
