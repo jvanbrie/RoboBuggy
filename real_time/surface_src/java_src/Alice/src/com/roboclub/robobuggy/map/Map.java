@@ -1,50 +1,96 @@
 package com.roboclub.robobuggy.map;
 
+import java.io.File;
 import java.util.ArrayList;
 
-public class Map {
-	// TODO
+import com.roboclub.robobuggy.localization.FrameOfRefrence;
+
+/***
+ * 
+ * @author Trevor Decker
+ *	TODO
+ */
+public abstract class Map {
+
+	/***
+	 * evaluates to the number of elements currently on the map 
+	 * 
+	 */
+	public abstract int getNumberOfElements();
 	
-	public MapObject getCLosestObject(Point aPoint){
-		//TODO
-		return null;
-	}
+	/**
+	 * TODO document 
+	 * @return
+	 */
+	FrameOfRefrence refrenceFrame;
 	
-	public ArrayList<MapObject> getClosestNObjects(Point aPoint){
-		//TODO
-		return null;
-	}
+	/***
+	 * TODO document
+	 * @param aPoint
+	 * @return
+	 */
+	public abstract MapObject getClosestObject(Point aPoint);
+	
+	/***
+	 * TODO document
+	 * @param aPoint
+	 * @return
+	 */
+	public abstract MapObject[] getClosestNObjects(Point aPoint,int numPoints);
 	
 	// @REQUIER num(Points) > 2
-	public ArrayList<MapObject> getPointsInRange(ArrayList<Point> Points){
-		//TODO
-		return null;
-	}
+	/*** 
+	 * TODO document
+	 * @param Points
+	 * @return
+	 */
+	public abstract ArrayList<MapObject> getPointsInRange(ArrayList<Point> Points);
 	
 	//@REQUIER num(Points) >2
-	public ArrayList<MapObject> getPointsOutSideRange(ArrayList<Point> Points){
-		//TODO
-		return null;
-	}
+	/***
+	 * TODO document
+	 * @param Points
+	 * @return
+	 */
+	public abstract ArrayList<MapObject> getPointsOutSideRange(ArrayList<Point> Points);
 	
 	//@REQUIER num(Points) > 2
-	public ArrayList<MapObject> getPointsOnRange(ArrayList<Point> Points){
-		//TODO
-		return null;
-	}
-	
-	public boolean isObjectOnMap(MapObject anObject){
-		//TODO
-		return false;
-	}
+	/***
+	 * TODO documnet
+	 * @param Points
+	 * @return
+	 */
+	public abstract ArrayList<MapObject> getPointsOnRange(ArrayList<Point> Points);
+	/***
+	 * TODO document
+	 * @param anObject
+	 * @return
+	 */
+	public abstract boolean isObjectOnMap(MapObject anObject);
 	
 	//Add Objects 
-	public void AddObject(MapObject anObject){
-		//TODO
-	}
+	/***
+	 * TODO document
+	 * @param anObject
+	 */
+	public abstract void AddObject(MapObject anObject);
+	/***
+	 * TODO document
+	 * @param anObject
+	 */
+	public abstract void removeObject(MapObject anObject);
 	
-	public void removeObject(MapObject anObject){
-		//TODO
-	}
+	/***
+	 * TODO document 
+	 * @param mapData
+	 */
+	public abstract void loadMap(File mapData);
+	
+	/***
+	 * TODO document
+	 * @param mapData
+	 */
+	public abstract void saveMap(File mapData);
+	
 	
 }

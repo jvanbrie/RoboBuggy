@@ -17,11 +17,19 @@ public class Publisher {
 	private String topic_name;
 	private MessageServer mserver;
 
+	/**
+	 * TODO document
+	 * @param topic
+	 */
 	public Publisher(String topic) {
 		topic_name = topic;
 		mserver = MessageServer.getMaster();
 	}
 
+	/**
+	 * TODO document 
+	 * @param m
+	 */
 	public void publish(Message m) {
 		mserver.sendMessage(topic_name, m);
 	}

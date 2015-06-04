@@ -1,13 +1,22 @@
 package com.roboclub.robobuggy.ros;
 
+/**
+ * TODO document 
+ * @author Matt Sebek
+ *
+ */
 public enum SensorChannel {
 	GPS("gps"),
 	IMU("imu"),
     RC("rc_angle"),
-	DRIVE_CTRL("steering"),
+    STEERING("steering"),
+    BRAKE("brake"),
+	DRIVE_CTRL("drive_ctrl"),
 	VISION("vision"),
 	ENCODER("encoder"),
-	GUI_LOGGING_BUTTON("logging_button");
+	GUI_LOGGING_BUTTON("logging_button"),
+	GUI_CONSOLE_TEXT("console_text"),
+	AUTO("auto");
 	
 	private String rstPath;
 	private String msgPath;
