@@ -4,8 +4,6 @@
   building javadocs 
   packaging a jar 
 -->
-
-
 <project name="HelloWorld" basedir="." default="main">
 
     <property name="src.dir"     value="real_time/surface_src/java_src/Alice/src/org/roboclub/robobuggy/testing"/> 
