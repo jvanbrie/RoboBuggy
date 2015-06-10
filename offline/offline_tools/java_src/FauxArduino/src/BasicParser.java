@@ -55,11 +55,22 @@ public class BasicParser implements FauxParser {
 		
 	public static Date makeDate(String string) {
 		try {
-			DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
+			DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.ENGLISH);
 			Date date = format.parse(string);
 			return date;
 		} catch (ParseException e) {
 			System.out.println("Unable to parse date");
+			return null;
+		}
+	}
+	
+	public static String makeStringFromDate(Date date) {
+		try {
+			DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.ENGLISH);
+			String ret = formatter.format(date);
+			return ret;
+		} catch (Exception e) {
+			System.out.println("Unable to convert date to string properly");
 			return null;
 		}
 	}

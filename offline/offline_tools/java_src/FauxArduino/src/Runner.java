@@ -13,9 +13,10 @@ public class Runner {
 		EncoderParser ep = new EncoderParser();
 		GPSParser gpsp = new GPSParser();
 		LoggingStartParser lsp = new LoggingStartParser();
+		BrakeParser bp = new BrakeParser();
 		
 		try {
-			System.setOut(new PrintStream(new FileOutputStream("test10.txt")));
+			System.setOut(new PrintStream(new FileOutputStream("test21.txt")));
 		} catch (FileNotFoundException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -24,7 +25,8 @@ public class Runner {
 		System.out.println("Starting to read from file!");
 
 		//TODO: Make this take in a file argument instead of being hardcoded
-		try(BufferedReader br = new BufferedReader(new FileReader("logs\\2015-03-21-07-12-46\\sensors.txt"))) {
+		//C:\Users\Vasu\Documents\RoboClub\RoboBuggy\offline\offline_tools\java_src\FauxArduino\logs\2015-04-12-06-22-37
+		try(BufferedReader br = new BufferedReader(new FileReader("logs\\2015-04-12-06-22-37\\sensors.txt"))) {
 			String line = br.readLine();
 			
 			long offset = getOffset(line);
@@ -38,7 +40,10 @@ public class Runner {
 				
 				int endIndex = line.indexOf(',');
 				if (endIndex == -1) {
-					throw new Exception("Malformed data!");
+					//Skipping line!
+					line = br.readLine();
+					continue;
+//					throw new Exception("Malformed data!");
 				} else {
 					String sensor = line.substring(0, endIndex);
 					switch (sensor.toLowerCase()) {
@@ -57,6 +62,9 @@ public class Runner {
 					case "sensors/logging_button":
 						lsp.qAdd(line);
 						break;
+					case "sensors/brake":
+						bp.qAdd(line);
+						break;
 					default:
 						System.out.println("Unknown sensor type: " + sensor.toLowerCase());
 					}
@@ -64,7 +72,8 @@ public class Runner {
 				}
 			}
 		} catch (Exception e) {
-			System.out.println("Looks like there was a problem somewhere.");
+			System.out.println("Looks like there was a problem somewhere in reading the file?.");
+			e.printStackTrace();
 		}
 	}
 	
