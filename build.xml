@@ -4,11 +4,9 @@
   building javadocs 
   packaging a jar 
 -->
-
-
 <project name="HelloWorld" basedir="." default="main">
 
-    <property name="src.dir"     value="real_time/surface_src/java_src/Alice/src/com/roboclub/robobuggy/testing"/> 
+    <property name="src.dir"     value="real_time/surface_src/java_src/Alice/src/org/roboclub/robobuggy/testing"/> 
 
     <property name="build.dir"   value="build"/>
     <property name="classes.dir" value="${build.dir}/classes"/>
@@ -50,17 +48,17 @@
       <target name="compile" ><!-- depends="mvn_windows, mvn_unix" > -->
         <mkdir dir="${classes.dir}"/>
         <javac  destdir="${classes.dir}" >
-	  <src path="real_time/surface_src/java_src/Alice/src/com/roboclub/robobuggy/actuators"/>
-	  <src path="real_time/surface_src/java_src/Alice/src/com/roboclub/robobuggy/localization"/>
-	  <src path="real_time/surface_src/java_src/Alice/src/com/roboclub/robobuggy/logging"/>
-	  <src path="real_time/surface_src/java_src/Alice/src/com/roboclub/robobuggy/main"/>
-	  <src path="real_time/surface_src/java_src/Alice/src/com/roboclub/robobuggy/map"/>
-	  <src path="real_time/surface_src/java_src/Alice/src/com/roboclub/robobuggy/messages"/>
-	  <src path="real_time/surface_src/java_src/Alice/src/com/roboclub/robobuggy/ros"/>
-	  <src path="real_time/surface_src/java_src/Alice/src/com/roboclub/robobuggy/sensors"/>
-	  <src path="real_time/surface_src/java_src/Alice/src/com/roboclub/robobuggy/serial"/>
-	  <src path="real_time/surface_src/java_src/Alice/src/com/roboclub/robobuggy/testing"/>
-	  <src path="real_time/surface_src/java_src/Alice/src/com/roboclub/robobuggy/ui"/>
+	  <src path="real_time/surface_src/java_src/Alice/src/org/roboclub/robobuggy/actuators"/>
+	  <src path="real_time/surface_src/java_src/Alice/src/org/roboclub/robobuggy/localization"/>
+	  <src path="real_time/surface_src/java_src/Alice/src/org/roboclub/robobuggy/logging"/>
+	  <src path="real_time/surface_src/java_src/Alice/src/org/roboclub/robobuggy/main"/>
+	  <src path="real_time/surface_src/java_src/Alice/src/org/roboclub/robobuggy/map"/>
+	  <src path="real_time/surface_src/java_src/Alice/src/org/roboclub/robobuggy/messages"/>
+	  <src path="real_time/surface_src/java_src/Alice/src/org/roboclub/robobuggy/ros"/>
+	  <src path="real_time/surface_src/java_src/Alice/src/org/roboclub/robobuggy/sensors"/>
+	  <src path="real_time/surface_src/java_src/Alice/src/org/roboclub/robobuggy/serial"/>
+	  <src path="real_time/surface_src/java_src/Alice/src/org/roboclub/robobuggy/testing"/>
+	  <src path="real_time/surface_src/java_src/Alice/src/org/roboclub/robobuggy/ui"/>
 	  <classpath>
 	    <pathelement location="real_time/surface_src/java_src/libs/junit/target/junit-4.12-SNAPSHOT.jar" /> 
             <path refid="application"/>
