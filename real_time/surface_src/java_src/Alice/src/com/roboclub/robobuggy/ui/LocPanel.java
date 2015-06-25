@@ -10,11 +10,11 @@ import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
-import com.roboclub.robobuggy.messages.GpsMeasurement;
-import com.roboclub.robobuggy.ros.Message;
-import com.roboclub.robobuggy.ros.MessageListener;
-import com.roboclub.robobuggy.ros.SensorChannel;
-import com.roboclub.robobuggy.ros.Subscriber;
+import org.roboclub.robobuggy.messages.GpsMeasurement;
+import org.roboclub.robobuggy.ros.Message;
+import org.roboclub.robobuggy.ros.MessageListener;
+import org.roboclub.robobuggy.ros.SensorChannel;
+import org.roboclub.robobuggy.ros.Subscriber;
 
 public class LocPanel extends JPanel {
 	private class LocTuple {
