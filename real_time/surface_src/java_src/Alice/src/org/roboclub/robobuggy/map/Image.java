@@ -8,6 +8,14 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+/**
+ * TODO document
+ * TODO 
+ * 
+ * @author Trevor Decker
+ * @version 0.0
+ *
+ */
 public class Image extends MapObject{
 	BufferedImage img = null;
 

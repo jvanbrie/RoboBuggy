@@ -5,6 +5,12 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * 
+ * @author Matt Sebek
+ * @version 0.0
+ *
+ */
 public abstract class BaseMessage {
 	public static DateFormat formatter = new SimpleDateFormat(
 			"yyyy-MM-dd HH:mm:ss.SSS");

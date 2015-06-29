@@ -1,5 +1,11 @@
 package org.roboclub.robobuggy.testing;
  
+/**
+ * 
+ * @author Trevor Decker 
+ * @version 0.0
+ *
+ */
 public class HelloWorldTest extends junit.framework.TestCase {
 
 	

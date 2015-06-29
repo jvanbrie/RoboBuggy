@@ -4,7 +4,10 @@ package org.roboclub.robobuggy.actuators;
  * 
  * @author Trevor Decker
  * 
- * @version 0.5
+ * @version 0.0
+ * 
+ * TODO document 
+ * TODO implment 
  * 
  *          CHANGELOG: NONE
  * 

@@ -5,9 +5,13 @@ import java.awt.Graphics;
 
 import javax.swing.JComponent;
 
+import org.roboclub.robobuggy.main.LogicException;
+import org.roboclub.robobuggy.main.Order;
+
 /***
  * 
  * @author Trevor Decker
+ * @version 0.0
  *
  */
 public abstract class  MapObject extends  JComponent{
@@ -23,14 +27,15 @@ public abstract class  MapObject extends  JComponent{
 	 * TODO document
 	 */
 	abstract boolean Equals(Object obj);
-	abstract boolean isGreater(Object obj);
-	abstract boolean isLess(Object obj);
+	abstract boolean isGreater(Object obj) throws LogicException;
+	abstract boolean isLess(Object obj) throws LogicException;
 	/***
 	 * TODO document 
 	 * @param obj
 	 * @return
+	 * @throws LogicException 
 	 */
-	Order compare(Object obj){
+	Order compare(Object obj) throws LogicException{
 		//if the two objects are of diffrent classes then it does not make sense to compare them 
 		if(obj.getClass() != this.getClass()){
 			return Order.NA;

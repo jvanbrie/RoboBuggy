@@ -10,6 +10,13 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+/**
+ * 
+ * @author Trevor Decker
+ * @author Kevin B
+ * @version 0.0
+ *
+ */
 public class AngleGraph extends JPanel {
 	private static final long serialVersionUID = 4524475337756493384L;
 

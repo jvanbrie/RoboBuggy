@@ -15,8 +15,10 @@ import javax.swing.JLabel;
 
 
 /** 
+ * @author Trevor Decker 
+ * @version 0.0
+ * 
  * library for visulizing the map
- * Author: Trevor Decker
  * 
  *  Class for creating a JPanel with a map displayed on it
  */

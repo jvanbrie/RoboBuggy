@@ -19,12 +19,19 @@ import org.roboclub.robobuggy.ros.Subscriber;
  * 
  * @author Joe Doyle
  * @author Trevor Decker
+ * @version 0.0
  */
 public final class SensorLogger {
 	private final PrintStream _log;
 	private final Queue<String> _logQueue;
 	private final ArrayList<Subscriber> subscribers;
+	SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
 
+	/**
+	 * TODO document
+	 * @param stream
+	 * @return
+	 */
 	private static final Queue<String> startLoggingThread(PrintStream stream) {
 		final LinkedBlockingQueue<String> ret = new LinkedBlockingQueue<>();
 		// TODO
@@ -54,8 +61,13 @@ public final class SensorLogger {
 		return ret;
 	};
 
-	SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
 
+	/**
+	 * TODO document 
+	 * @param outputDir
+	 * @param startTime
+	 * @throws Exception
+	 */
 	public SensorLogger(File outputDir, Date startTime) throws Exception {
 		if (outputDir == null) {
 			throw new Exception("Output Directory was null!");

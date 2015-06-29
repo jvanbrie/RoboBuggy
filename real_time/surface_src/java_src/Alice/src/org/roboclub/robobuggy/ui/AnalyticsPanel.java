@@ -6,6 +6,13 @@ import java.awt.GridBagLayout;
 
 import javax.swing.JPanel;
 
+/**
+ *
+ * @author Trevor Decker
+ * @author Kevein B
+ * @version 0.0
+ *
+ */
 public class AnalyticsPanel extends JPanel {
 	private static final long serialVersionUID = 7017667286491619492L;
 

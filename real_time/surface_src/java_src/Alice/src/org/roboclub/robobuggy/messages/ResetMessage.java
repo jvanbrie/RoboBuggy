@@ -4,6 +4,11 @@ import java.util.Date;
 
 import org.roboclub.robobuggy.ros.Message;
 
+/**
+ * @author Matt Sebek
+ * @version 0.0
+ *
+ */
 public class ResetMessage implements Message {
 	private Date timestamp;
 	

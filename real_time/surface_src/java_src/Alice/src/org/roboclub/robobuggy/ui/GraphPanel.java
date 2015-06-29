@@ -10,6 +10,12 @@ import org.roboclub.robobuggy.ros.MessageListener;
 import org.roboclub.robobuggy.ros.SensorChannel;
 import org.roboclub.robobuggy.ros.Subscriber;
 
+/**
+ * @author Kevin B
+ * @author Trevor Decker
+ * @version 0.0
+ *
+ */
 public class GraphPanel extends JPanel {
 	private static final long serialVersionUID = -5453262887347328140L;
 

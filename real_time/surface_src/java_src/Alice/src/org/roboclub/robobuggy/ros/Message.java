@@ -3,7 +3,7 @@ package org.roboclub.robobuggy.ros;
 /**
  * @author Matt Sebek
  *
- * @version 0.5
+ * @version 0.0
  * 
  *          CHANGELOG: NONE
  * 

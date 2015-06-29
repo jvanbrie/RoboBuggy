@@ -3,6 +3,12 @@ package org.roboclub.robobuggy.messages;
 import java.util.Date;
 import org.roboclub.robobuggy.ros.Message;
 
+/**
+ * 
+ * @author Matt Sebek
+ * @version 0.0
+ *
+ */
 public class SteeringMeasurement extends BaseMessage implements Message {
 	public int angle;
 	private Date timestamp;

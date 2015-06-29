@@ -24,7 +24,8 @@ import org.roboclub.robobuggy.ros.Subscriber;
 import org.roboclub.robobuggy.ui.Gui;
 
 /**
- * 
+ * @author ??
+ * @version 0.0
  * TODO document
  * manages all of the saftey systems of the buggy 
  *
@@ -38,6 +39,10 @@ public class Robot implements RosMaster {
 	private static Publisher steerPub;
 	private static Publisher brakePub;
 	
+	/**
+	 * TODO document
+	 * @return
+	 */
 	public static Robot getInstance() {
 		if (instance == null) {
 			instance = new Robot();
@@ -45,6 +50,9 @@ public class Robot implements RosMaster {
 		return instance;
 	}
 
+	/**
+	 * TODO document 
+	 */
 	private Robot() {
 		sensorList = new ArrayList<>();
 		kf = new KalmanFilter();
@@ -143,15 +151,25 @@ public class Robot implements RosMaster {
 		System.out.println();
 	}
 
+	/**
+	 * TODO document 
+	 * @return
+	 */
 	public KalmanFilter getKalmanFilter(){
 		return kf; 
 	}
 	
+	/**
+	 * TODO document 
+	 * @return
+	 */
 	public static ArrayList<Node> getSensorList(){
 		return sensorList;
 	}
 	
-	// shuts down the robot and all of its child sensors
+	/**
+	 * shuts down the robot and all of its child sensors
+	 */
 	public static void ShutDown() {
 		if (sensorList != null && !sensorList.isEmpty()) {
 			for (Node sensor : sensorList) {
@@ -168,24 +186,46 @@ public class Robot implements RosMaster {
 		return null;
 	}*/
 	
-	/* Methods for Updating Current State */
+	/**
+	 * Methods for Updating Current State 
+	 * TODO implement 
+	 * @param m
+	 **/
 	private void updateGps(GpsMeasurement m) {
 		// TODO Update planner
 	}
 
+	/**
+	 * TODO document
+	 * TODO implement
+	 * @param m
+	 */
 	private void updateImu(ImuMeasurement m) {
 		// TODO Update planner
 	}
 
+	/**
+	 * TODO document
+	 * TODO implement
+	 * @param m
+	 */
 	private void updateSteering(SteeringMeasurement m) {
 		// TODO update planner
 	}
 
+	/**
+	 * TODO document 
+	 * TODO implement
+	 * @param m
+	 */
 	private void updateEnc(EncoderMeasurement m) {
 		// TODO update planner
 	}
 	
-	/* Methods for Autonomous Control */
+	/**
+	 * TODO document
+	 *  Methods for Autonomous Control 
+	 */
 	public void writeAngle(int angle) {
 		if (autonomous) {
 			steerPub.publish(new WheelAngleCommand(angle));
@@ -194,6 +234,11 @@ public class Robot implements RosMaster {
 		}
 	}
 	
+	/**
+	 * TODO document 
+	 * TODO implment
+	 * @param brakesDown
+	 */
 	public void writeBrakes(boolean brakesDown) {
 		if (autonomous) {
 			// TODO new pub/sub for command messages
@@ -203,16 +248,29 @@ public class Robot implements RosMaster {
 		}
 	}
 	
+	/**
+	 * TODO document 
+	 * TODO implment
+	 * @return
+	 */
 	public boolean get_autonomous() {
 		return autonomous;
 	}
 	
 	@Override
+	/**
+	 * TODO document 
+	 * TODO implement
+	 */
 	public List<Node> getAllSensors() {
 		return sensorList;
 	}
 
 	@Override
+	/**
+	 * TODO document
+	 * TODO implement 
+	 */
 	public boolean shutDown() {
 		// TODO Auto-generated method stub
 		return false;

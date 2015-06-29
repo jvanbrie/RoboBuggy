@@ -1,15 +1,6 @@
 package org.roboclub.robobuggy.nodes;
 
-/**
- * 
- * @author Kevin Brennan 
- *
- * @version 0.5
- * 
- * CHANGELOG: NONE
- * 
- * DESCRIPTION: TODO
- */
+
 
 import java.awt.BorderLayout;
 import java.awt.Graphics;
@@ -32,6 +23,16 @@ import org.roboclub.robobuggy.main.config;
 import org.roboclub.robobuggy.ros.SensorChannel;
 import org.roboclub.robobuggy.sensors.SensorState;
 
+/**
+ * 
+ * @author Kevin Brennan 
+ *
+ * @version 0.0
+ * 
+ * CHANGELOG: NONE
+ * 
+ * DESCRIPTION: TODO
+ */
 public class VisionNode {
 	private boolean connected;
 	private SensorState state;

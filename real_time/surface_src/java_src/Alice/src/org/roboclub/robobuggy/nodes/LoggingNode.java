@@ -15,7 +15,15 @@ import org.roboclub.robobuggy.ros.Publisher;
 import org.roboclub.robobuggy.ros.SensorChannel;
 import org.roboclub.robobuggy.ros.Subscriber;
 
-// When logging begins, a new folder is created, and then logging begins to that folder
+/**
+ * 
+ * @author Matt Sebek
+ * @verion 0.0
+ * 
+ * 
+ *  When logging begins, a new folder is created, and then logging begins to that folder
+ *
+ */
 public class LoggingNode implements Node {
 
 	String directoryPath;

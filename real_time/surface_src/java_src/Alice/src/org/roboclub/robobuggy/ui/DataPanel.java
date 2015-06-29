@@ -21,7 +21,7 @@ import org.roboclub.robobuggy.ros.Subscriber;
  * @author Trevor Decker
  * @author Kevin Brennan 
  *
- * @version 0.5
+ * @version 0.0
  * 
  * CHANGELOG: NONE
  * 

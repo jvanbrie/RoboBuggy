@@ -8,9 +8,13 @@ import com.orsoncharts.util.json.JSONObject;
 import com.orsoncharts.util.json.parser.JSONParser;
 import com.orsoncharts.util.json.parser.ParseException;
 
-// where all system configuration values should be placed
-// add jason parser for config
-
+/**
+ * @author ? 
+ * @version 0.0 
+ * 
+ *  where all system configuration values should be placed
+ *TODO add jason parser for config
+ */
 public class config {
 	// port index of the front camera
 	public static int FRONT_CAM_INDEX = 2;
@@ -70,6 +74,10 @@ public class config {
 	// internal reference of this config so that it can fit the factory pattern
 	private static config instance;
 
+	/**
+	 * TODO document 
+	 * @return
+	 */
 	public static config getInstance() {
 		if (instance == null) {
 			instance = new config();
@@ -82,6 +90,10 @@ public class config {
 	}
 
 	@SuppressWarnings("unchecked")
+	/**
+	 * TODO document
+	 * @param filename
+	 */
 	public static void Set(String filename) {
 		System.out.println("Setting configuration parameters from file: "
 				+ filename);

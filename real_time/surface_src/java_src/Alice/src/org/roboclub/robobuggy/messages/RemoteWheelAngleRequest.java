@@ -4,7 +4,12 @@ import java.util.Date;
 
 import org.roboclub.robobuggy.ros.Message;
 
-// Represents raw measurement from the IMU
+/**
+ * @author Matt Sebek
+ * @version 0.0
+ * Represents raw measurement from the IMU
+ *
+ */
 public class RemoteWheelAngleRequest implements Message {
 	public static final String version_id = "rc_wheel_angleV0.1";
 

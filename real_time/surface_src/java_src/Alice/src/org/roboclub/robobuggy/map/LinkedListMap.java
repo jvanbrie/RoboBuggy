@@ -6,6 +6,8 @@ import java.util.LinkedList;
 /***
  * 
  * @author Trevor Decker
+ * @version 0.0
+ * 
  * an implemention of a map that uses a linked list store the map nodes 
  */
 //TODO change to a sorted linked list 

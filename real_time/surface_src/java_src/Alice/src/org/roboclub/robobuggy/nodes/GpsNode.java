@@ -13,6 +13,7 @@ import org.roboclub.robobuggy.serial.SerialNode;
 /**
  * @author Matt Sebek 
  * @author Kevin Brennan
+ * @version 0.0
  *
  */
 

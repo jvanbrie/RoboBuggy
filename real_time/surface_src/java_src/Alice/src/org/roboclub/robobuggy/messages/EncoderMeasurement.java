@@ -4,7 +4,7 @@ import java.util.Date;
 import org.roboclub.robobuggy.ros.Message;
 
 /**
- * @author ?
+ * @author Matt Sebek
  *
  * @version 0.5
  * 

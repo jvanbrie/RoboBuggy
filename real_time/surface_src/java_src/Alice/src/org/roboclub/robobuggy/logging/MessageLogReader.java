@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
  *
  * @author Joe Doyle
  * @author Matt Sebek (sebek.matt@gmail.com)
+ * @version 0.0
  */
 public final class MessageLogReader {
 	// Used for directory names

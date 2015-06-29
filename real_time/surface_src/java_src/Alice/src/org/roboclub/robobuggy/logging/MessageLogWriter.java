@@ -18,6 +18,7 @@ import org.roboclub.robobuggy.ros.Message;
  *
  * @author Joe Doyle
  * @author Matt Sebek (sebek.matt@gmail.com)
+ * @version 0.0
  */
 public final class MessageLogWriter {
 	private PrintStream _csv_outstream = null;
@@ -26,7 +27,11 @@ public final class MessageLogWriter {
 	// Used for directory names
 	private SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
 
-	// returns the name of the logger.
+	/** 
+	 * returns the name of the logger.
+	 * @param startTime
+	 * @return
+	 */
 	private String getFileName(Date startTime) {
 		String outputFileName = startTime.toString();
 		outputFileName = outputFileName.replaceAll(" ", "");
@@ -34,16 +39,33 @@ public final class MessageLogWriter {
 		return outputFileName;
 	}
 
+	/**
+	 * TODO document
+	 * @param outputDir
+	 * @param startTime
+	 */
 	public MessageLogWriter(File outputDir, Date startTime) {
 		String filename = getFileName(startTime);
 		init(outputDir, filename, startTime);
 	}
 
+	/**
+	 * TODO document
+	 * @param outputDir
+	 * @param logFileName
+	 * @param startTime
+	 */
 	public MessageLogWriter(File outputDir, String logFileName, Date startTime) {
 		init(outputDir, logFileName, startTime);
 	}
 
-	// TODO think about error cases more
+	/**
+	 * TODO document
+	 *  TODO think about error cases more
+	 * @param outputDir
+	 * @param outputFilename
+	 * @param startTime
+	 */
 	private void init(File outputDir, String outputFilename, Date startTime) {
 		// Create output directory
 		if (outputDir == null) {
@@ -79,15 +101,25 @@ public final class MessageLogWriter {
 	 * new String[keys.size()]; keys.toArray(_keys); _csvQueue.offer(_keys); }
 	 */
 
-	// Runnable that writes to a CSV file-stream continuously
+	/**
+	 *  Runnable that writes to a CSV file-stream continuously
+	 *  TODO break out to a separate class
+	 */
 	class csv_writer implements Runnable {
 		PrintStream ps;
 
+		/**
+		 * TODO document 
+		 * @param stream
+		 */
 		public csv_writer(PrintStream stream) {
 			ps = stream;
 		}
 
 		@Override
+		/**
+		 * TODO document 
+		 */
 		public void run() {
 			while (true) {
 				try {
@@ -102,6 +134,10 @@ public final class MessageLogWriter {
 		}
 	}
 
+	/**
+	 * TODO document 
+	 * @param m
+	 */
 	public void log(Message m) {
 		_line_queue.offer(m.toLogString());
 	}

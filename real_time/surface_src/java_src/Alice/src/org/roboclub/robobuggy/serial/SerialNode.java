@@ -9,7 +9,15 @@ import java.io.OutputStream;
 
 import org.roboclub.robobuggy.ros.Node;
 
-// Properly initializes the serial things
+ 
+/**
+ * 
+ * @author TOOD
+ * @version 0.0
+ * Properly initializes the serial things
+ * TODO document 
+ *
+ */
 public abstract class SerialNode implements Node {
 	
 	// Initialize first

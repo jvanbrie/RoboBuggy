@@ -7,9 +7,12 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.EmptyStackException;
 
+import org.roboclub.robobuggy.main.LogicException;
+
 /**
  * TODO
  * @author Trevor Decker
+ * @version 0.0
  *
  */
 public class Polygon extends MapObject {

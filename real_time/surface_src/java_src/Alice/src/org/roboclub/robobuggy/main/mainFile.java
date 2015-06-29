@@ -18,11 +18,23 @@ import org.roboclub.robobuggy.ros.SensorChannel;
 import org.roboclub.robobuggy.ros.Subscriber;
 import org.roboclub.robobuggy.ui.Gui;
 
+/**
+ * TODO document
+ * @author Trevor Decker
+ * @author Kevin B
+ * @author Matt Sebeck 
+ * @version 0.0
+ *
+ */
 public class mainFile {
 	static Robot buggy;
 
 	static int num = 0;
 	
+	/**
+	 * TODO document
+	 * @param args
+	 */
 	public static void main(String args[]) {
 		//ArrayList<Integer> cameras = new ArrayList<Integer>();  //TODO have this set the cameras to use 
 		config.getInstance();//must be run at least once
@@ -58,7 +70,13 @@ public class mainFile {
 		}	
 	}
 	
-	// Open a serial port
+	/**
+	 * TODO document 
+	 *  Open a serial port
+	 * @param portName
+	 * @return
+	 * @throws Exception
+	 */
 	private static SerialPort connect(String portName) throws Exception
     {
         CommPortIdentifier portIdentifier = CommPortIdentifier.getPortIdentifier(portName);
@@ -85,6 +103,11 @@ public class mainFile {
         }
 		return null;
     }	
+	
+	/**
+	 * TODO documnet 
+	 * @throws Exception
+	 */
 	public static void bringup_sim() throws Exception {
 		ArrayList<Node> sensorList = new ArrayList<Node>();
 

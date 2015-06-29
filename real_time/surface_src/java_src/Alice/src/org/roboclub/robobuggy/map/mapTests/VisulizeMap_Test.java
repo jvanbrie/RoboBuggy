@@ -22,7 +22,6 @@ public class VisulizeMap_Test {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		System.out.println("Starting VisulizeMap Tests");
 		LinkedListMap thisMap = new LinkedListMap();
 		

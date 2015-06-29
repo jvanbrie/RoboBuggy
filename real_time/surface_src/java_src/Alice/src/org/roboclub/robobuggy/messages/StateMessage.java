@@ -5,6 +5,11 @@ import java.util.Date;
 import org.roboclub.robobuggy.ros.Message;
 import org.roboclub.robobuggy.sensors.SensorState;
 
+/**
+ * @author Matt Sebek
+ * @version 0.0
+ *
+ */
 public class StateMessage implements Message {
 	private Date timestamp;
 	private SensorState state;

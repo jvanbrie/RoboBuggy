@@ -17,6 +17,7 @@ import org.roboclub.robobuggy.main.config;
  * 
  * @author Joe Doyle 
  * @author Trevor Decker
+ * @version 0.0
  */
 public final class RobotLogger {
 	public  static Logger message;
@@ -25,6 +26,10 @@ public final class RobotLogger {
 	public static File logDir;  //TODO describe the diffrence between LogDir and  logFolder 
 	public static File logFolder;
 
+	/**
+	 * TODO document 
+	 * @return
+	 */
 	public static RobotLogger getInstance() {
 		if (instance == null) {
 			logDir = new File(config.LOG_FILE_LOCATION);
@@ -45,6 +50,9 @@ public final class RobotLogger {
 
 	}
 
+	/**
+	 * TODO document
+	 */
 	public static void CloseLog() {
 		if (instance != null) {
 			Handler[] handlers = instance.message.getHandlers();
@@ -56,13 +64,18 @@ public final class RobotLogger {
 		}
 	}
 
-	// closes the current log and creates a new one
+	/**
+	 *  closes the current log and creates a new one
+	 */
 	public void startNewLog() {
 		// TODO send signal to vision to start a new log also
 		CloseLog();
 		CreateLog();
 	}
 
+	/**
+	 * TODO document 
+	 */
 	public static void CreateLog() {
 		getInstance();
 
@@ -100,6 +113,11 @@ public final class RobotLogger {
 		}
 	}
 
+	/**
+	 * TODO document 
+	 * @param logdir
+	 * @throws Exception
+	 */
 	private RobotLogger(File logdir) throws Exception {
 		this.message = Logger.getLogger("RoboBuggy");
 		this.sensor = null;

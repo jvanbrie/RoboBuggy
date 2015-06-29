@@ -11,29 +11,26 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.JComponent;
 
-import org.roboclub.robobuggy.linearAlgebra.UNITS;
+import org.roboclub.robobuggy.linearAlgebra.ANGULAR_UNITS;
+import org.roboclub.robobuggy.linearAlgebra.Angle;
+import org.roboclub.robobuggy.linearAlgebra.DISTINCE_UNITS;
+import org.roboclub.robobuggy.linearAlgebra.Distince;
+import org.roboclub.robobuggy.main.LogicException;
 
-//TODO clean up point
-//TODO add color 
-//TODO clean up linkedList map
-//TODO clean up visulizeMap
-//TODO finish writeing test cases
-//TODO fix travis ci
-//TODO implment all of the other mapObject types 
-//TODO merge into master and show the rest of the team
+import coordinateFrame.FrameOfRefrence;
+import coordinateFrame.Pose;
+
  //GOAL get done by july 1
 
 /***
+ * @author Trevor Decker
+ * @version 0.0
  * Representation of a point on the map 
  * for now this value will be stored as a 2d(x,y) pair 
- * @author Trevor Decker
- *
  */
 public class Point extends MapObject  {
-	private double x;
-	private double y;
-	private double scale; //the size to draw the point
-	private UNITS pointUnits; 
+	private FrameOfRefrence coordinateFrame; //where should we draw the point
+	private Distince raidus; //How large should we draw the point
 	Color backgroundColor;
 	Color outlineColor;
 
@@ -42,65 +39,58 @@ public class Point extends MapObject  {
 	 * @param x_ the x corrdinate of the point 
 	 * @param y_ the y corrdinate of the point
 	 * @param unit what units the corrdinates are in 
+	 * @throws LogicException 
 	 */
-	public Point(double x_,double y_,UNITS unit){
-		this.pointUnits = unit;
-		x = x_;
-		y = y_;
-		scale = 20; //TODO make dynamic
-		int thisScale = (int)scale;
-		setBounds((int)x_-thisScale/2, (int)y_-thisScale/2, thisScale, thisScale);
+	public Point(Distince x_,Distince y_,Distince raidus) throws LogicException{
+		this.raidus = raidus;
+		coordinateFrame = new Pose(x_,y_,new Angle(ANGULAR_UNITS.DEGREES, 0.0));
+		Distince x = coordinateFrame.getX().toMeters();
+		Distince y = coordinateFrame.getY().toMeters();
+		int thisScale = 1;//TODO add scale based on the current zoom 
+		setBounds((int)x.getMeassurmentValue()-thisScale/2, (int)y.getMeassurmentValue()-thisScale/2, thisScale, thisScale);
 	}
 	
 	/***
-	 * A constructor for the point class, assumes that units are meters
+	 * A constructor for the point class, assumes that units are meters 
+	 *   and that the radius of the point is 1 meter
 	 * @param x_
 	 * @param y_
+	 * @throws LogicException 
 	 */
-	public Point(double x_, double y_) {
-		this(x_,y_,UNITS.METERS);
+	public Point(Distince x_, Distince y_) throws LogicException {
+		this(x_,y_,new Distince(DISTINCE_UNITS.METERS, 1.0));
 	}
 	
-	/***
-	 * @return
+	/**
+	 * TODO documnet
 	 */
-	public double getX_corr(){
-		return x;
+	public FrameOfRefrence getCoordinateFrame(){
+		return coordinateFrame;
 	}
-	/***
-	 * @return
+	
+	/**
+	 * TODO documnet 
 	 */
-	public double getY_corr(){
-		return y;
+	public void setCoordinateFrame(FrameOfRefrence newFrame){
+		coordinateFrame = newFrame;
 	}
-	/***
-	 * @param x
-	 */
-	public void setX_corr(double x){
-		this.x = x;
-	}
-	/***
-	 * @param y
-	 */
-	public void setY_corr(double y){
-		this.y = y;
-	}
+	
 	
 	/***
 	 * returns the units that this point uses for its corrdinates 
 	 * @return Units
 	 */
-	public UNITS getUnits(){
-		return this.pointUnits;
+	public Distince getRadius(){
+		return this.raidus;
 	}
 	
 	
 	/***
 	 * sets the units that the point uses for its corrdiantes 
 	 */
-	public void setUnits(UNITS newUnits)
+	public void setRadius(Distince newRadius)
 	{
-		this.pointUnits = newUnits; 
+		this.raidus = newRadius; 
 	}
 	
 	//TODO add a conversion function that will convert the point between different types of units for example miles to feet
@@ -125,6 +115,7 @@ public class Point extends MapObject  {
 	 *  jcomponent that the point is added to
 	 */
 	public void paintComponent(Graphics g){
+		//TODO use current view size 
 		super.paintComponent(g);
         g.setColor(Color.GRAY);
         int thisScale = (int)scale;
@@ -176,44 +167,32 @@ public Dimension	getPreferredSize(){
 
 	/***
 	 * TODO document 
+	 * @throws LogicException 
 	 */
 	@Override
-	boolean isGreater(Object obj) {
-		//it does not make sense for objects of diffrent types to be greater then the other
-		//TODO throw an error 
-		//TODO think about units
+	boolean isGreater(Object obj) throws LogicException {
+		//it does not make sense for objects of different types to be greater then the other
 		if(obj.getClass() != this.getClass()){
-			return false;
+			throw new LogicException("calling is Greater on an object that is of a non comparable class type");
 		}
 		Point other = (Point)obj;
-		if(this.x > other.x){
-			return true;
-		}else if(this.y > other.y){
-			return true;
-		}else{
-			return false;
-		}		
+		return this.coordinateFrame.isGreater(other.coordinateFrame);
+
 	}
 
 	@Override
 	/***
 	 * TODO document
+	 * @throws LogicException
 	 */
-	boolean isLess(Object obj) {
+	boolean isLess(Object obj) throws LogicException {
 		//it does not make sense for objects of different types to be greater then the other
-		//TODO throw an error 
-		//TODO think about units
 		if(obj.getClass() != this.getClass()){
-			return false;
+			throw new LogicException("calling is Less on an object that is of a non comparable class type");
 		}
 		Point other = (Point)obj;
-		if(this.x < other.x){
-			return true;
-		}else if(this.y < other.y){
-			return true;
-		}else{
-			return false;
-		}		
+		return this.coordinateFrame.isLess(other.coordinateFrame);
+	
 	}
 
 

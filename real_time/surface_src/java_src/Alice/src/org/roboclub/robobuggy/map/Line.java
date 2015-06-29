@@ -4,9 +4,13 @@ import java.awt.Component;
 import java.awt.Graphics;
 import java.util.ArrayList;
 
+//TODO change to be a clasical line (infite length thing)
+
 /***
  * 
- * @author trevor decker <tdecker@andrew.cmu.edu>
+ * @author Trevor decker <tdecker@andrew.cmu.edu>
+ * @version 0.0
+ * 
  * computer repersentation of a line (a series of points) 
  * TODO add further documentation 
  */

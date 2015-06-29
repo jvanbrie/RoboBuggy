@@ -8,6 +8,13 @@ import org.roboclub.robobuggy.ros.MessageListener;
 import org.roboclub.robobuggy.ros.SensorChannel;
 import org.roboclub.robobuggy.ros.Subscriber;
 
+/**
+ * 
+ * @author Trevor Decker
+ * @author Kevin B
+ * @verion 0.0
+ *
+ */
 public class ConsolePanel extends JPanel{
 	JTextArea ta = new JTextArea("",30,118); //TODO don't hardcode size 
 	Subscriber s = new Subscriber(SensorChannel.GUI_CONSOLE_TEXT.getMsgPath(), new MessageListener() {

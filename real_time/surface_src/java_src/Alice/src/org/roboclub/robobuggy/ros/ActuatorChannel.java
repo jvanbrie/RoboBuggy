@@ -1,5 +1,11 @@
 package org.roboclub.robobuggy.ros;
 
+/**
+ * 
+ * @author Matt Sebek
+ * @version 0.0
+ *
+ */
 public enum ActuatorChannel {
 	STEERING("steering"),
 	BRAKE("brake"),

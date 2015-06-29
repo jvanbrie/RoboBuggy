@@ -1,8 +1,9 @@
-package org.roboclub.robobuggy.map;
+package org.roboclub.robobuggy.main;
 
 /**
  * TODO document 
  * @author Trevor Decker
+ * @version 0.0
  *
  */
 public class LogicException extends Exception {

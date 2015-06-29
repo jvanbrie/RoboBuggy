@@ -3,11 +3,13 @@ package org.roboclub.robobuggy.map;
 import java.io.File;
 import java.util.ArrayList;
 
-import org.roboclub.robobuggy.localization.FrameOfRefrence;
+import coordinateFrame.FrameOfRefrence;
 
 /***
  * 
  * @author Trevor Decker
+ * @version 0.0
+ * 
  *	TODO
  */
 public abstract class Map {

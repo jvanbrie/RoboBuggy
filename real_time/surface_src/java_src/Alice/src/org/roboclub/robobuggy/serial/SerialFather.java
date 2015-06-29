@@ -13,7 +13,11 @@ import java.util.Set;
 import java.util.TreeSet;
 import org.roboclub.robobuggy.ros.Node;
 
-// Properly initializes the serial things
+/**
+ * @author TODO
+ * @version 0.0
+ * Properly initializes the serial things
+ */
 public class SerialFather implements Node {
 
 	List<SerialNode> children;

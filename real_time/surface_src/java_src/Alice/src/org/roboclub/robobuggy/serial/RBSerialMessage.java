@@ -1,5 +1,11 @@
 package org.roboclub.robobuggy.serial;
 
+/**
+ * 
+ * @author TODO
+ * @version 0.0
+ *
+ */
 public class RBSerialMessage {
 
 	

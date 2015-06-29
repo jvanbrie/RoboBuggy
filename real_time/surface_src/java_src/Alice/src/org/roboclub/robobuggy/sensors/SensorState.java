@@ -4,7 +4,7 @@ package org.roboclub.robobuggy.sensors;
  * 
  * @author Trevor Decker 
  *
- * @version 0.5
+ * @version 0.0
  * 
  * CHANGELOG: NONE
  * 

@@ -2,14 +2,19 @@ package org.roboclub.robobuggy.linearAlgebra;
 
 import java.lang.reflect.Array;
 
+import org.roboclub.robobuggy.main.LogicException;
+
 /***
- * A way for creating arbitrary sized arrays of a generic type 
- * based on code from 	//http://stackoverflow.com/questions/4770926/java-n-dimensional-arrays
  * 
  * @author Trevor Decker
+ * @version 0.0
+ * 
+ * A way for creating arbitrary sized arrays of a generic type 
+ * based on code from 	//http://stackoverflow.com/questions/4770926/java-n-dimensional-arrays
  *
  */
 public class NDimensionalArray<CELL_TYPE  extends Number> {
+	CELL_TYPE example;
 	private int[] dimensions;
 	private CELL_TYPE[] array;
 	private int[] offsetMultipliers;
@@ -24,6 +29,7 @@ public class NDimensionalArray<CELL_TYPE  extends Number> {
 	 */
 	@SuppressWarnings("unchecked")
 	public NDimensionalArray(CELL_TYPE sampleElment,int ... dimensions) {
+		this.example = sampleElment;
 		this.dimensions = dimensions;
 		int arraySize = 1;
 		for(int i =0;i<dimensions.length;i++){
@@ -56,8 +62,7 @@ public class NDimensionalArray<CELL_TYPE  extends Number> {
 	 * if all elements were stored in a 1d row. 
 	 */
 	public CELL_TYPE getIndex(int index){
-		//TODO
-		return null;
+		return array[index];
 	}
 	
 	/**
@@ -65,7 +70,7 @@ public class NDimensionalArray<CELL_TYPE  extends Number> {
 	 * all elements were stored in a 1d row. 
 	 */
 	public void setIndex(int index,CELL_TYPE newValue){
-		//TODO
+		array[index] = newValue;
 	}
 	
 	/**
@@ -90,34 +95,31 @@ public class NDimensionalArray<CELL_TYPE  extends Number> {
 	}
 	
 	/**
-	 * TODO document 
+	 * requires that the Ndimensinal Array passed to this method has the same dimensions as
+	 *  this NDimensinal array.   Evaluates to a new NdimensionalArray of the same dimensions as
+	 *  this NdimensionalArray.  The value of each element in the new array is result of applying
+	 *  the addition method to the corresponding index from this Array with the corresponding index's
+	 *  value from the passed in array. 
+	 *  @param B
 	 * @return
+	 * @throws LogicException 
 	 */
-	public NDimensionalArray<CELL_TYPE> add(NDimensionalArray<CELL_TYPE> b){
+	public NDimensionalArray<CELL_TYPE> add(NDimensionalArray<CELL_TYPE> b) throws LogicException{
 		assert(this.getDimensions() == b.getDimensions()); //TODO check this
 		NDimensionalArray<CELL_TYPE> result =this.clone();
-		int numCells = 1;
-		int[] dimensions = this.getDimensions();
-		for(int dim = 0;dim<dimensions.length;dim++){
-			numCells *= dimensions[dim];
-		}
-		
-		for(int i = 0;i<numCells;i++){
+		for(int i = 0;i<array.length;i++){
 			@SuppressWarnings("unchecked")
 			CELL_TYPE newValue = (CELL_TYPE) this.getIndex(i).add(b.getIndex(i));
-				result.setIndex(i,newValue);
-			}
-		
+			result.setIndex(i, newValue);
+		}
 		return result;
 	}
 	
 	/**
-	 * TODO document 
-	 * TODO implement 
+	 * Creates a separate object that is equivalent to this object but stored in a different location in memory 
 	 */
 	public NDimensionalArray<CELL_TYPE> clone(){
-		//TODO
-		return null;
+		return new NDimensionalArray<CELL_TYPE>(this.example, this.dimensions.clone());
 	}
 	
 }
