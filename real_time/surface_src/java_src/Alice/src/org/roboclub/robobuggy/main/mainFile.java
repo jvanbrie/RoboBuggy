@@ -6,6 +6,11 @@ import gnu.io.SerialPort;
 
 import java.util.ArrayList;
 
+import org.roboclub.robobuggy.fauxNodes.FauxEncoderNode;
+import org.roboclub.robobuggy.fauxNodes.FauxGPSNode;
+import org.roboclub.robobuggy.fauxNodes.FauxIMUNode;
+import org.roboclub.robobuggy.fauxNodes.FauxNode;
+import org.roboclub.robobuggy.fauxNodes.FauxSteeringNode;
 import org.roboclub.robobuggy.logging.RobotLogger;
 import org.roboclub.robobuggy.nodes.EncoderNode;
 import org.roboclub.robobuggy.nodes.GpsNode;
@@ -16,6 +21,7 @@ import org.roboclub.robobuggy.ros.MessageListener;
 import org.roboclub.robobuggy.ros.Node;
 import org.roboclub.robobuggy.ros.SensorChannel;
 import org.roboclub.robobuggy.ros.Subscriber;
+import org.roboclub.robobuggy.simulation.FauxRunner;
 import org.roboclub.robobuggy.ui.Gui;
 
 /**
@@ -23,6 +29,7 @@ import org.roboclub.robobuggy.ui.Gui;
  * @author Trevor Decker
  * @author Kevin B
  * @author Matt Sebeck 
+ * @author Vasu
  * @version 0.0
  *
  */
@@ -36,6 +43,7 @@ public class mainFile {
 	 * @param args
 	 */
 	public static void main(String args[]) {
+		System.out.println("did we get here");
 		//ArrayList<Integer> cameras = new ArrayList<Integer>();  //TODO have this set the cameras to use 
 		config.getInstance();//must be run at least once
 		
@@ -109,7 +117,7 @@ public class mainFile {
 	 * @throws Exception
 	 */
 	public static void bringup_sim() throws Exception {
-		ArrayList<Node> sensorList = new ArrayList<Node>();
+//		ArrayList<Node> sensorList = new ArrayList<Node>();
 
 		// Turn on logger!
 		if(config.logging){
@@ -127,56 +135,63 @@ public class mainFile {
 
 		Gui.EnableLogging();
 
-	
+		ArrayList<FauxNode> fauxSensors = new ArrayList<FauxNode>();
+		fauxSensors.add(new FauxIMUNode(SensorChannel.IMU));
+		fauxSensors.add(new FauxGPSNode(SensorChannel.GPS));
+		fauxSensors.add(new FauxEncoderNode(SensorChannel.ENCODER));
+		fauxSensors.add(new FauxSteeringNode(SensorChannel.DRIVE_CTRL));
+		String path = "C:\\Users\\Vasu\\Documents\\RoboClub\\RoboBuggy\\offline\\offline_tools\\java_src\\FauxArduino\\logs\\2015-04-12-06-22-37\\sensors.txt";
+		new Thread(new FauxRunner(fauxSensors, path)).start();
+			
 //		LoggingNode ln = new LoggingNode(SensorChannel.IMU.getMsgPath(), "C:\\Users\\Matt\\buggy-log\\run1");
 		
-		ImuNode imu = new ImuNode(SensorChannel.IMU);
-		GpsNode gps = new GpsNode(SensorChannel.GPS);
-		EncoderNode enc = new EncoderNode(SensorChannel.ENCODER);
-		SteeringNode drive_ctrl = new SteeringNode(SensorChannel.DRIVE_CTRL);
-		
-		// Set up the IMU
-		SerialPort sp = null;
-		String com = "COM4";//"COM18";
-		try {
-			System.out.println("Initializing IMU Serial Connection");
-			sp = connect(com);
-			System.out.println("IMU connected to " + com);
-		} catch (Exception e) {
-			System.out.println("Unable to connect to necessary device on " + com);
-			e.printStackTrace();
-			throw new Exception("Device not found error");
-		}
-		imu.setSerialPort(sp);
-		sensorList.add(imu);
-
-		// Set up the GPS
-		com = "COM7"; //"COM16";
-		try {
-			System.out.println("Initializing GPS Serial Connection");
-			sp = connect(com);
-			System.out.println("GPS connected to " + com);
-		} catch (Exception e) {
-			System.out.println("Unable to connect to necessary device on " + com);
-			e.printStackTrace();
-			throw new Exception("Device not found error");
-		}
-		gps.setSerialPort(sp);
-		sensorList.add(gps);
+//		ImuNode imu = new ImuNode(SensorChannel.IMU);
+//		GpsNode gps = new GpsNode(SensorChannel.GPS);
+//		EncoderNode enc = new EncoderNode(SensorChannel.ENCODER);
+//		SteeringNode drive_ctrl = new SteeringNode(SensorChannel.DRIVE_CTRL);
+//		
+//		// Set up the IMU
+//		SerialPort sp = null;
+//		String com = "COM4";//"COM18";
+//		try {
+//			System.out.println("Initializing IMU Serial Connection");
+//			sp = connect(com);
+//			System.out.println("IMU connected to " + com);
+//		} catch (Exception e) {
+//			System.out.println("Unable to connect to necessary device on " + com);
+//			e.printStackTrace();
+//			throw new Exception("Device not found error");
+//		}
+//		imu.setSerialPort(sp);
+//		sensorList.add(imu);
+//
+//		// Set up the GPS
+//		com = "COM7"; //"COM16";
+//		try {
+//			System.out.println("Initializing GPS Serial Connection");
+//			sp = connect(com);
+//			System.out.println("GPS connected to " + com);
+//		} catch (Exception e) {
+//			System.out.println("Unable to connect to necessary device on " + com);
+//			e.printStackTrace();
+//			throw new Exception("Device not found error");
+//		}
+//		gps.setSerialPort(sp);
+//		sensorList.add(gps);
 	
-		// Set up the Encoder
-		com = "COM14"; //"COM15";
-		try {
-			System.out.println("Initializing ENCODER Serial Connection");
-			sp = connect(com);
-			System.out.println("ENCODER connected to " + com);
-		} catch (Exception e) {
-			System.out.println("Unable to connect to necessary device on " + com);
-			e.printStackTrace();
-			throw new Exception("Device not found error");
-		}
-		enc.setSerialPort(sp);
-		sensorList.add(enc);
+//		// Set up the Encoder
+//		com = "COM14"; //"COM15";
+//		try {
+//			System.out.println("Initializing ENCODER Serial Connection");
+//			sp = connect(com);
+//			System.out.println("ENCODER connected to " + com);
+//		} catch (Exception e) {
+//			System.out.println("Unable to connect to necessary device on " + com);
+//			e.printStackTrace();
+//			throw new Exception("Device not found error");
+//		}
+//		enc.setSerialPort(sp);
+//		sensorList.add(enc);
 	
 		new Subscriber(SensorChannel.ENCODER.getMsgPath(), new MessageListener() {
 			@Override
@@ -185,18 +200,18 @@ public class mainFile {
 			}
 		});
 
-		// Set up the DRIVE CONTROL
-		com = "COM9"; //"COM17";
-		try {
-			System.out.println("Initializing DRIVE CONTROL Serial Connection");
-			sp = connect(com);
-			System.out.println("DRIVE CONTROL connected to " + com);
-		} catch (Exception e) {
-			System.out.println("Unable to connect to necessary device on " + com);
-			e.printStackTrace();
-			throw new Exception("Device not found error");
-		}
-		drive_ctrl.setSerialPort(sp);
-		sensorList.add(drive_ctrl);
+//		// Set up the DRIVE CONTROL
+//		com = "COM9"; //"COM17";
+//		try {
+//			System.out.println("Initializing DRIVE CONTROL Serial Connection");
+//			sp = connect(com);
+//			System.out.println("DRIVE CONTROL connected to " + com);
+//		} catch (Exception e) {
+//			System.out.println("Unable to connect to necessary device on " + com);
+//			e.printStackTrace();
+//			throw new Exception("Device not found error");
+//		}
+//		drive_ctrl.setSerialPort(sp);
+//		sensorList.add(drive_ctrl);
 	}
 }

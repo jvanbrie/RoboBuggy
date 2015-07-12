@@ -5,8 +5,13 @@ import java.awt.Graphics;
 
 import javax.swing.JComponent;
 
+import org.roboclub.robobuggy.linearAlgebra.Distince;
 import org.roboclub.robobuggy.main.LogicException;
 import org.roboclub.robobuggy.main.Order;
+
+import coordinateFrame.FrameOfRefrence;
+import coordinateFrame.Pose;
+import coordinateFrame.SpacialDimensions;
 
 /***
  * 
@@ -17,18 +22,18 @@ import org.roboclub.robobuggy.main.Order;
 public abstract class  MapObject extends  JComponent{
 	
 	
-	/***	
-	 * TODO document
-	 * @param thisObject
-	 * @return
-	 */
-	Point refrenceFrame;
+	 //TODO document
+	Pose refrenceFrame;
+	protected View view;  //how the map object should be viewed 
+
+	
 	/**
 	 * TODO document
 	 */
 	abstract boolean Equals(Object obj);
 	abstract boolean isGreater(Object obj) throws LogicException;
 	abstract boolean isLess(Object obj) throws LogicException;
+	
 	/***
 	 * TODO document 
 	 * @param obj
@@ -49,22 +54,24 @@ public abstract class  MapObject extends  JComponent{
 		}
 		
 	}
+	
 	/**
-	 * TODO document
+	 * evaluates to the transform between this points frame of reference to aPoints reference Frame
 	 * @param obj
 	 * @return
+	 * @throws LogicException 
 	 */
-	public double getDistince(Point aPoint) {
-		Point thisPoint;
-		
-		if(this.getClass() == Point.class){
-			thisPoint = (Point)this;
-		}else{
-			thisPoint = this.refrenceFrame;
-		}
-		double dx = aPoint.getX_corr() - thisPoint.getX_corr();
-		double dy = aPoint.getY_corr() - thisPoint.getY_corr();
-		return Math.sqrt(dx*dx + dy*dy);
+	public FrameOfRefrence getTransform(MapObject otherObject) throws LogicException {
+		return this.refrenceFrame.postApply(otherObject.refrenceFrame.inverse());
 	}
-
+	
+	/**
+	 * TODO document
+	 * @param aPoint
+	 * @return
+	 * @throws LogicException 
+	 */
+	public Distince getMinDistince(FrameOfRefrence aPoint) throws LogicException{
+		return  getTransform((MapObject) aPoint).getPosition().getDistince();
+	}
 }

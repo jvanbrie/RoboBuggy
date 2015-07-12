@@ -22,10 +22,11 @@ public class VisulizeMap_Test {
 	 * @param args
 	 */
 	public static void main(String[] args) {
+	
 		System.out.println("Starting VisulizeMap Tests");
 		LinkedListMap thisMap = new LinkedListMap();
 		
-		Point aPoint = new Point(20,20);
+		//Point aPoint = new Point(20,20);
 		/*
 		Point bPoint = new Point(20,100);
 		Point cPoint = new Point(60,60);
@@ -57,8 +58,8 @@ public class VisulizeMap_Test {
 		}
 		}*/
 		
-		VisulizeMap thisDisplay = new VisulizeMap(thisMap);
-		java.util.Date date2= new java.util.Date();
+	//	VisulizeMap thisDisplay = new VisulizeMap(thisMap);
+	//	java.util.Date date2= new java.util.Date();
 		// System.out.println(new Timestamp(date2.getTime()));
 		
 		System.out.println("finished VisulizeMap Tests");

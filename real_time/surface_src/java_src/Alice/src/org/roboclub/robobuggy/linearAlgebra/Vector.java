@@ -17,8 +17,8 @@ public class Vector<TYPE  extends Number> extends Matrix<TYPE> {
 	 * @param sampleElment
 	 * @param len
 	 */
-	public Vector(TYPE sampleElment,int len) {
-		super(sampleElment,len);
+	public Vector(int len) {
+		super(len);
 	}
 	
 	/**
@@ -27,7 +27,7 @@ public class Vector<TYPE  extends Number> extends Matrix<TYPE> {
 	 * @return
 	 */
 	public Vector(TYPE sampleElment,ArrayList<TYPE> input){
-		super(sampleElment, input.size());
+		super(input.size());
 		for(int i = 0;i<input.size();i++){
 			set(input.get(i), 0, i);
 		}
@@ -40,7 +40,7 @@ public class Vector<TYPE  extends Number> extends Matrix<TYPE> {
 	 */
 	public  Vector(TYPE sampleElement,TYPE ... values)
 	{
-		super(sampleElement,values.length);
+		super(values.length);
 		for(int i = 0;i<values.length;i++){
 			data.setIndex(i, values[i]);
 		}
@@ -96,7 +96,11 @@ public class Vector<TYPE  extends Number> extends Matrix<TYPE> {
 	 * @throws LogicException 
 	 */
 	public TYPE mult(Vector<TYPE> b) throws LogicException{
-		TYPE result = (TYPE) sampleElment.zero();
+		if(this.getNumRows() == 0){
+			throw new LogicException("it does not make sense to multiply a zero size vector");
+		}
+		//the vector has at least one element in it 
+		TYPE result = this.getIndex(0);
 		if(this.getNumRows() != b.getNumCols()){
 			throw new LogicException("dimension mismatch for vector multiplication");
 		}
@@ -155,18 +159,22 @@ public class Vector<TYPE  extends Number> extends Matrix<TYPE> {
 	}
 	
 	/**
-	 * TODO document
+	 * evaluates to a new vector that has the same contents of this vector with a new value 
+	 * appended on to the end 
+	 * Currently evaluates in linear time
 	 * @param newValue
 	 * @return 
 	 * @throws LogicException 
 	 */
 	public Vector<TYPE> append(TYPE newValue) throws LogicException{
-			Vector<TYPE> result = new Vector<TYPE>(newValue, this.getLength()+1);
+			Vector<TYPE> result = new Vector<TYPE>(this.getLength()+1);
 			int i = 0;
+			//i is not just in for loop so it can be used to set the last index's value to newValue
 			for(;i<this.getLength();i++){
 				result.setIndex(i, this.getIndex(i));
 			}
 			result.setIndex(i,newValue);
 			return result;
 	}
+
 }

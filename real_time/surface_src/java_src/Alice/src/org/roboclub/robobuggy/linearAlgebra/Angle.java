@@ -1,5 +1,8 @@
 package org.roboclub.robobuggy.linearAlgebra;
 
+import java.io.ObjectInputStream.GetField;
+import java.lang.reflect.InvocationTargetException;
+
 import org.roboclub.robobuggy.main.LogicException;
 
 /**
@@ -8,8 +11,8 @@ import org.roboclub.robobuggy.main.LogicException;
  * @version 0.0
  * 
  */
-public class Angle implements Number{
-	Number value;
+public class Angle<NTYPE extends Number> implements Number{
+	NTYPE value;
 	ANGULAR_UNITS unit;
 	
 
@@ -19,12 +22,17 @@ public class Angle implements Number{
 	 * @param units
 	 * @param value
 	 */
-	public Angle(ANGULAR_UNITS units,Number value){
+	public Angle(ANGULAR_UNITS units,NTYPE value){
 		setUNITS(units);
 		setMeassurmentValue(value);
 	}
 	
 	
+	public Angle() {
+		// TODO Auto-generated constructor stub
+	}
+
+
 	/***
 	 * produces a new unit object which represents the same angle but in degrees
 	 * if the calling object is not an angle then an error is thrown 
@@ -144,12 +152,16 @@ public class Angle implements Number{
 	}
 
 	
+
 	/**
 	 * TODO document
 	 * @return
+	 * @throws LogicException 
 	 */
-	public Angle zero() {
-		return new Angle(ANGULAR_UNITS.RADIANS, value.zero());
+	public static <T extends Number> Angle zero() throws LogicException{
+		Double_Number z = Double_Number.zero();
+		return new Angle(ANGULAR_UNITS.RADIANS,z);		
+		//this is a hack, in future versions any type of number should be usable as the type T
 	}
 
 	
@@ -159,17 +171,19 @@ public class Angle implements Number{
 	 * @return A Angle object encoding 1 radian
 	 */
 	public Angle One() {
-		return new Angle(ANGULAR_UNITS.RADIANS, value.One());
+		Double_Number z = Double_Number.one();
+		return new Angle(ANGULAR_UNITS.RADIANS,z);		
+		//this is a hack, in future versions any type of number should be usable as the type T
 	}
 	
 	/**
 	 * TODO document
 	 * @param newValue
 	 */
-	public void setMeassurmentValue(Number newValue){
+	public void setMeassurmentValue(NTYPE newValue){
 		this.value = newValue;
 	}
-
+	
 
 	/***
 	 * returns the scaler(Number) numerical value that currently represents the measurement 
@@ -267,7 +281,8 @@ public class Angle implements Number{
 
 	@Override
 	/**
-	 * TODO document
+	 * Evaluates to the numbers representation of +1 if the Angle is positive,
+	 *  Evaluates to the numbers representation of the inverse of 1 if the number is negative 
 	 */
 	public Angle signum() {
 		//TODO remove try catch 
@@ -280,6 +295,16 @@ public class Angle implements Number{
 		result.value = result.value.signum();		
 		return result;
 	}
+
+
+	public static Number createNew() {
+		return new Angle<Number>();
+	}
+	
+	 public Number getZero() throws LogicException{
+		 System.out.println("running angle get zero");
+		 return zero();
+	 }
 
 
 }

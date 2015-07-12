@@ -9,11 +9,10 @@ import org.roboclub.robobuggy.main.LogicException;
  *
  */
 public interface Number {
-
-	
 	/**
-	 * TODO document 
-	 * @return
+	 * evaluates to the inverse representation of the number
+	 * ie Number + Number.inverse() = 0 
+	 * 	@return inverse of calling number
 	 */
 	abstract public Number inverse();
 	
@@ -51,14 +50,21 @@ public interface Number {
 	/**
 	 * TODO document 
 	 * @return
+	 * @throws LogicException 
 	 */
-	abstract public Number zero();
-	
+	 public static Number zero() throws LogicException {
+		 throw new LogicException("This function needs to be over written");
+
+	}
+	 
 	/**
 	 * TODO document
 	 * @return
 	 */
-	abstract public Number One();
+	 public static Number one() {
+		 //must be overwritten 
+		return null;
+	}
 
 	/**
 	 * TODO document 
@@ -101,4 +107,30 @@ public interface Number {
 	 * TODO document 
 	 */
 	abstract public Number signum();
+	
+	/**
+	 * TODO document
+	 * @return
+	 * @throws LogicException
+	 */
+	public default Number getZero() throws LogicException{
+		return zero();
+	}
+	
+	/**
+	 * TODO document
+	 * @return
+	 * @throws LogicException
+	 */
+	public default Number getOne() throws LogicException{
+		return one();
+	}
+
+	public default Integer_Number toInteger_Number() throws LogicException{
+		throw new LogicException("To Integer Number has not been implmented yet or does not make sense for this Number type");
+	}
+	public default Double_Number toDouble_Number() throws LogicException{
+		throw new LogicException("To Integer Number has not been implmented yet or does not make sense for this Number type");
+	}
+
 }

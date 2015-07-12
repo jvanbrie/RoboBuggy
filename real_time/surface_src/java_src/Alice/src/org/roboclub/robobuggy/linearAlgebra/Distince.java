@@ -243,15 +243,19 @@ public class Distince implements Number{
 	/**
 	 * TODO document
 	 */
-	public Distince zero() {
-		return new Distince(this.unit, this.value.zero());
+	public static Distince zero() {
+		//TODO come up with a better solution so that other numebr types can be used 
+		Number z = Double_Number.zero();
+		return new Distince(DISTINCE_UNITS.METERS, z);
 	}
 
 	/**
 	 * TODO document 
 	 */
-	public Distince One() {
-		return new Distince(this.unit, this.value.One());
+	public static Distince one() {
+		//TODO come up with a better solution so that other numebr types can be used 
+		Number one = Double_Number.one();
+		return new Distince(DISTINCE_UNITS.METERS, one);
 	}
 	
 	@Override
@@ -317,7 +321,8 @@ public class Distince implements Number{
 	
 	@Override
 	/**
-	 * TODO document 
+	 * Evaluates to the numbers representation of +1 if the Distance is positive,
+	 *  Evaluates to the numbers representation of the inverse of 1 if the number is negative 
 	 */
 	public Distince signum() {
 		return new Distince(this.unit, value.signum());

@@ -5,6 +5,7 @@ import org.roboclub.robobuggy.map.Point;
 public class Point_Test {
 
 	public static void main(String[] args) {
+	/*
 		System.out.println("Starting to test Point Class \n ");
 		int x_a = 0;
 		int y_a = 0;
@@ -33,6 +34,7 @@ public class Point_Test {
 		//TODO finsih writing tests 
 		
 		System.out.println("All tests passed for Point Class \n");
+		*/
 	}
 
 }

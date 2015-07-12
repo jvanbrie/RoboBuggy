@@ -19,5 +19,5 @@ surface_src/java_src/Alice/src/com/roboclub/robobuggy/main/config.java
 *.o
 *.sym
 .dep
-
+*~
 real_time/surface_src/java_src/Alice/.classpath

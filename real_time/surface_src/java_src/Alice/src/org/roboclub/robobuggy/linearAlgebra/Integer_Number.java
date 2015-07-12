@@ -65,25 +65,24 @@ public class Integer_Number implements Number{
 		return new Integer_Number(value/((Integer_Number) otherNumber).getValue());
 	}
 
-	@Override
 	/**
 	 * TODO document
 	 */
-	public Integer_Number zero() {
+	public static Integer_Number zero() {
 		return new Integer_Number(0);
 	}
-
-	@Override
+	
 	/**
 	 * TODO document 
 	 */
-	public Integer_Number One() {
+	public static Integer_Number One() {
 		return new Integer_Number(1);
 	}
 
 	@Override
 	/**
-	 * TODO document
+	 * evaluates to the inverse representation of the number,
+	 * in this case -1*the calling objects value
 	 */
 	public Integer_Number inverse() {
 		return new Integer_Number(-value);
@@ -179,5 +178,13 @@ public class Integer_Number implements Number{
 	public Double_Number toDouble(){
 		return new  Double_Number(value);
 	}
+	
+
+	 
+	 @Override
+	 public String toString(){
+		return Integer.toString(value);
+		 
+	 }
 
 }

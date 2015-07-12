@@ -8,6 +8,11 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import coordinateFrame.FrameOfRefrence;
+import coordinateFrame.Pose;
+
+//TODO make a part of polygon 
+
 /**
  * TODO document
  * TODO 
@@ -24,8 +29,7 @@ public class Image extends MapObject{
 	 * TODO implement
 	 */
 	public Image(){
-		 Point p = new  Point(0, 0);
-		 refrenceFrame = p;
+		 refrenceFrame = Pose.zero();
 		 //need to have a nonzero setBounds so that the system trys to draw something 
 		 setBounds(1,1,100,100);
 			File imgFile = new File("/Users/trevordecker/Desktop/test.jpg");
@@ -90,5 +94,6 @@ public class Image extends MapObject{
 	    g.drawImage(img, 0, 0, this);
 	    //TODO add refrence frame stuff for the image
 	}
+
 
 }

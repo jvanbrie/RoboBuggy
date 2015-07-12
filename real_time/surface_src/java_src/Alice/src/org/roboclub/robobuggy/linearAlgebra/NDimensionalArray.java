@@ -14,7 +14,6 @@ import org.roboclub.robobuggy.main.LogicException;
  *
  */
 public class NDimensionalArray<CELL_TYPE  extends Number> {
-	CELL_TYPE example;
 	private int[] dimensions;
 	private CELL_TYPE[] array;
 	private int[] offsetMultipliers;
@@ -29,13 +28,14 @@ public class NDimensionalArray<CELL_TYPE  extends Number> {
 	 */
 	@SuppressWarnings("unchecked")
 	public NDimensionalArray(CELL_TYPE sampleElment,int ... dimensions) {
-		this.example = sampleElment;
+		//TODO remove need for sampleElment
 		this.dimensions = dimensions;
 		int arraySize = 1;
 		for(int i =0;i<dimensions.length;i++){
 			offsetMultipliers[i] = arraySize;
 			arraySize *= dimensions[i];
 		}
+		
 		array = (CELL_TYPE[]) Array.newInstance(sampleElment.getClass(), arraySize);
 	}
 	
@@ -119,7 +119,23 @@ public class NDimensionalArray<CELL_TYPE  extends Number> {
 	 * Creates a separate object that is equivalent to this object but stored in a different location in memory 
 	 */
 	public NDimensionalArray<CELL_TYPE> clone(){
-		return new NDimensionalArray<CELL_TYPE>(this.example, this.dimensions.clone());
+		for(int i =0;i < this.dimensions.length;i++){
+			if(this.dimensions[i] == 0){
+				try {
+					throw new LogicException("currently can not have clone a matrix with one demension 0");
+				} catch (LogicException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		int[] z = new int[this.dimensions.length];
+		for(int i = 0;i<this.dimensions.length;i++){
+			z[i] = 0;
+		}
+		
+		CELL_TYPE sample = this.get(z);
+		return new NDimensionalArray<CELL_TYPE>(sample,this.dimensions.clone());
 	}
 	
 }

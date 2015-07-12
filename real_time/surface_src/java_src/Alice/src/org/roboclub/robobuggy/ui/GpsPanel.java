@@ -1,11 +1,13 @@
 package org.roboclub.robobuggy.ui;
 
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
-import javax.swing.BorderFactory;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import org.roboclub.robobuggy.messages.GpsMeasurement;
@@ -14,12 +16,6 @@ import org.roboclub.robobuggy.ros.MessageListener;
 import org.roboclub.robobuggy.ros.SensorChannel;
 import org.roboclub.robobuggy.ros.Subscriber;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 
 /**
  * 
@@ -31,90 +27,117 @@ import java.awt.GridLayout;
  * 
  * DESCRIPTION: TODO
  */
+
 public class GpsPanel extends JPanel {
-	private static final long serialVersionUID = 1399590586061060311L;
+	/**
+	 * TODO document
+	 * @author Vasu
+	 *
+	 */
+	private class LocTuple {
+		private double latitude;
+		private double longitude;
+		/**
+		 * TODO document
+		 * @param x
+		 * @param y
+		 */
+		private LocTuple(double x, double y){
+			this.latitude = x;
+			this.longitude = y;
+		}
+		
+		/**
+		 * TODO document
+		 * @return
+		 */
+		public double getLatitude(){
+			return latitude;
+		}
+		/**
+		 * TODO document
+		 * @return
+		 */
+		public double getLongitude(){
+			return longitude;
+		}
+	}	
 	
-	private MapPanel mapPanel;
-	private JLabel lat, lon;
+	private static final long serialVersionUID = 42L;
+	private ArrayList<LocTuple> locs;
+	private LocTuple imgNorthEast;
+	private LocTuple imgSouthWest;
+	private BufferedImage map;
+	private boolean setup;
+	private int frameWidth;
+	private int frameHeight;
+	private Subscriber gpsSub;
 	
 	/**
-	 * Constructor for GPS panel on user interface. Initializes a serial communication
-	 * for reading from serial port. For the ui, it creates a graph marking the last
-	 * longitude and latitude read.
+	 * TODO document
 	 */
-	public GpsPanel() {
-		this.setBorder(BorderFactory.createLineBorder(Color.black));
-		this.setLayout(new GridBagLayout());
+	public GpsPanel(){
+		locs = new ArrayList<LocTuple>();
+		imgNorthEast = new LocTuple(-79.93596322545625, 40.443946388131266);
+		imgSouthWest = new LocTuple(-79.95532877484377, 40.436597411027364);
+		try {
+			map = ImageIO.read(new File("images/lat_long_course_map.png"));
+		} catch(Exception e) {
+			System.out.println("Unable to open map!");
+		}
+		setup = false;
 		
-		GridBagConstraints gbc = new GridBagConstraints();
-		gbc.gridx = 0;
-		gbc.gridy = 0;
-		gbc.fill = GridBagConstraints.BOTH;
-		
-		mapPanel = new MapPanel();
-		this.add(mapPanel, gbc);
-		
-		JPanel lowerPanel = new JPanel();
-		lowerPanel.setLayout(new GridLayout(1,4));
-		
-		lat = new JLabel();
-		JLabel label = new JLabel("   Lat: ");
-		lowerPanel.add(label);
-		lowerPanel.add(lat);
-		
-		lon = new JLabel();
-		label = new JLabel("   Lon: ");
-		lowerPanel.add(label);
-		lowerPanel.add(lon);
-		
-		// Subscriber for Gps updates
-		new Subscriber(SensorChannel.GPS.getMsgPath(), new MessageListener() {
+		gpsSub = new Subscriber(SensorChannel.GPS.getMsgPath(), new MessageListener() {
 			@Override
 			public void actionPerformed(String topicName, Message m) {
 				double latitude = ((GpsMeasurement)m).latitude;
 				double longitude = ((GpsMeasurement)m).longitude;
-				lat.setText(Double.toString(latitude));
-				lon.setText(Double.toString(longitude));
-				
-				mapPanel.update(latitude, longitude);
+				locs.add(new LocTuple(latitude, longitude));
 			}
-		});
+		});		
 		
-		gbc.gridy = 1;
-		this.add(lowerPanel, gbc);
+		locs.add(new LocTuple(-79.94596322545625, 40.440946388131266));
 	}
-
-	private class MapPanel extends JPanel {
-		private static final long serialVersionUID = 4153098045458832521L;
-		
-		/* Image Dimensons */
-		private static final int WIDTH = 360;
-		private static final int HEIGHT = 240;
-		private BufferedImage map;
-		
-		public MapPanel() {
-			this.setPreferredSize(new Dimension(WIDTH, HEIGHT));
-			
-			// Load map image as background
-			try {
-				map = ImageIO.read(new File("images/course_map.png"));
-			} catch (Exception e) {
-				System.out.println("Unable to open map background!");
-			}
-		}
 	
-		@Override
-		public void paintComponent(Graphics g) {
-			g.drawImage(map, 0, 0, WIDTH, HEIGHT, Color.black, null);			
-		}
+	/**
+	 * TODO document
+	 */
+	private void setup() {
+		frameWidth = getWidth();
+		frameHeight = getHeight();
+	}
 	
-		/*private void setPixels() {
-			pixelX = (int)(WIDTH * (currLoc.getX() - UL.getX()) / lon_width);
-			pixelY = (int)(HEIGHT * (UL.getY() - currLoc.getY()) / lat_height);	
-		}*/
-		
-		public void update(double lat, double lon) {
-			//TODO paint current coordinates on map
+	/**
+	 * TODO document
+	 * @param g2d
+	 * @param mTuple
+	 */
+	private void drawTuple(Graphics2D g2d, LocTuple mTuple){
+		double dx = imgSouthWest.getLatitude() - imgNorthEast.getLatitude();
+		double dy = imgSouthWest.getLongitude() - imgNorthEast.getLongitude();
+		double x = (mTuple.getLatitude() - imgNorthEast.getLatitude()) / dx * frameWidth;
+		double y = (mTuple.getLongitude() - imgSouthWest.getLongitude()) / dy * frameHeight;
+		int cDiameter = 5;
+		g2d.setColor(Color.RED);
+		g2d.drawOval((int)x, -(int)y, cDiameter, cDiameter);
+		g2d.fillOval((int)x, -(int)y, cDiameter, cDiameter);
+	}
+	
+	@Override
+	/**
+	 * TODO document
+	 */
+	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
+		if (!setup){
+			setup();
+			setup = true;
 		}
+		Graphics2D g2d = (Graphics2D) g.create();
+		g.drawImage(map, 0, 0, frameWidth, frameHeight, Color.black, null);
+		for	(LocTuple mTuple : locs) {
+			drawTuple(g2d, mTuple);
+		}
+		g2d.dispose();
 	}
 }

@@ -3,11 +3,14 @@ package org.roboclub.robobuggy.map;
 import java.io.File;
 import java.util.ArrayList;
 
+import org.roboclub.robobuggy.main.LogicException;
+
 import coordinateFrame.FrameOfRefrence;
 
 /***
  * 
  * @author Trevor Decker
+ * TODO document
  * @version 0.0
  * 
  *	TODO
@@ -20,25 +23,24 @@ public abstract class Map {
 	 */
 	public abstract int getNumberOfElements();
 	
-	/**
-	 * TODO document 
-	 * @return
-	 */
+	 // Representation of where the maps coordinates are defined from
 	FrameOfRefrence refrenceFrame;
 	
 	/***
 	 * TODO document
 	 * @param aPoint
 	 * @return
+	 * @throws LogicException 
 	 */
-	public abstract MapObject getClosestObject(Point aPoint);
+	public abstract MapObject getClosestObject(FrameOfRefrence aPoint) throws LogicException;
 	
 	/***
 	 * TODO document
-	 * @param aPoint
+	 * @param pointOfView
 	 * @return
+	 * @throws LogicException 
 	 */
-	public abstract MapObject[] getClosestNObjects(Point aPoint,int numPoints);
+	public abstract MapObject[] getClosestNObjects(FrameOfRefrence pointOfView,int numPoints) throws LogicException;
 	
 	// @REQUIER num(Points) > 2
 	/*** 

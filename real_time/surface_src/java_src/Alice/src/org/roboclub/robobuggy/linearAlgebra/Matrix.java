@@ -11,7 +11,6 @@ import org.roboclub.robobuggy.main.LogicException;
  */
 public class Matrix<TYPE extends Number> {
 	NDimensionalArray<TYPE> data; 
-	TYPE sampleElment;
 	
 	//TODO allow for a matrix that has multiple types ie angles and distinces 
 	//TODO remove the need for an example type to be given when constructor is used  
@@ -19,9 +18,9 @@ public class Matrix<TYPE extends Number> {
 	 * TODO document
 	 * @return
 	 */
-	public Matrix(TYPE sampleElment,int ... dimensions){
+	public Matrix(int ... dimensions){
+		TYPE sampleElment = null; //TODO fix
 		data = new NDimensionalArray<TYPE>(sampleElment, dimensions);
-		this.sampleElment = sampleElment;
 	}
 	
 	/**
@@ -58,7 +57,7 @@ public class Matrix<TYPE extends Number> {
 	 * @return
 	 */
 	public Vector<TYPE> getRow(int row){
-		Vector<TYPE> result = new Vector<TYPE>(sampleElment,this.getNumCols());
+		Vector<TYPE> result = new Vector<TYPE>(this.getNumCols());
 		for(int i = 0;i<this.getNumCols();i++){
 			result.set(this.get(row, i), 0, i);
 		}
@@ -71,7 +70,7 @@ public class Matrix<TYPE extends Number> {
 	 * @return
 	 */
 	public Vector<TYPE> getCol(int col){
-		Vector<TYPE> result = new Vector<TYPE>(sampleElment,this.getNumRows());
+		Vector<TYPE> result = new Vector<TYPE>(this.getNumRows());
 		for(int i = 0;i<this.getNumRows();i++){
 			result.set(this.get(i, col), i, 0);
 		}
@@ -85,7 +84,7 @@ public class Matrix<TYPE extends Number> {
 	 * @return
 	 */
 	public Matrix<TYPE> getRows(int startRow,int endRow){
-		Matrix<TYPE> result = new Matrix<TYPE>(sampleElment, endRow-startRow,getNumCols());
+		Matrix<TYPE> result = new Matrix<TYPE>(endRow-startRow,getNumCols());
 		for(int row = 0;startRow+row<endRow;row++){
 			for(int col = 0;col<this.getNumCols();col++){
 				result.set(this.get(startRow+row, col), row, col);
@@ -101,7 +100,7 @@ public class Matrix<TYPE extends Number> {
 	 * @return
 	 */
 	public Matrix<TYPE> getCols(int startCol,int endCol){
-		Matrix<TYPE> result = new Matrix<TYPE>(sampleElment, getNumRows(),endCol-startCol);
+		Matrix<TYPE> result = new Matrix<TYPE>( getNumRows(),endCol-startCol);
 		for(int col = 0;startCol+col<endCol;col++){
 			for(int row = 0;row<this.getNumRows();row++){
 				result.set(this.get(row, startCol+col), row, col);
@@ -167,7 +166,7 @@ public class Matrix<TYPE extends Number> {
 	 * @return
 	 */
 	public Matrix transpose() {
-		Matrix<TYPE> result = new Matrix<TYPE>(sampleElment,this.getNumCols(),getNumRows());
+		Matrix<TYPE> result = new Matrix<TYPE>(this.getNumCols(),getNumRows());
 		for(int i = 0;i<getNumRows();i++){
 			for(int j = 0;j<getNumCols();j++){
 				result.set(data.get(i,j), j,i);
@@ -177,12 +176,14 @@ public class Matrix<TYPE extends Number> {
 	}
 	
 	/**
-	 * TODO document 
+	 * creates a new matrix with the same values as this one but as a completely separate reference
+	 * NOTE is a shallow copy ie will if it is a matrix of pointers then the copy matrix will have the 
+	 * the same pointers in its cells 
 	 * @return
 	 */
 	@Override
 	public Matrix<TYPE> clone(){
-		Matrix<TYPE> result = new Matrix<TYPE>(sampleElment,this.getNumRows(),getNumCols());
+		Matrix<TYPE> result = new Matrix<TYPE>(this.getNumRows(),getNumCols());
 		for(int row = 0;row<this.getNumRows();row++){
 			for(int col=0;col<this.getNumCols();col++){
 				result.set(this.get(row, col), row, col);
@@ -212,11 +213,11 @@ public class Matrix<TYPE extends Number> {
 			return get(0,0).mult(get(0,1)).sub(get(1,0).mult(get(0,1)));
 		}
 		//nxn case
-		Number A = sampleElment.One();
-		Number result = sampleElment.zero();
+		TYPE result = (TYPE) this.get(1, 1).getZero();
+		Number A = (TYPE) this.get(1,1).getOne();
 		for(int i = 0;i<this.getNumRows();i++){
 				for(int col =1;col<this.getNumCols();col++){
-					Matrix<TYPE> cofactor = new Matrix<TYPE>(sampleElment,this.getNumRows()-1,getNumCols()-1);
+					Matrix<TYPE> cofactor = new Matrix<TYPE>(this.getNumRows()-1,getNumCols()-1);
 
 					//Populates the cofactor skipping the 1st col and the ith row
 					for(int row = 0;row<i;row++){
@@ -225,7 +226,7 @@ public class Matrix<TYPE extends Number> {
 					for(int row = i+1;row<this.getNumRows();row++){
 						cofactor.set(this.get(row, col), row-1, col-1);
 					}
-					result = A.mult(result.add(cofactor.determinate()));	
+					result = (TYPE) A.mult(result.add(cofactor.determinate()));	
 				}
 				A = A.inverse();
 		}

@@ -8,6 +8,11 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
+import org.roboclub.robobuggy.main.LogicException;
+
+import coordinateFrame.FrameOfRefrence;
+import coordinateFrame.Pose;
+
 // TODO make dynamic when user resizes 
 // TODO add scale to mapping 
 // TODO add moving options
@@ -25,12 +30,62 @@ import javax.swing.JLabel;
 public class VisulizeMap{
 	private JFrame frame = new JFrame();
 	private Map thisMap; 
+	private FrameOfRefrence pointOfView;
+	
+	
+	//gets the JFrame for the map 
+	/*** 
+	 * TDOO document 
+	 * TODO impment 
+	 * @return
+	 */
+	public JFrame getJFrame(){
+		return frame;
+	}
+	
+	/**
+	 * TODO document
+	 * @param newFrame
+	 */
+	public void setJFrame(JFrame newFrame){
+		this.frame = newFrame;
+	}
+	
+	
+	
+	
+	/**
+	 * 
+	 * @throws LogicException
+	 */
+	public void draw() throws LogicException{
+		//TODO handle occlusion I think it should be a mask which tells objects where it should not draw
+
+		/*
+		MapObject[] objects = thisMap.getClosestNObjects(pointOfView, thisMap.getNumberOfElements());
+		for(int i = 0;i<objects.length;i++){
+			objects[i].projectTo(pointOfView);
+		}
+		this.frame.add(comp)
+		//TODO actually draw
+		 * 
+		 */
+	}
+
+	
+	//TODO add update 
+	
+	//TODO add gui controls 
+	
+	
+	
 	
 	//constructor for map visulizer
 	/***
 	 * TODO document
 	 * TODO implment 
 	 */
+	/*
 	public VisulizeMap(Map theMap){
 		thisMap = theMap;
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -40,11 +95,13 @@ public class VisulizeMap{
 		updateDisplay();
 		drawGUI();
 	}
+	*/
 	
 	/***
 	 * updates all of the drawing based on the current state of the map 
 	 * TODO implment
 	 */
+	/*
 	public void updateDisplay(){
 		//TODO consider only updateing the mapobjects that are currently in view 
 		//TODO fix frame so that objects don't overlap 
@@ -53,7 +110,7 @@ public class VisulizeMap{
 		Container contentPane = frame.getContentPane();
 		contentPane.setLayout(null);
 		
-		Point orgin = new Point(0,0);
+		Pose orgin = new Pose(null, null);
 		MapObject[] mapObjects = thisMap.getClosestNObjects(orgin,thisMap.getNumberOfElements());
 		for (MapObject thisMapObject : mapObjects) {
 		//	System.out.println(mapObjects[0].getClass());
@@ -72,18 +129,9 @@ public class VisulizeMap{
 		
 		
 	}
+	*/
 	
-	
-	//gets the JFrame for the map 
-	/*** 
-	 * TDOO document 
-	 * TODO impment 
-	 * @return
-	 */
-	public JFrame getJFrame(){
-		return frame;
-	}
-	
+
 
 	
 	

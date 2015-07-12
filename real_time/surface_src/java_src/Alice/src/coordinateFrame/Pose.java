@@ -1,0 +1,115 @@
+package coordinateFrame;
+
+import org.roboclub.robobuggy.linearAlgebra.Angle;
+import org.roboclub.robobuggy.linearAlgebra.Distince;
+import org.roboclub.robobuggy.main.LogicException;
+
+
+/**
+ * 
+ * @author Trevor Decker
+ * @version 0.0
+ * TODO document
+ */
+public class Pose implements FrameOfRefrence{
+	private PositionRepersentation position;
+	private RotationalRepersentation orintation;
+	
+	/**
+	 * TODO document 
+	 * @param position
+	 * @param orintation
+	 */
+	public Pose(PositionRepersentation position,RotationalRepersentation orintation){
+		this.position = position;
+		this.orintation = orintation;
+	}
+	
+
+	/**
+	 * TODO document 
+	 * TODO implement
+	 * @return
+	 */
+	public static Pose zero(){
+		//TOOD may need to set the size and type of position/orintation, but ideally the system will figure it out on its own 
+
+		return null;
+	}
+	
+	/**
+	 * TODO document
+	 * @throws LogicException 
+	 */
+	public FrameOfRefrence preApply(FrameOfRefrence otherFrame) throws LogicException{
+		//rotate then translate 
+		RotationalRepersentation newOrintation = this.orintation.preApplyRotation(otherFrame.getOrintation());
+		PositionRepersentation newPosition = position.applyRotation(otherFrame.getOrintation()).add(otherFrame.getPosition());
+		return new Pose(newPosition, newOrintation); 
+	}
+	
+	/**
+	 * TODO document
+	 * @throws LogicException 
+	 */
+	public FrameOfRefrence postApply(FrameOfRefrence otherFrame) throws LogicException{
+		return otherFrame.preApply(this);
+	}
+	
+	/**
+	 * TODO document
+	 * @return
+	 */
+	public PositionRepersentation getPosition(){
+		return position;
+	}
+	
+	/**
+	 * TODO document
+	 * @return
+	 */
+	public RotationalRepersentation getOrintation(){
+		return orintation;
+	}
+
+	/**
+	 * TODO document 
+	 * TODO implement
+	 */
+	public FrameOfRefrence inverse(){
+		return null;
+		//TODO
+	}
+	
+	@Override
+	/**
+	 * TODO document
+	 * TODO implement
+	 */
+	public HomogeneousMatrix toHomogeneousMatrix() {
+		return null;
+	}
+
+
+	@Override
+	/**
+	 * TODO document
+	 */
+	public Pose toPose() {
+		return this;
+	}
+
+
+	public boolean isGreater(Pose refrenceFrame) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
+	public boolean isLess(Pose refrenceFrame) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
+}

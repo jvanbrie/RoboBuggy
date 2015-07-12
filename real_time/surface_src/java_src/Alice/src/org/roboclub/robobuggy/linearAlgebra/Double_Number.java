@@ -76,25 +76,25 @@ public class Double_Number implements Number {
 		return new Integer_Number((int) this.getValue()); 
 	}
 
-	@Override
+	
 	/**
 	 * Creates a Double number representing zero
 	 */
-	public Double_Number zero() {
+	public static Double_Number zero() {
 		return new Double_Number(0.0);
 	}
 	
-	@Override
 	/**
 	 * Creates a Double number representing the identy element 1.0
 	 */
-	public Double_Number One(){
+	public static Double_Number one(){
 		return new Double_Number(1.0);
 	}
 
 	@Override
 	/**
-	 * TODO document
+	 * evaluates to the inverse representation of the number,
+	 * in this case -1*the calling objects value
 	 */
 	public Double_Number inverse() {
 		return new Double_Number(-value);
@@ -152,7 +152,9 @@ public class Double_Number implements Number {
 
 	@Override
 	/**
-	 * TODO document
+	 * Evaluates if some other Number is of the same value and type as this Double number
+	 * currently will only evaluate to true iff the otherNumber is a Double number of the exact 
+	 * same value as this Double number
 	 */
 	public boolean isEqual(Number otherNumber) throws LogicException {
 		if(otherNumber.getClass() == Double_Number.class){
@@ -192,5 +194,7 @@ public class Double_Number implements Number {
 	public Integer_Number toInteger(){
 		return new Integer_Number((int) value);
 	}
+	
+
 	
 }

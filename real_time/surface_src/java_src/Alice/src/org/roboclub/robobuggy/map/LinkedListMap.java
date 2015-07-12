@@ -3,6 +3,12 @@ package org.roboclub.robobuggy.map;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedList;
+
+import org.roboclub.robobuggy.linearAlgebra.Distince;
+import org.roboclub.robobuggy.linearAlgebra.Number;
+import org.roboclub.robobuggy.main.LogicException;
+
+import coordinateFrame.FrameOfRefrence;
 /***
  * 
  * @author Trevor Decker
@@ -35,16 +41,16 @@ public class LinkedListMap extends Map{
 	 * TODO document
 	 *   if no closestObject exists ie the map is empty return null
 	 */
-	public MapObject getClosestObject(Point aPoint) {
+	public MapObject getClosestObject(FrameOfRefrence aPoint) throws LogicException {
 		if(map.size() <1){
 			return null;
 		}
 		
 		int best_index = 0;
-		double best_distince = map.get(0).getDistince(aPoint);
+		Distince best_distince = map.get(0).getMinDistince(aPoint);
 		for(int i = 1;i<map.size();i++){
-			double this_distince = map.get(i).getDistince(aPoint);
-			if(this_distince < best_distince){
+			Distince this_distince = map.get(i).getMinDistince(aPoint);
+			if(this_distince.isLess(best_distince)){
 				best_index = i;
 				best_distince = this_distince;
 			}
@@ -52,42 +58,7 @@ public class LinkedListMap extends Map{
 		return map.get(best_index);
 	}
 
-	@Override
-	/***
-	 * TODO document
-	 * TODO implement
-	 */
-	public MapObject[] getClosestNObjects(Point aPoint,int numPoints) {
-		//a sorted array of mapObjects (sorted based on distance from aPoint)
-		MapObject[] sortedObjects = new MapObject[numPoints];
-		//sets all of the points to null incase not enogth objects exsits on the map we do not want 0 objects to be returned
-		for(int i = 0;i<numPoints;i++){
-			sortedObjects[i] = null;
-		}
-		//TODO make a binary search 
-		for(int i = 0;i<map.size();i++)
-		{
-			//add this element to the sortedObjects list (if it is within range)
-			int offset = 0;
-			double mapObjectDistince = map.get(i).getDistince(aPoint); 
-			while(offset < numPoints && sortedObjects[offset] != null && sortedObjects[offset].getDistince(aPoint) < mapObjectDistince)
-			{
-				offset++;
-			}
-			//we have reached the point in the list where the new element should be added 
-			//shift all points after this one 
-			for(int j = numPoints-1;j> offset;j--)
-			{
-				sortedObjects[j] = sortedObjects[j-1];
-			}
-			//add this point 
-			if(offset < numPoints){
-			sortedObjects[offset] = map.get(i);
-			}
-			
-		}
-		return sortedObjects;
-	}
+
 
 	@Override
 	/***
@@ -173,4 +144,44 @@ public class LinkedListMap extends Map{
 		
 	}
 
+	@Override
+	/**
+	 * TODO document
+	 */
+	public MapObject[] getClosestNObjects(FrameOfRefrence aFrame,
+			int numPoints) throws LogicException {
+		//a sorted array of mapObjects (sorted based on distance from aPoint)
+				MapObject[] sortedObjects = new MapObject[numPoints];
+				//sets all of the points to null incase not enogth objects exsits on the map we do not want 0 objects to be returned
+				for(int i = 0;i<numPoints;i++){
+					sortedObjects[i] = null;
+				}
+				//TODO make a binary search 
+				for(int i = 0;i<map.size();i++)
+				{
+					//add this element to the sortedObjects list (if it is within range)
+					int offset = 0;
+					Number mapObjectDistince = map.get(i).getMinDistince(aFrame).toMeters().getMeassurmentValue(); 
+					while(offset < numPoints && sortedObjects[offset] != null && sortedObjects[offset].getMinDistince(aFrame).isLess(mapObjectDistince))
+					{
+						offset++;
+					}
+					//we have reached the point in the list where the new element should be added 
+					//shift all points after this one 
+					for(int j = numPoints-1;j> offset;j--)
+					{
+						sortedObjects[j] = sortedObjects[j-1];
+					}
+					//add this point 
+					if(offset < numPoints){
+					sortedObjects[offset] = map.get(i);
+					}
+					
+				}
+				return sortedObjects;
+	}
+
+	
+
+	
 }
