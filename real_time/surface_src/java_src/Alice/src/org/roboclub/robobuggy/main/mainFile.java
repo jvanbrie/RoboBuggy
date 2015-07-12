@@ -21,6 +21,7 @@ import org.roboclub.robobuggy.ros.MessageListener;
 import org.roboclub.robobuggy.ros.Node;
 import org.roboclub.robobuggy.ros.SensorChannel;
 import org.roboclub.robobuggy.ros.Subscriber;
+import org.roboclub.robobuggy.sensors.SensorManager;
 import org.roboclub.robobuggy.simulation.FauxRunner;
 import org.roboclub.robobuggy.ui.Gui;
 
@@ -65,33 +66,33 @@ public class mainFile {
 		}	
 	}
 	
-	// Open a serial port
-	private static SerialPort connect(String portName) throws Exception
-    {
-        CommPortIdentifier portIdentifier = CommPortIdentifier.getPortIdentifier(portName);
-        if ( portIdentifier.isCurrentlyOwned() )
-        {
-            System.out.println("Error: Port is currently in use");
-            return null;
-        }
-        else
-        {
-        	//TODO fix this so that it is not potato 
-            CommPort commPort = portIdentifier.open("potato", 2000);
-            
-            if ( commPort instanceof SerialPort )
-            {
-                SerialPort serialPort = (SerialPort) commPort;
-                serialPort.setSerialPortParams(57600,SerialPort.DATABITS_8,SerialPort.STOPBITS_1,SerialPort.PARITY_NONE);
-                return serialPort;
-            }
-            else
-            {
-                System.out.println("Error: Only serial ports are handled by this example.");
-            }
-        }
-		return null;
-    }	
+//	// Open a serial port
+//	private static SerialPort connect(String portName) throws Exception
+//    {
+//        CommPortIdentifier portIdentifier = CommPortIdentifier.getPortIdentifier(portName);
+//        if ( portIdentifier.isCurrentlyOwned() )
+//        {
+//            System.out.println("Error: Port is currently in use");
+//            return null;
+//        }
+//        else
+//        {
+//        	//TODO fix this so that it is not potato 
+//            CommPort commPort = portIdentifier.open("potato", 2000);
+//            
+//            if ( commPort instanceof SerialPort )
+//            {
+//                SerialPort serialPort = (SerialPort) commPort;
+//                serialPort.setSerialPortParams(57600,SerialPort.DATABITS_8,SerialPort.STOPBITS_1,SerialPort.PARITY_NONE);
+//                return serialPort;
+//            }
+//            else
+//            {
+//                System.out.println("Error: Only serial ports are handled by this example.");
+//            }
+//        }
+//		return null;
+//    }	
 	public static void bringup_sim() throws Exception {
 //		ArrayList<Node> sensorList = new ArrayList<Node>();
 
@@ -101,93 +102,46 @@ public class mainFile {
 			RobotLogger.getInstance();
 		}
 
-		// Initialize Sensor
-		/*if (config.GPS_DEFAULT) {
-			System.out.println("Initializing GPS Serial Connection");
-			FauxGps gps = new FauxGps(SensorChannel.GPS);
-			sensorList.add(gps);
-
-		}*/
-
 		Gui.EnableLogging();
 
-		ArrayList<FauxNode> fauxSensors = new ArrayList<FauxNode>();
-		fauxSensors.add(new FauxIMUNode(SensorChannel.IMU));
-		fauxSensors.add(new FauxGPSNode(SensorChannel.GPS));
-		fauxSensors.add(new FauxEncoderNode(SensorChannel.ENCODER));
-		fauxSensors.add(new FauxSteeringNode(SensorChannel.DRIVE_CTRL));
-		String path = "C:\\Users\\Vasu\\Documents\\RoboClub\\RoboBuggy\\offline\\offline_tools\\java_src\\FauxArduino\\logs\\2015-04-12-06-22-37\\sensors.txt";
-		new Thread(new FauxRunner(fauxSensors, path)).start();
+// Fake sensors (simulated)
+//		ArrayList<FauxNode> fauxSensors = new ArrayList<FauxNode>();
+//		fauxSensors.add(new FauxIMUNode(SensorChannel.IMU));
+//		fauxSensors.add(new FauxGPSNode(SensorChannel.GPS));
+//		fauxSensors.add(new FauxEncoderNode(SensorChannel.ENCODER));
+//		fauxSensors.add(new FauxSteeringNode(SensorChannel.DRIVE_CTRL));
+//		String path = "C:\\Users\\Vasu\\Documents\\RoboClub\\RoboBuggy\\offline\\offline_tools\\java_src\\FauxArduino\\logs\\2015-04-12-06-22-37\\sensors.txt";
+//		new Thread(new FauxRunner(fauxSensors, path)).start();
 			
-//		LoggingNode ln = new LoggingNode(SensorChannel.IMU.getMsgPath(), "C:\\Users\\Matt\\buggy-log\\run1");
-		
 //		ImuNode imu = new ImuNode(SensorChannel.IMU);
 //		GpsNode gps = new GpsNode(SensorChannel.GPS);
 //		EncoderNode enc = new EncoderNode(SensorChannel.ENCODER);
 //		SteeringNode drive_ctrl = new SteeringNode(SensorChannel.DRIVE_CTRL);
 //		
-//		// Set up the IMU
-//		SerialPort sp = null;
-//		String com = "COM4";//"COM18";
-//		try {
-//			System.out.println("Initializing IMU Serial Connection");
-//			sp = connect(com);
-//			System.out.println("IMU connected to " + com);
-//		} catch (Exception e) {
-//			System.out.println("Unable to connect to necessary device on " + com);
-//			e.printStackTrace();
-//			throw new Exception("Device not found error");
-//		}
-//		imu.setSerialPort(sp);
-//		sensorList.add(imu);
-//
-//		// Set up the GPS
-//		com = "COM7"; //"COM16";
-//		try {
-//			System.out.println("Initializing GPS Serial Connection");
-//			sp = connect(com);
-//			System.out.println("GPS connected to " + com);
-//		} catch (Exception e) {
-//			System.out.println("Unable to connect to necessary device on " + com);
-//			e.printStackTrace();
-//			throw new Exception("Device not found error");
-//		}
-//		gps.setSerialPort(sp);
-//		sensorList.add(gps);
-	
-//		// Set up the Encoder
-//		com = "COM14"; //"COM15";
-//		try {
-//			System.out.println("Initializing ENCODER Serial Connection");
-//			sp = connect(com);
-//			System.out.println("ENCODER connected to " + com);
-//		} catch (Exception e) {
-//			System.out.println("Unable to connect to necessary device on " + com);
-//			e.printStackTrace();
-//			throw new Exception("Device not found error");
-//		}
-//		enc.setSerialPort(sp);
-//		sensorList.add(enc);
-	
+		SensorManager sm = SensorManager.getInstance();
+//		sm.newRealSensor(SensorChannel.IMU, "COM5");
+//		sm.newRealSensor(SensorChannel.GPS, "COM2");
+//		sm.newRealSensor(SensorChannel.ENCODER, "COM42");
+//		sm.newRealSensor(SensorChannel.DRIVE_CTRL, "COM69");
+		String path = "C:\\Users\\Vasu\\Documents\\RoboClub\\RoboBuggy\\offline\\offline_tools\\java_src\\FauxArduino\\logs\\2015-04-12-06-22-37\\sensors.txt";
+		String path2 = "C:\\Users\\Vasu\\Documents\\RoboClub\\RoboBuggy\\offline\\offline_tools\\java_src\\FauxArduino\\logs\\2015-04-12-06-22-38\\sensors.txt";
+//		String path2 = "C:\\Users\\Vasu\\Documents\\RoboClub\\RoboBuggy\\offline\\offline_tools\\java_src\\FauxArduino\\logs\\2015_slurpee_day\\dualTest.txt";
+		sm.newSimulatedSensors(path
+			//,SensorChannel.IMU,
+			//,SensorChannel.ENCODER,
+			,SensorChannel.GPS
+			//,SensorChannel.DRIVE_CTRL
+			);
+		sm.newSimulatedSensors(path2
+			,SensorChannel.IMU
+			,SensorChannel.DRIVE_CTRL
+			);
+		
 		new Subscriber(SensorChannel.ENCODER.getMsgPath(), new MessageListener() {
 			@Override
 			public void actionPerformed(String topicName, Message m) {
 				//System.out.println(m.toLogString());
 			}
 		});
-
-//		// Set up the DRIVE CONTROL
-//		com = "COM9"; //"COM17";
-//		try {
-//			System.out.println("Initializing DRIVE CONTROL Serial Connection");
-//			sp = connect(com);
-//			System.out.println("DRIVE CONTROL connected to " + com);
-//		} catch (Exception e) {
-//			System.out.println("Unable to connect to necessary device on " + com);
-//			e.printStackTrace();
-//			throw new Exception("Device not found error");
-//		}
-//		drive_ctrl.setSerialPort(sp);
-//		sensorList.add(drive_ctrl);
 	}
 }

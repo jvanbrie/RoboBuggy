@@ -21,8 +21,10 @@ public class FauxRunner implements Runnable {
 	private FauxSteeringNode drive_ctrl = null;
 	private String path;
 	
+	//Can probably improve the constructor to take all collections, but meh.
 	public FauxRunner(ArrayList<FauxNode> sensors, String path) {
 		
+		//really, really ghetto. Sorry.
 		this.path = path;
 		for (FauxNode sensor : sensors) {
 			switch (sensor.typeString) {
@@ -59,8 +61,6 @@ public class FauxRunner implements Runnable {
 		
 		System.out.println("Starting to read from file!");
 
-		//TODO: Make this take in a file argument instead of being hardcoded
-//		try(BufferedReader br = new BufferedReader(new FileReader("logs\\2015-04-12-06-22-37\\sensors.txt"))) {
 		try(BufferedReader br = new BufferedReader(new FileReader(path))) {
 			String line = br.readLine();
 			
@@ -78,21 +78,29 @@ public class FauxRunner implements Runnable {
 					//Skipping line!
 					line = br.readLine();
 					continue;
-//						throw new Exception("Malformed data!");
 				} else {
+					// TODO: Fix crashing when not all of the sensors are defined.
 					String sensor = line.substring(0, endIndex);
 					switch (sensor.toLowerCase()) {
 					case "sensors/imu":
-						imu.qAdd(line);
+						if (imu != null) {
+							imu.qAdd(line);
+						}
 						break;
 					case "sensors/steering":
-						drive_ctrl.qAdd(line);
+						if (drive_ctrl != null) {
+							drive_ctrl.qAdd(line);
+						}
 						break;
 					case "sensors/encoder":
-						enc.qAdd(line);
+						if (enc != null) {
+							enc.qAdd(line);
+						}
 						break;
 					case "sensors/gps":
-						gps.qAdd(line);
+						if (gps != null) {
+							gps.qAdd(line);
+						}
 						break;
 //					case "sensors/logging_button":
 //						lsp.qAdd(line);
