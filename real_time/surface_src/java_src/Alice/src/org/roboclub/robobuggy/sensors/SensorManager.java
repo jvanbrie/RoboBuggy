@@ -7,6 +7,9 @@ import gnu.io.SerialPort;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
+import org.roboclub.robobuggy.calculatedNodes.BaseCalculatedNode;
+import org.roboclub.robobuggy.calculatedNodes.CalculatedIMUNode;
+import org.roboclub.robobuggy.calculatedNodes.NodeCalculator;
 import org.roboclub.robobuggy.fauxNodes.FauxEncoderNode;
 import org.roboclub.robobuggy.fauxNodes.FauxGPSNode;
 import org.roboclub.robobuggy.fauxNodes.FauxIMUNode;
@@ -26,12 +29,12 @@ public class SensorManager {
 	
 	private LinkedHashMap<String, Node> realSensors;
 	private LinkedHashMap<String, LinkedHashMap<SensorChannel, FauxNode>> simulatedSensors;
-	private LinkedHashMap calculatedSensors;
+	private LinkedHashMap<String, BaseCalculatedNode> calculatedSensors;
 	
 	private SensorManager() {
 		realSensors = new LinkedHashMap<String, Node>();
 		simulatedSensors = new LinkedHashMap<String, LinkedHashMap<SensorChannel, FauxNode>>();
-		calculatedSensors = new LinkedHashMap();	
+		calculatedSensors = new LinkedHashMap<String, BaseCalculatedNode>();	
 	}
 
 	// Open a serial port
@@ -128,6 +131,24 @@ public class SensorManager {
 		}
 		new Thread(new FauxRunner(new ArrayList<FauxNode>(fauxSensors.values()), path)).start();
 		simulatedSensors.put(path, fauxSensors);
+	}
+	
+	public void newCalculatedSensor(SensorChannel sensor, NodeCalculator calc) {
+		switch(sensor) {
+		case IMU:
+			CalculatedIMUNode imu = new CalculatedIMUNode(sensor, calc, 200);
+			calculatedSensors.put(calc.getClass().getName(), imu);
+			imu.crunch();
+			break;
+		}
+	}
+	
+	public void disableFauxNode(String path, SensorChannel sensor) {
+		simulatedSensors.get(path).get(sensor).disable();
+	}
+	
+	public void enableFauxNode(String path, SensorChannel sensor) {
+		simulatedSensors.get(path).get(sensor).enable();
 	}
 	
 	//Google says this is a good idea

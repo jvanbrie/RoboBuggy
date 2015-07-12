@@ -6,6 +6,7 @@ import gnu.io.SerialPort;
 
 import java.util.ArrayList;
 
+import org.roboclub.robobuggy.calculatedNodes.SimpleEncoderCalculator;
 import org.roboclub.robobuggy.fauxNodes.FauxEncoderNode;
 import org.roboclub.robobuggy.fauxNodes.FauxGPSNode;
 import org.roboclub.robobuggy.fauxNodes.FauxIMUNode;
@@ -137,11 +138,22 @@ public class mainFile {
 			,SensorChannel.DRIVE_CTRL
 			);
 		
+		//This will *effectively* disable it, but it seems that because it's subscribing to things
+		//there are still parts of the GUI which think a sensor exists. This may or may not be an issue?
+		//ISSUE: Seems like there's a delay in enabling / disabling it?
+		//SOLUTION: It looks like the delay was caused by the call of newCalculatedSensor, which isn't instantaneous
+		//		this may or may not be a problem? Will ask Trevor.
+		sm.disableFauxNode(path2, SensorChannel.IMU);
+		
+		sm.newCalculatedSensor(SensorChannel.IMU, new SimpleEncoderCalculator());
+		
 		new Subscriber(SensorChannel.ENCODER.getMsgPath(), new MessageListener() {
 			@Override
 			public void actionPerformed(String topicName, Message m) {
 				//System.out.println(m.toLogString());
 			}
 		});
+		
+		
 	}
 }

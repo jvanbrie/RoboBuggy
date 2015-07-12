@@ -109,7 +109,8 @@ public class FauxRunner implements Runnable {
 //						bp.qAdd(line);
 //						break;
 					default:
-						System.out.println("Unknown sensor type: " + sensor.toLowerCase());
+//						System.out.println("Unknown sensor type: " + sensor.toLowerCase());
+						break;
 					}
 					line = br.readLine();
 				}

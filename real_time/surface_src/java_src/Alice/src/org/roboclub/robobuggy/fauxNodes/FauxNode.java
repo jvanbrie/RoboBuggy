@@ -15,6 +15,7 @@ public class FauxNode {
 	boolean parserStarted = false;
 	static long offset = 0;
 	public String typeString;
+	private boolean enabled = true;
 	
 	public FauxNode() {
 		q = new ArrayBlockingQueue<String>(50);
@@ -29,16 +30,26 @@ public class FauxNode {
 
 //	@Override
 	public void qAdd(String input) {
-		while (true) {
-			if (q.offer(input)) {
-				break;
+		if (enabled) {
+			while (true) {
+				if (q.offer(input)) {
+					break;
+				}
 			}
+			if (!parserStarted) {
+				parse();
+				parserStarted = true;
+			}
+			return;
 		}
-		if (!parserStarted) {
-			parse();
-			parserStarted = true;
-		}
-		return;
+	}
+	
+	public void enable() {
+		this.enabled = true;
+	}
+	
+	public void disable() {
+		this.enabled = false;
 	}
 	
 	public static void setOffset(long offset) {
