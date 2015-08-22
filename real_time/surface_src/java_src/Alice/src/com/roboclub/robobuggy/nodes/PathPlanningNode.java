@@ -37,14 +37,14 @@ public class PathPlanningNode implements Node, Runnable {
 	// Locks
 	Lock l;
 	
-	// TODO: array that stores waypoints
+	// TODO: array that stores waypoints from the waypoint file
 	
 	
 	public PathPlanningNode(String waypointFile) {
 		this.waypointFile = waypointFile;
 		l = new ReentrantLock();
 		
-		// TODO: function: get the way points out of the waypoint file
+		// TODO: private function: get the way points out of the waypoint file
 			
 		// add a new subscriber that listens to the velocity message
 		Subscriber velocity_sub = new Subscriber(SensorChannel.ENCODER.getMsgPath(), new MessageListener(){
@@ -81,12 +81,15 @@ public class PathPlanningNode implements Node, Runnable {
 	@Override
 	public boolean shutdown() {
 		// TODO: kill spawned thread
+		// note: chose not to kill. Instead it is set not to run anymore when it comes out of run
+		// Java has a weird way of killing spawned threads and we determined this was the best 
+		// solution for now. 
 		return false;
 	}
 
 	@Override
 	public void run() {
-		while(true){
+		while(true){ // TODO: add a case when it is time to end the thread.
 			long start_time = System.currentTimeMillis();
 			// Start of runnable loop
 			if(gps_update == true && velocity_update == true){
@@ -107,9 +110,13 @@ public class PathPlanningNode implements Node, Runnable {
 			
 			// Put waypoint onto publisher
 			
+			/******** End Path Planning Computation **********/
+			
+			// update the Sensor flags
 			gps_update = false;
 			velocity_update = false;
-			// Do the timing control
+			
+			// Loop timing control
 			long stop_time = System.currentTimeMillis();
 			long millis = stop_time - start_time;
 			if((stop_time - start_time) < time_step){
