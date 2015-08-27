@@ -110,7 +110,7 @@ public class SensorManager {
 	//Due to how I wrote the code, you'll need to initialize all of the sensors you want at once.
 	//Disable the ones you don't want later if you want, I guess?
 	//TODO: go and fix this
-	public void newSimulatedSensors(String path, SensorChannel... sensors) {
+	public void newFauxSensors(String path, SensorChannel... sensors) {
 		//A pretty terrible solution for now, this will assume that there will only be one type of
 		//simulated sensor per log file. This is an okay assumption for the data we are currently
 		//outputting, but if we change the log file to log multiple sensors with the granularity

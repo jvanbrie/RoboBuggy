@@ -70,13 +70,13 @@ public static void bringup_sim() throws Exception {
 		String path = "D:\\Vasu\\Documents\\RoboClub\\RoboBuggy\\offline\\offline_tools\\java_src\\FauxArduino\\logs\\2015-04-12-06-22-37\\sensors.txt";
 		String path2 = "D:\\Vasu\\Documents\\RoboClub\\RoboBuggy\\offline\\offline_tools\\java_src\\FauxArduino\\logs\\2015-04-12-06-22-38\\sensors.txt";
 //		String path2 = "C:\\Users\\Vasu\\Documents\\RoboClub\\RoboBuggy\\offline\\offline_tools\\java_src\\FauxArduino\\logs\\2015_slurpee_day\\dualTest.txt";
-		sm.newSimulatedSensors(path
+		sm.newFauxSensors(path
 			//,SensorChannel.IMU
 			,SensorChannel.ENCODER
 			,SensorChannel.GPS
 			//,SensorChannel.DRIVE_CTRL
 			);
-		sm.newSimulatedSensors(path2
+		sm.newFauxSensors(path2
 			,SensorChannel.IMU
 			,SensorChannel.DRIVE_CTRL
 			);
