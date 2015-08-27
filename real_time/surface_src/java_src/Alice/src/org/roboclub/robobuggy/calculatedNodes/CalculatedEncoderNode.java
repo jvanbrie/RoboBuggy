@@ -1,17 +1,17 @@
 package org.roboclub.robobuggy.calculatedNodes;
 
-import org.roboclub.robobuggy.messages.ImuMeasurement;
+import org.roboclub.robobuggy.messages.EncoderMeasurement;
 import org.roboclub.robobuggy.messages.StateMessage;
 import org.roboclub.robobuggy.ros.Publisher;
 import org.roboclub.robobuggy.ros.SensorChannel;
 import org.roboclub.robobuggy.sensors.SensorState;
 
-public class CalculatedIMUNode extends BaseCalculatedNode {
+public class CalculatedEncoderNode extends BaseCalculatedNode {
 	
 	private Publisher statePub;
 	private Publisher msgPub;
 	
-	public CalculatedIMUNode (SensorChannel sensor, NodeCalculator calc, int delay) {
+	public CalculatedEncoderNode (SensorChannel sensor, NodeCalculator calc, int delay) {
 		msgPub = new Publisher(sensor.getMsgPath());
 		statePub = new Publisher(sensor.getStatePath());
 		statePub.publish(new StateMessage(SensorState.DISCONNECTED));
@@ -29,7 +29,7 @@ public class CalculatedIMUNode extends BaseCalculatedNode {
 				while(true) {
 					//I'm sensing problems can arise here ... 
 					if (enabled) {
-						msgPub.publish((ImuMeasurement)calc.calculator(elapsed));
+						msgPub.publish((EncoderMeasurement)calc.calculator(elapsed));
 					}
 									
 					elapsed += delay;

@@ -1,29 +1,14 @@
 package org.roboclub.robobuggy.main;
 
-import gnu.io.CommPort;
-import gnu.io.CommPortIdentifier;
-import gnu.io.SerialPort;
-
-import java.util.ArrayList;
-
+import org.roboclub.robobuggy.calculatedNodes.CalculatedNodeEnum;
 import org.roboclub.robobuggy.calculatedNodes.SimpleEncoderCalculator;
-import org.roboclub.robobuggy.fauxNodes.FauxEncoderNode;
-import org.roboclub.robobuggy.fauxNodes.FauxGPSNode;
-import org.roboclub.robobuggy.fauxNodes.FauxIMUNode;
-import org.roboclub.robobuggy.fauxNodes.FauxNode;
-import org.roboclub.robobuggy.fauxNodes.FauxSteeringNode;
+import org.roboclub.robobuggy.calculatedNodes.SimpleIMUCalculator;
 import org.roboclub.robobuggy.logging.RobotLogger;
-import org.roboclub.robobuggy.nodes.EncoderNode;
-import org.roboclub.robobuggy.nodes.GpsNode;
-import org.roboclub.robobuggy.nodes.ImuNode;
-import org.roboclub.robobuggy.nodes.SteeringNode;
 import org.roboclub.robobuggy.ros.Message;
 import org.roboclub.robobuggy.ros.MessageListener;
-import org.roboclub.robobuggy.ros.Node;
 import org.roboclub.robobuggy.ros.SensorChannel;
 import org.roboclub.robobuggy.ros.Subscriber;
 import org.roboclub.robobuggy.sensors.SensorManager;
-import org.roboclub.robobuggy.simulation.FauxRunner;
 import org.roboclub.robobuggy.ui.Gui;
 
 public class mainFile {
@@ -66,37 +51,8 @@ public class mainFile {
 			Robot.getInstance();
 		}	
 	}
-	
-//	// Open a serial port
-//	private static SerialPort connect(String portName) throws Exception
-//    {
-//        CommPortIdentifier portIdentifier = CommPortIdentifier.getPortIdentifier(portName);
-//        if ( portIdentifier.isCurrentlyOwned() )
-//        {
-//            System.out.println("Error: Port is currently in use");
-//            return null;
-//        }
-//        else
-//        {
-//        	//TODO fix this so that it is not potato 
-//            CommPort commPort = portIdentifier.open("potato", 2000);
-//            
-//            if ( commPort instanceof SerialPort )
-//            {
-//                SerialPort serialPort = (SerialPort) commPort;
-//                serialPort.setSerialPortParams(57600,SerialPort.DATABITS_8,SerialPort.STOPBITS_1,SerialPort.PARITY_NONE);
-//                return serialPort;
-//            }
-//            else
-//            {
-//                System.out.println("Error: Only serial ports are handled by this example.");
-//            }
-//        }
-//		return null;
-//    }	
-	public static void bringup_sim() throws Exception {
-//		ArrayList<Node> sensorList = new ArrayList<Node>();
 
+public static void bringup_sim() throws Exception {
 		// Turn on logger!
 		if(config.logging){
 			System.out.println("Starting Logging");
@@ -105,31 +61,18 @@ public class mainFile {
 
 		Gui.EnableLogging();
 
-// Fake sensors (simulated)
-//		ArrayList<FauxNode> fauxSensors = new ArrayList<FauxNode>();
-//		fauxSensors.add(new FauxIMUNode(SensorChannel.IMU));
-//		fauxSensors.add(new FauxGPSNode(SensorChannel.GPS));
-//		fauxSensors.add(new FauxEncoderNode(SensorChannel.ENCODER));
-//		fauxSensors.add(new FauxSteeringNode(SensorChannel.DRIVE_CTRL));
-//		String path = "C:\\Users\\Vasu\\Documents\\RoboClub\\RoboBuggy\\offline\\offline_tools\\java_src\\FauxArduino\\logs\\2015-04-12-06-22-37\\sensors.txt";
-//		new Thread(new FauxRunner(fauxSensors, path)).start();
-			
-//		ImuNode imu = new ImuNode(SensorChannel.IMU);
-//		GpsNode gps = new GpsNode(SensorChannel.GPS);
-//		EncoderNode enc = new EncoderNode(SensorChannel.ENCODER);
-//		SteeringNode drive_ctrl = new SteeringNode(SensorChannel.DRIVE_CTRL);
-//		
 		SensorManager sm = SensorManager.getInstance();
-//		sm.newRealSensor(SensorChannel.IMU, "COM5");
+
+		//		sm.newRealSensor(SensorChannel.IMU, "COM5");
 //		sm.newRealSensor(SensorChannel.GPS, "COM2");
 //		sm.newRealSensor(SensorChannel.ENCODER, "COM42");
 //		sm.newRealSensor(SensorChannel.DRIVE_CTRL, "COM69");
-		String path = "C:\\Users\\Vasu\\Documents\\RoboClub\\RoboBuggy\\offline\\offline_tools\\java_src\\FauxArduino\\logs\\2015-04-12-06-22-37\\sensors.txt";
-		String path2 = "C:\\Users\\Vasu\\Documents\\RoboClub\\RoboBuggy\\offline\\offline_tools\\java_src\\FauxArduino\\logs\\2015-04-12-06-22-38\\sensors.txt";
+		String path = "D:\\Vasu\\Documents\\RoboClub\\RoboBuggy\\offline\\offline_tools\\java_src\\FauxArduino\\logs\\2015-04-12-06-22-37\\sensors.txt";
+		String path2 = "D:\\Vasu\\Documents\\RoboClub\\RoboBuggy\\offline\\offline_tools\\java_src\\FauxArduino\\logs\\2015-04-12-06-22-38\\sensors.txt";
 //		String path2 = "C:\\Users\\Vasu\\Documents\\RoboClub\\RoboBuggy\\offline\\offline_tools\\java_src\\FauxArduino\\logs\\2015_slurpee_day\\dualTest.txt";
 		sm.newSimulatedSensors(path
-			//,SensorChannel.IMU,
-			//,SensorChannel.ENCODER,
+			//,SensorChannel.IMU
+			,SensorChannel.ENCODER
 			,SensorChannel.GPS
 			//,SensorChannel.DRIVE_CTRL
 			);
@@ -143,9 +86,13 @@ public class mainFile {
 		//ISSUE: Seems like there's a delay in enabling / disabling it?
 		//SOLUTION: It looks like the delay was caused by the call of newCalculatedSensor, which isn't instantaneous
 		//		this may or may not be a problem? Will ask Trevor.
+		sm.disableFauxNode(path, SensorChannel.ENCODER);
 		sm.disableFauxNode(path2, SensorChannel.IMU);
 		
-		sm.newCalculatedSensor(SensorChannel.IMU, new SimpleEncoderCalculator());
+		//I've just discovered that sending values from different sensors doesn't break the entire system, but instead 
+		//just causes a lot of jittery / jumpy behavior.
+		sm.newCalculatedSensor(CalculatedNodeEnum.ENCODER, SensorChannel.ENCODER, new SimpleEncoderCalculator(), 100);
+		sm.newCalculatedSensor(CalculatedNodeEnum.IMU, SensorChannel.IMU, new SimpleIMUCalculator(), 100);
 		
 		new Subscriber(SensorChannel.ENCODER.getMsgPath(), new MessageListener() {
 			@Override
@@ -153,7 +100,5 @@ public class mainFile {
 				//System.out.println(m.toLogString());
 			}
 		});
-		
-		
 	}
 }

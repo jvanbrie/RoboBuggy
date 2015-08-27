@@ -8,7 +8,10 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
 import org.roboclub.robobuggy.calculatedNodes.BaseCalculatedNode;
+import org.roboclub.robobuggy.calculatedNodes.CalculatedEncoderNode;
+import org.roboclub.robobuggy.calculatedNodes.CalculatedGPSNode;
 import org.roboclub.robobuggy.calculatedNodes.CalculatedIMUNode;
+import org.roboclub.robobuggy.calculatedNodes.CalculatedNodeEnum;
 import org.roboclub.robobuggy.calculatedNodes.NodeCalculator;
 import org.roboclub.robobuggy.fauxNodes.FauxEncoderNode;
 import org.roboclub.robobuggy.fauxNodes.FauxGPSNode;
@@ -18,6 +21,7 @@ import org.roboclub.robobuggy.fauxNodes.FauxSteeringNode;
 import org.roboclub.robobuggy.nodes.EncoderNode;
 import org.roboclub.robobuggy.nodes.GpsNode;
 import org.roboclub.robobuggy.nodes.ImuNode;
+import org.roboclub.robobuggy.nodes.RealNodeEnum;
 import org.roboclub.robobuggy.nodes.SteeringNode;
 import org.roboclub.robobuggy.ros.Node;
 import org.roboclub.robobuggy.ros.SensorChannel;
@@ -60,7 +64,7 @@ public class SensorManager {
     }	
 	
 	//TODO: Come up with a better way to determine which sensor to create
-	public void newRealSensor(SensorChannel sensor, String port) throws Exception {
+	public void newRealSensor(RealNodeEnum node, SensorChannel sensor, String port) throws Exception {
 		if (realSensors.containsKey(port)) {
 			throw new Exception("Trying to connect on a port which exists already!");
 		}
@@ -76,7 +80,7 @@ public class SensorManager {
 			throw new Exception("Device not found error");
 		}
 
-		switch (sensor) {
+		switch (node) {
 		case IMU:
 			ImuNode imu = new ImuNode(sensor);
 			imu.setSerialPort(sp);
@@ -105,6 +109,7 @@ public class SensorManager {
 	
 	//Due to how I wrote the code, you'll need to initialize all of the sensors you want at once.
 	//Disable the ones you don't want later if you want, I guess?
+	//TODO: go and fix this
 	public void newSimulatedSensors(String path, SensorChannel... sensors) {
 		//A pretty terrible solution for now, this will assume that there will only be one type of
 		//simulated sensor per log file. This is an okay assumption for the data we are currently
@@ -133,22 +138,43 @@ public class SensorManager {
 		simulatedSensors.put(path, fauxSensors);
 	}
 	
-	public void newCalculatedSensor(SensorChannel sensor, NodeCalculator calc) {
-		switch(sensor) {
+	// I believe this will only allow for a single calculated sensor per type. This may need to be updated in the future
+	public void newCalculatedSensor(CalculatedNodeEnum node, SensorChannel sensor, NodeCalculator calc, int delay) {
+		switch(node) {
 		case IMU:
-			CalculatedIMUNode imu = new CalculatedIMUNode(sensor, calc, 200);
+			CalculatedIMUNode imu = new CalculatedIMUNode(sensor, calc, delay);
 			calculatedSensors.put(calc.getClass().getName(), imu);
 			imu.crunch();
+			break;
+		case GPS:
+			CalculatedGPSNode gps = new CalculatedGPSNode (sensor, calc, delay);
+			calculatedSensors.put(calc.getClass().getName(), gps);
+			gps.crunch();
+			break;
+		case ENCODER:
+			CalculatedEncoderNode enc = new CalculatedEncoderNode(sensor, calc, delay);
+			calculatedSensors.put(calc.getClass().getName(), enc);
+			enc.crunch();
+			break;
+		default:
 			break;
 		}
 	}
 	
 	public void disableFauxNode(String path, SensorChannel sensor) {
-		simulatedSensors.get(path).get(sensor).disable();
+		if (simulatedSensors.containsKey(path) && simulatedSensors.get(path).containsKey(sensor)) {
+			simulatedSensors.get(path).get(sensor).disable();
+		} else {
+			System.out.println("Trying to disable a Faux node on an invalid path / sensor");
+		}
 	}
 	
 	public void enableFauxNode(String path, SensorChannel sensor) {
-		simulatedSensors.get(path).get(sensor).enable();
+		if (simulatedSensors.containsKey(path) && simulatedSensors.get(path).containsKey(sensor)) {
+			simulatedSensors.get(path).get(sensor).enable();
+		} else {
+			System.out.println("Trying to enable a Faux node on an invalid path / sensor");
+		}
 	}
 	
 	//Google says this is a good idea
