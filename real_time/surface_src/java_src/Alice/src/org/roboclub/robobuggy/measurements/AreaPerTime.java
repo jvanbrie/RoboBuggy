@@ -1,10 +1,14 @@
-package org.roboclub.robobuggy.measurments;
+package org.roboclub.robobuggy.measurements;
 
 public class AreaPerTime extends Measurement{
 	//the internal value for area/Time is in meters^2/second
 	
 	private AreaPerTime(double measurment){
 		value = measurment;
+	}
+	
+	public String toString(){
+		return value + " meters^2 / second";
 	}
 	
 	public static AreaPerTime metersSquarePerSecond(double measurment){
