@@ -5,6 +5,7 @@ import gnu.io.PortInUseException;
 import gnu.io.SerialPort;
 import gnu.io.SerialPortEventListener;
 import java.io.IOException;
+import gnu.io.SerialPortEventListener;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Enumeration;
@@ -84,8 +85,9 @@ public class SerialFather implements Node {
 					inputBuffer = new char[BUFFER_SIZE];
 					index = 0;
 					connected = true;
-					port.addEventListener((SerialPortEventListener) this);
 
+					//TODO fix the event Listener
+					port.addEventListener((SerialPortEventListener) this);
 					System.out.println("Connected to port: "
 							+ port.getName());
 					return;
@@ -101,6 +103,11 @@ public class SerialFather implements Node {
 			}
 		}
 		System.out.println("Failed to connect for " + owner);
+	}
+
+	private boolean isCorrectPort(InputStream input, String header, int i) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 	@Override
