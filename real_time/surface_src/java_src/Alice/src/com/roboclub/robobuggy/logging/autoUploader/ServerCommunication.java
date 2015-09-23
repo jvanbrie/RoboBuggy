@@ -1,4 +1,4 @@
-package com.roboclub.robobuggy.logging;
+package com.roboclub.robobuggy.logging.autoUploader;
 
 
 /*
@@ -39,6 +39,10 @@ import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.DriveScopes;
 import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.ParentReference;
+import com.google.api.services.samples.drive.cmdline.DriveSample;
+import com.google.api.services.samples.drive.cmdline.FileDownloadProgressListener;
+import com.google.api.services.samples.drive.cmdline.FileUploadProgressListener;
+import com.google.api.services.samples.drive.cmdline.View;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
