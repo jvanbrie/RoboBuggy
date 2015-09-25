@@ -20,6 +20,28 @@ public class SensorDataTests {
     private boolean failedTest;
     private String testName;
 
+
+    public static void main(String[] args) throws InterruptedException {
+        //run all tests
+        SensorDataTests tests = new SensorDataTests();
+
+        //standard-in tests
+        tests.test_standardIn_encoder();
+        tests.test_standardIn_gps();
+        tests.test_standardIn_imu();
+        tests.test_standardIn_brake();
+        tests.test_standardIn_steering();
+
+        //performance-in tests
+        tests.test_getContinuousData_encoder();
+        tests.test_getContinuousData_gps();
+        tests.test_getContinuousData_imu();
+        tests.test_getContinuousData_brake();
+        tests.test_getContinuousData_steering();
+
+    }
+
+
     public void setUp() {
         System.out.println("Beginning test " + testName);
         failedTest = false;
