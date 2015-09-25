@@ -4,7 +4,6 @@ import com.roboclub.robobuggy.ros.Message;
 import com.roboclub.robobuggy.ros.MessageListener;
 import com.roboclub.robobuggy.ros.SensorChannel;
 import com.roboclub.robobuggy.ros.Subscriber;
-import com.sun.xml.internal.xsom.impl.parser.SubstGroupBaseTypeRef;
 
 import java.util.Timer;
 import java.util.TimerTask;
