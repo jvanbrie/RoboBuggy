@@ -62,9 +62,8 @@ public class SensorDataTests {
         test_standardIn_generic(SensorChannel.STEERING.toString());
     }
 
-
-
     public void test_standardIn_generic(String topic) throws InterruptedException {
+
         testName = "Standard IO : " + topic;
         setUp();
 
@@ -77,11 +76,32 @@ public class SensorDataTests {
         tearDown();
     }
 
-    public void test_gettingContinuousData_Encoder() {
-        testName = "continuous data stream - Encoder";
+
+    public void test_getContinuousData_encoder() {
+        test_gettingContinuousData_generic(SensorChannel.ENCODER.toString());
+    }
+
+    public void test_getContinuousData_gps() {
+        test_gettingContinuousData_generic(SensorChannel.GPS.toString());
+    }
+
+    public void test_getContinuousData_imu() {
+        test_gettingContinuousData_generic(SensorChannel.IMU.toString());
+    }
+
+    public void test_getContinuousData_brake() {
+        test_gettingContinuousData_generic(SensorChannel.BRAKE.toString());
+    }
+
+    public void test_getContinuousData_steering() {
+        test_gettingContinuousData_generic(SensorChannel.STEERING.toString());
+    }
+
+    public void test_gettingContinuousData_generic(String topic) {
+        testName = "continuous data stream - " + topic;
         setUp();
 
-        subscribers.add(new Subscriber(SensorChannel.ENCODER.toString(), listener));
+        subscribers.add(new Subscriber(topic, listener));
 
         final Timer timer = new Timer("Timer");
         timer.scheduleAtFixedRate(new TimerTask() {
