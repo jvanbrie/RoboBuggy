@@ -21,11 +21,14 @@ public class SensorDataTests {
     private String testName;
 
     public void setUp() {
+        System.out.println("Beginning test " + testName);
         failedTest = false;
         listener = new MessageListener() {
+
             @Override
             public void actionPerformed(String topicName, Message m) {
-                System.out.println("received message!");
+                System.out.println("Message received!");
+                dataPointsReceivedSinceLastCheck++;
             }
         };
         subscribers = new Vector<Subscriber>();
@@ -39,17 +42,45 @@ public class SensorDataTests {
         subscribers = new Vector<Subscriber>();
     }
 
-    public void test_gettingContinuousData() {
-        testName = "gettingContinuousData";
+    public void test_standardIn_encoder() throws InterruptedException {
+        test_standardIn_generic(SensorChannel.ENCODER.toString());
+    }
+
+    public void test_standardIn_gps() throws InterruptedException {
+        test_standardIn_generic(SensorChannel.GPS.toString());
+    }
+
+    public void test_standardIn_imu() throws InterruptedException {
+        test_standardIn_generic(SensorChannel.IMU.toString());
+    }
+
+    public void test_standardIn_brake() throws InterruptedException {
+        test_standardIn_generic(SensorChannel.BRAKE.toString());
+    }
+
+    public void test_standardIn_steering() throws InterruptedException {
+        test_standardIn_generic(SensorChannel.STEERING.toString());
+    }
+
+
+
+    public void test_standardIn_generic(String topic) throws InterruptedException {
+        testName = "Standard IO : " + topic;
         setUp();
 
+        subscribers.add(new Subscriber(topic, listener));
 
-        listener = new MessageListener() {
-            @Override
-            public void actionPerformed(String topicName, Message m) {
-                dataPointsReceivedSinceLastCheck++;
-            }
-        };
+        Thread.sleep(1000);
+
+        failedTest = dataPointsReceivedSinceLastCheck > 0;
+
+        tearDown();
+    }
+
+    public void test_gettingContinuousData_Encoder() {
+        testName = "continuous data stream - Encoder";
+        setUp();
+
         subscribers.add(new Subscriber(SensorChannel.ENCODER.toString(), listener));
 
         final Timer timer = new Timer("Timer");
