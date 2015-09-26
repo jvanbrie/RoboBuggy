@@ -39,8 +39,6 @@ public class SensorDataTests {
         tests.test_getContinuousData_brake();
         tests.test_getContinuousData_steering();
 
-        //change! for new member demo
-
     }
 
 

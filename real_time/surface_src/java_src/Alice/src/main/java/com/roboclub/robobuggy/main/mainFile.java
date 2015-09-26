@@ -114,7 +114,7 @@ public class mainFile {
 		
 		// Set up the IMU
 		SerialPort sp = null;
-		String com = "COM4";//"COM18";
+		String com = "COM6";//"COM18";
 		try {
 			System.out.println("Initializing IMU Serial Connection");
 			sp = connect(com);
@@ -128,7 +128,7 @@ public class mainFile {
 		sensorList.add(imu);
 
 		// Set up the GPS
-		com = "COM7"; //"COM16";
+		com = "COM5"; //"COM16";
 		try {
 			System.out.println("Initializing GPS Serial Connection");
 			sp = connect(com);
@@ -142,7 +142,7 @@ public class mainFile {
 		sensorList.add(gps);
 	
 		// Set up the Encoder
-		com = "COM14"; //"COM15";
+		com = "COM3"; //"COM15";
 		try {
 			System.out.println("Initializing ENCODER Serial Connection");
 			sp = connect(com);
@@ -162,18 +162,18 @@ public class mainFile {
 			}
 		});
 
-		// Set up the DRIVE CONTROL
-		com = "COM9"; //"COM17";
-		try {
-			System.out.println("Initializing DRIVE CONTROL Serial Connection");
-			sp = connect(com);
-			System.out.println("DRIVE CONTROL connected to " + com);
-		} catch (Exception e) {
-			System.out.println("Unable to connect to necessary device on " + com);
-			e.printStackTrace();
-			throw new Exception("Device not found error");
-		}
-		drive_ctrl.setSerialPort(sp);
-		sensorList.add(drive_ctrl);
+//		// Set up the DRIVE CONTROL
+//		com = "COM9"; //"COM17";
+//		try {
+//			System.out.println("Initializing DRIVE CONTROL Serial Connection");
+//			sp = connect(com);
+//			System.out.println("DRIVE CONTROL connected to " + com);
+//		} catch (Exception e) {
+//			System.out.println("Unable to connect to necessary device on " + com);
+//			e.printStackTrace();
+//			throw new Exception("Device not found error");
+//		}
+//		drive_ctrl.setSerialPort(sp);
+//		sensorList.add(drive_ctrl);
 	}
 }
