@@ -1,3 +1,5 @@
+package com.roboclub.robobuggy.logging.autoLogging;
+
 /*
  * Copyright (c) 2012 Google Inc.
  *
@@ -12,11 +14,9 @@
  * the License.
  */
 
-package com.roboclub.robobuggy.logging.autoUploader;
 
 import com.google.api.client.googleapis.media.MediaHttpDownloader;
 import com.google.api.client.googleapis.media.MediaHttpDownloaderProgressListener;
-import com.roboclub.robobuggy.logging.autoUploader.View;
 
 /**
  * The File Download Progress Listener.
