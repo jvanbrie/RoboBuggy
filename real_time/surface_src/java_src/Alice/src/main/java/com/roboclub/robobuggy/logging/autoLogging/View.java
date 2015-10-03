@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.roboclub.robobuggy.logging.autoUploader;
+package com.roboclub.robobuggy.logging.autoLogging;
 
 /**
  * Utility methods to print to the command line.

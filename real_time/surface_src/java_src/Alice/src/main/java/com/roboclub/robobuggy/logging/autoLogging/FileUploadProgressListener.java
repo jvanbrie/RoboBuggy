@@ -12,11 +12,10 @@
  * the License.
  */
 
-package com.roboclub.robobuggy.logging.autoUploader;
+package com.roboclub.robobuggy.logging.autoLogging;
 
 import com.google.api.client.googleapis.media.MediaHttpUploader;
 import com.google.api.client.googleapis.media.MediaHttpUploaderProgressListener;
-import com.roboclub.robobuggy.logging.autoUploader.View;
 
 import java.io.IOException;
 import java.text.NumberFormat;

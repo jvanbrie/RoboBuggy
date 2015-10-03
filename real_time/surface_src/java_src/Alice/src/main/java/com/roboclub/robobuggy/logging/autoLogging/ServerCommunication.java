@@ -1,4 +1,5 @@
-package com.roboclub.robobuggy.logging.autoUploader;
+package com.roboclub.robobuggy.logging.autoLogging;
+
 
 
 /*
@@ -39,10 +40,10 @@ import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.DriveScopes;
 import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.ParentReference;
-import com.google.api.services.samples.drive.cmdline.DriveSample;
-import com.google.api.services.samples.drive.cmdline.FileDownloadProgressListener;
-import com.google.api.services.samples.drive.cmdline.FileUploadProgressListener;
-import com.google.api.services.samples.drive.cmdline.View;
+//import com.google.api.services.samples.drive.cmdline.DriveSample;
+//import com.google.api.services.samples.drive.cmdline.FileDownloadProgressListener;
+//import com.google.api.services.samples.drive.cmdline.FileUploadProgressListener;
+//import com.google.api.services.samples.drive.cmdline.View;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -86,7 +87,7 @@ public class ServerCommunication {
     // load client secrets
     GoogleClientSecrets clientSecrets =
         GoogleClientSecrets.load(JSON_FACTORY,
-            new InputStreamReader(DriveSample.class.getResourceAsStream("/client_secrets.json")));
+            new InputStreamReader(ServerCommunication.class.getResourceAsStream("/client_secrets.json")));
     if (clientSecrets.getDetails().getClientId().startsWith("Enter")
         || clientSecrets.getDetails().getClientSecret().startsWith("Enter ")) {
       System.out

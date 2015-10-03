@@ -19,9 +19,9 @@ dependencies {
     compile files('library/google-api-java-client/libs/google-api-client-1.20.0.jar')
     compile files('library/google-api-java-client/libs/google-api-client-android-1.20.0.jar')
     compile files('library/google-api-java-client/libs/google-api-client-gson-1.20.0.jar')
-    compile files('library/google-api-java-client/libs/google-api-jackson2-1.20.0.jar')
-    compile files('library/google-api-java-client/libs/google-api-java6-1.20.0.jar')
-    compile files('library/google-api-java-client/libs/google-api-protobuf-1.20.0.jar')
+    compile files('library/google-api-java-client/libs/google-api-client-jackson2-1.20.0.jar')
+    compile files('library/google-api-java-client/libs/google-api-client-java6-1.20.0.jar')
+    compile files('library/google-api-java-client/libs/google-api-client-protobuf-1.20.0.jar')
     compile files('library/google-api-java-client/libs/google-api-client-servlet-1.20.0.jar')
     compile files('library/google-api-java-client/libs/google-api-client-xml-1.20.0.jar')
     compile files('library/google-api-java-client/libs/google-http-client-1.20.0.jar')
@@ -29,7 +29,7 @@ dependencies {
     compile files('library/google-api-java-client/libs/google-http-client-appengine-1.20.0.jar')
     compile files('library/google-api-java-client/libs/google-http-client-gson-1.20.0.jar')
     compile files('library/google-api-java-client/libs/google-http-client-jackson-1.20.0.jar')
-    compile files('library/google-api-java-client/libs/google-http-client-jackson-2.20.0.jar')
+    compile files('library/google-api-java-client/libs/google-http-client-jackson2-1.20.0.jar')
     compile files('library/google-api-java-client/libs/google-http-client-jdo-1.20.0.jar')
     compile files('library/google-api-java-client/libs/google-http-client-protobuf-1.20.0.jar')
     compile files('library/google-api-java-client/libs/google-http-client-xml-1.20.0.jar')
@@ -41,6 +41,7 @@ dependencies {
     compile files('library/google-api-java-client/libs/gson-2.1.jar')
     compile files('library/google-api-java-client/libs/guava-jdk5-13.0.jar')
     compile files('library/google-api-java-client/libs/httpclient-4.0.1.jar')
+    compile files('library/google-api-java-client/libs/google-api-services-drive-v2-rev135-1.19.0.jar')
 }
 
 uploadArchives {
