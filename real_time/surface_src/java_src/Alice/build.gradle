@@ -15,6 +15,7 @@ dependencies {
     // TODO: this is stupid. find a way to use mavencentral repo.
     compile files('library/orsoncharts-1.4-eval-nofx.jar')
     compile files('library/RXTXcomm.jar')
+    compile files('library/google-api-java-client/libs/gson-2.1.jar')
 }
 
 uploadArchives {
