@@ -3,6 +3,7 @@ package com.roboclub.robobuggy.logging.autoLogging;
 
 
 /*
+ * Modified by Trevor Decker
  * Copyright (c) 2012 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
@@ -40,10 +41,6 @@ import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.DriveScopes;
 import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.ParentReference;
-//import com.google.api.services.samples.drive.cmdline.DriveSample;
-//import com.google.api.services.samples.drive.cmdline.FileDownloadProgressListener;
-//import com.google.api.services.samples.drive.cmdline.FileUploadProgressListener;
-//import com.google.api.services.samples.drive.cmdline.View;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -55,7 +52,6 @@ import java.util.List;
 
 
 public class ServerCommunication {
-
   // Be sure to specify the name of your application. If the application name is {@code null} or
   // blank, the application will log a warning. Suggested format is "MyCompany-ProductName/1.0".
 
@@ -87,7 +83,7 @@ public class ServerCommunication {
     // load client secrets
     GoogleClientSecrets clientSecrets =
         GoogleClientSecrets.load(JSON_FACTORY,
-            new InputStreamReader(ServerCommunication.class.getResourceAsStream("/client_secrets.json")));
+            new InputStreamReader(ServerCommunication.class.getResourceAsStream("client_secrets.json")));
     if (clientSecrets.getDetails().getClientId().startsWith("Enter")
         || clientSecrets.getDetails().getClientSecret().startsWith("Enter ")) {
       System.out
@@ -153,7 +149,6 @@ public class ServerCommunication {
       t.printStackTrace();
     }
     System.exit(1);
-
   }
 
   private static void uploadFolder(java.io.File inputFile, ParentReference whereToSave)
