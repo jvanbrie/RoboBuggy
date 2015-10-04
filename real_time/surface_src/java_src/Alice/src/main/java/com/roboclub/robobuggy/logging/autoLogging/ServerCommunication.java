@@ -1,7 +1,5 @@
 package com.roboclub.robobuggy.logging.autoLogging;
 
-
-
 /*
  * Modified by Trevor Decker
  * Copyright (c) 2012 Google Inc.
@@ -21,7 +19,7 @@ package com.roboclub.robobuggy.logging.autoLogging;
 //TODO add ability to list the directory and see which ones have been download and chose what to download 
 //TOOD package in a factory for easy use
 //TODO add check for Internet connection
-//TODO add needed lib files 
+//TODO add download stuff
 
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
@@ -41,24 +39,27 @@ import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.DriveScopes;
 import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.ParentReference;
+import com.roboclub.robobuggy.ui.Gui;
 
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 
-public class ServerCommunication {
+public  class ServerCommunication {
   // Be sure to specify the name of your application. If the application name is {@code null} or
   // blank, the application will log a warning. Suggested format is "MyCompany-ProductName/1.0".
 
-  private static final String APPLICATION_NAME = "Trevor-Test";
-
+  private static final String APPLICATION_NAME = "Robotic_Buggy";
   private static final String DIR_FOR_DOWNLOADS = "LOG_FILES";
-  private static final java.io.File UPLOAD_FILE = new java.io.File("LOG_FILES");
+  private static final String DRIVE_LOG_FOLDER_ID = "0B1IjfVrCn6dNZjZfems2ZUlXNlE";
 
   // / Directory to store user credentials.
   private static final java.io.File DATA_STORE_DIR = new java.io.File(
@@ -78,6 +79,28 @@ public class ServerCommunication {
   // / Global Drive API client.
   private static Drive drive;
 
+  private ServerCommunication(){
+	  //constructor for this class
+	    System.out.println("Working directory" + System.getProperty("user.dir"));
+
+	    try {
+	      httpTransport = GoogleNetHttpTransport.newTrustedTransport();
+	      dataStoreFactory = new FileDataStoreFactory(DATA_STORE_DIR);
+	      // authorization
+	      Credential credential = authorize();
+	      // set up the global Drive instance
+	      drive = new Drive.Builder(httpTransport, JSON_FACTORY, credential).setApplicationName(
+	              APPLICATION_NAME).build();
+	      
+	      return;
+	    } catch (IOException e) {
+	      System.err.println(e.getMessage());
+	    } catch (Throwable t) {
+	      t.printStackTrace();
+	    }
+	    System.exit(1);
+  }
+  
   // / Authorizes the installed application to access user's protected data.
   private static Credential authorize() throws Exception {
     // load client secrets
@@ -99,60 +122,53 @@ public class ServerCommunication {
     // authorize
     return new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver()).authorize("user");
   }
-
-  public static void main(String[] args) {
-    System.out.println("Working directory" + System.getProperty("user.dir"));
-
-    // Preconditions.checkArgument(
-    // !UPLOAD_FILE_PATH.startsWith("Enter ") && !DIR_FOR_DOWNLOADS.startsWith("Enter "),
-    // "Please enter the upload file path and download directory in %s", DriveSample.class);
-    try {
-      httpTransport = GoogleNetHttpTransport.newTrustedTransport();
-      dataStoreFactory = new FileDataStoreFactory(DATA_STORE_DIR);
-      // authorization
-      Credential credential = authorize();
-      // set up the global Drive instance
-      drive =
-          new Drive.Builder(httpTransport, JSON_FACTORY, credential).setApplicationName(
-              APPLICATION_NAME).build();
-
-      ParentReference root_dir = new ParentReference();
-      root_dir.setId("0B1IjfVrCn6dNZjZfems2ZUlXNlE");
-      uploadFolder(UPLOAD_FILE, root_dir);
-
-      /*
-       * // run commands View.header1("Creating a new log folder"); File folder =
-       * createFolder(false, "newLogFolder", Arrays.asList(new
-       * ParentReference().setId("0B1IjfVrCn6dNZjZfems2ZUlXNlE")));
-       * 
-       * View.header1("Starting Resumable Media Upload"); File uploadedFile = uploadFile(false,
-       * Arrays.asList(new ParentReference().setId(folder.getId())));
-       */
-      /*
-       * 
-       * View.header1("Updating Uploaded File Name"); File updatedFile =
-       * updateFileWithTestSuffix(uploadedFile.getId());
-       * 
-       * View.header1("Starting Resumable Media Download"); downloadFile(false, updatedFile);
-       * 
-       * View.header1("Starting Simple Media Upload"); uploadedFile = uploadFile(true);
-       * 
-       * View.header1("Starting Simple Media Download"); downloadFile(true, uploadedFile);
-       */
-
-      View.header1("Success!");
-
-      return;
-    } catch (IOException e) {
-      System.err.println(e.getMessage());
-    } catch (Throwable t) {
-      t.printStackTrace();
-    }
-    System.exit(1);
+  private static ServerCommunication instance = null;
+  public static ServerCommunication getInstance(){
+	  if(instance == null){
+		  instance = new ServerCommunication();
+	  }
+	return instance;  
   }
+  
+  public static boolean addFolderToDrive(java.io.File FolderToupload) throws IOException{
+	  if(drive==null){
+		  return false;
+	  }
+	  ParentReference root_dir = new ParentReference();
+      root_dir.setId(DRIVE_LOG_FOLDER_ID);
+      boolean upload_status = uploadFolder(FolderToupload, root_dir);
+      if(!upload_status){
+    	  return false;
+      }
+    	//upload worked 
 
-  private static void uploadFolder(java.io.File inputFile, ParentReference whereToSave)
+      return true;
+  }	
+  
+
+  //TODO
+  public static boolean hasInterntAcess(){
+	  return false;
+  }
+  
+  
+
+  
+  
+  /**
+   * 
+   * @param inputFile
+   * @param whereToSave
+   * @return return true if upload worked properly, return false if upload did not work properly 
+   * @throws IOException
+   */
+  private static boolean uploadFolder(java.io.File inputFile, ParentReference whereToSave)
       throws IOException {
+	  if(hasFolderBeenUploaded()){
+		  return true;
+	  }
+	  //folder has not been uploaded yet so we are going to upload it now
+	  
     // todo mark as uploaded
     String[] files = inputFile.list();
     for (int i = 0; i < files.length; i++) {
@@ -170,7 +186,23 @@ public class ServerCommunication {
         }
       }
     }
-
+    //adds status file 
+    markFolderAsUploaded(inputFile, whereToSave);
+    return true; //TODO provide actual feedback about the folder being uploaded or not.
+  }
+  
+  private static boolean hasFolderBeenUploaded(){
+	  //checks to see if the folder has already been marked as  
+	  return false; //TODO
+  }
+  
+  private static void markFolderAsUploaded(java.io.File folder,ParentReference whereToSave) throws IOException{
+	    String filePath = folder.getAbsolutePath()+"/.uploadStatus.txt";
+	    PrintWriter writer = new PrintWriter(folder, "UTF-8");
+	    writer.println("uploaded");
+	    writer.close();
+	    java.io.File statusFile = new java.io.File(filePath);
+	    uploadFile(false, Arrays.asList(whereToSave),statusFile);
   }
 
   // create a new folder at a specfic location, set parent to be null if you want it to be root
@@ -187,10 +219,8 @@ public class ServerCommunication {
   /*
    * // If the folder has a uploaded textfile with the value "false" then Recursively walks down the
    * // folder uploading all files and sub folders private static File uploadFolder(boolean
-   * useDirectUpload, File folder) { UPLOAD_FILE.list(); // TODO return folder; }
    */
 
-  // TODO add download stuff
 
   /** Uploads a file using either resumable or direct media upload. */
   private static File uploadFile(boolean useDirectUpload, List<ParentReference> parentList,
@@ -206,15 +236,6 @@ public class ServerCommunication {
     uploader.setDirectUploadEnabled(useDirectUpload);
     uploader.setProgressListener(new FileUploadProgressListener());
     return insert.execute();
-  }
-
-  /** Updates the name of the uploaded file to have a "drivetest-" prefix. */
-  private static File updateFileWithTestSuffix(String id) throws IOException {
-    File fileMetadata = new File();
-    fileMetadata.setTitle("drivetest-" + UPLOAD_FILE.getName());
-
-    Drive.Files.Update update = drive.files().update(id, fileMetadata);
-    return update.execute();
   }
 
   /** Downloads a file using either resumable or direct media download. */
