@@ -26,7 +26,6 @@ public class mainFile {
 	public static void main(String args[]) {
 		//ArrayList<Integer> cameras = new ArrayList<Integer>();  //TODO have this set the cameras to use 
 		config.getInstance();//must be run at least once
-		
 		for (int i = 0; i < args.length; i++) {
 			if (args[i].equalsIgnoreCase("-g")) {
 				config.GUI_ON = false;
@@ -42,7 +41,7 @@ public class mainFile {
 		if(config.GUI_ON){
 			Gui.getInstance();
 		}
-		
+
 		// Starts the robot
 		if(config.DATA_PLAY_BACK_DEFAULT){
 			try {

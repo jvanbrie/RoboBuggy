@@ -52,7 +52,7 @@ public final class Gui extends JFrame {
 		Container pane = this.getContentPane();
 		pane.setLayout(new GridBagLayout());
 		pane.setBackground(Color.DARK_GRAY);
-
+		
 		try {
 			this.setIconImage(ImageIO.read(new File("images/rc_logo.png")));
 		} catch (Exception e) {
