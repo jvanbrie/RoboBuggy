@@ -15,7 +15,13 @@ public class IntegralSink implements Node {
 			System.out.println("Hello, BuggyRos! (" + im.val + ")");
 		}
 	});
-	
+
+        public IntegralSink() {
+            System.out.println("Tutorial starting up....");
+            System.out.println("(If nothing happens after this, follow the instructions in a_integrator\\startercode\\Integrator.java");
+    
+        }
+
 	@Override
 	public boolean shutdown() {
 		// no resources to clean up; simply return.
