@@ -37,10 +37,8 @@ int main(void) {
   
   for(int i=0; i < 24; i++)
     lightarr[i] = MAXBRIGHT;
-  
-  ws2812_setleds(lightarr, 24);
-  
-  while(true) {
     
+  while(true) {
+    ws2812_setleds(lightarr, 24);
   }
 }
