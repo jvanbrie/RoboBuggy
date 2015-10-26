@@ -78,6 +78,8 @@ public abstract class SerialNode implements Node {
 			System.out.println("broken");
 		}
 		
+		sp.notifyOnBreakInterrupt(true);
+		
 		// Begin the madness
 		io_thread = new Thread(new iothread(), thread_name + "-serial");
 		io_thread.setPriority(Thread.MAX_PRIORITY);
@@ -127,8 +129,9 @@ public abstract class SerialNode implements Node {
 					//System.out.printf(new String(buf));
 					//System.out.printf("%d\n", bytes);
 				} catch (IOException e) {
+					System.err.println("IO Error: Is the thing disconnected?");
 					// TODO handle this error reasonably.
-					e.printStackTrace();
+//					e.printStackTrace();
 				}
 				
 				while(true) {
