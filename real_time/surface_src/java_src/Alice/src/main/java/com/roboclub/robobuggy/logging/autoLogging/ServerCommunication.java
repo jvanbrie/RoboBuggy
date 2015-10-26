@@ -39,218 +39,366 @@ import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.DriveScopes;
 import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.ParentReference;
-import com.roboclub.robobuggy.ui.Gui;
+import com.google.api.services.drive.Drive.Children;
+import com.google.api.services.drive.model.ChildList;
+import com.google.api.services.drive.model.ChildReference;
 
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+public class ServerCommunication {
+	// Be sure to specify the name of your application. If the application name
+	// is {@code null} or
+	// blank, the application will log a warning. Suggested format is
+	// "MyCompany-ProductName/1.0".
 
-public  class ServerCommunication {
-  // Be sure to specify the name of your application. If the application name is {@code null} or
-  // blank, the application will log a warning. Suggested format is "MyCompany-ProductName/1.0".
+	private static final String APPLICATION_NAME = "Robotic_Buggy";
+	private static final String DRIVE_LOG_FOLDER_ID = "0B1IjfVrCn6dNZjZfems2ZUlXNlE";
 
-  private static final String APPLICATION_NAME = "Robotic_Buggy";
-  private static final String DIR_FOR_DOWNLOADS = "LOG_FILES";
-  private static final String DRIVE_LOG_FOLDER_ID = "0B1IjfVrCn6dNZjZfems2ZUlXNlE";
+	// / Directory to store user credentials.
+	private static final java.io.File DATA_STORE_DIR = new java.io.File(
+			System.getProperty("user.home"), ".store/drive_sample");
 
-  // / Directory to store user credentials.
-  private static final java.io.File DATA_STORE_DIR = new java.io.File(
-      System.getProperty("user.home"), ".store/drive_sample");
+	// / Global instance of the {@link DataStoreFactory}. The best practice is
+	// to make it a single
+	// / globally shared instance across your application.
+	private static FileDataStoreFactory dataStoreFactory;
 
+	// / Global instance of the HTTP transport.
+	private static HttpTransport httpTransport;
 
-  // / Global instance of the {@link DataStoreFactory}. The best practice is to make it a single
-  // / globally shared instance across your application.
-  private static FileDataStoreFactory dataStoreFactory;
+	// / Global instance of the JSON factory.
+	private static final JsonFactory JSON_FACTORY = JacksonFactory
+			.getDefaultInstance();
 
-  // / Global instance of the HTTP transport.
-  private static HttpTransport httpTransport;
+	// / Global Drive API client.
+	private static Drive drive;
 
-  // / Global instance of the JSON factory.
-  private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
+	private ServerCommunication() {
+		// constructor for this class
+		System.out.println("Working directory" + System.getProperty("user.dir"));
 
-  // / Global Drive API client.
-  private static Drive drive;
+		try {
+			httpTransport = GoogleNetHttpTransport.newTrustedTransport();
+			dataStoreFactory = new FileDataStoreFactory(DATA_STORE_DIR);
+			// authorization
+			Credential credential = authorize();
+			// set up the global Drive instance
+			drive = new Drive.Builder(httpTransport, JSON_FACTORY, credential)
+					.setApplicationName(APPLICATION_NAME).build();
 
-  private ServerCommunication(){
-	  //constructor for this class
-	    System.out.println("Working directory" + System.getProperty("user.dir"));
+			return;
+		} catch (IOException e) {
+			System.err.println(e.getMessage());
+		} catch (Throwable t) {
+			t.printStackTrace();
+		}
+		System.exit(1);
+	}
 
+	// / Authorizes the installed application to access user's protected data.
+	private static Credential authorize() throws Exception {
+		// load client secrets
+		GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(
+				JSON_FACTORY,
+				new InputStreamReader(ServerCommunication.class
+						.getResourceAsStream("client_secrets.json")));
+		if (clientSecrets.getDetails().getClientId().startsWith("Enter")
+				|| clientSecrets.getDetails().getClientSecret()
+						.startsWith("Enter ")) {
+			System.out
+					.println("Enter Client ID and Secret from https://code.google.com/apis/console/?api=drive "
+							+ "into drive-cmdline-sample/src/main/resources/client_secrets.json");
+			System.exit(1);
+		}
+		// set up authorization code flow
+		GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
+				httpTransport, JSON_FACTORY, clientSecrets,
+				Collections.singleton(DriveScopes.DRIVE_FILE))
+				.setDataStoreFactory(dataStoreFactory).build();
+		// authorize
+		return new AuthorizationCodeInstalledApp(flow,
+				new LocalServerReceiver()).authorize("user");
+	}
+
+	private static ServerCommunication instance = null;
+
+	public static ServerCommunication getInstance() {
+		if (instance == null) {
+			instance = new ServerCommunication();
+		}
+		return instance;
+	}
+	
+	public ArrayList<File> ListFileMetaDataInDrive(String folderOnServer) throws IOException{
+		return ListTypeMetaDataInDrive(folderOnServer,"application/vnd.google-apps.folder",false);
+
+	}
+	
+	public ArrayList<File> ListFolderMetaDataInDrive(String folderOnServer) throws IOException{
+		return ListTypeMetaDataInDrive(folderOnServer,"application/vnd.google-apps.folder",true);
+
+	}
+	
+	//if accept is true then we will only keep files with data that has a type matching the typeName string
+	//if accept is false then we will only keep files with data that has a type that does not match the typeName string
+	private ArrayList<File> ListTypeMetaDataInDrive(String folderOnServer,String typeName,boolean accept) throws IOException{
+		ArrayList<File> allMetaData = ListMetaDataInDrive(folderOnServer);
+		ArrayList<File> result = new ArrayList<File>();
+		for(File thisFile : allMetaData){
+			if(thisFile.getMimeType().equals(typeName)){
+				if(accept){
+					result.add(thisFile);
+				}
+			}else{
+				if(!accept){
+					result.add(thisFile);
+				}
+				
+			}
+		}
+		return result;
+	}
+	
+	public ArrayList<File> ListMetaDataInDrive(String folderOnServer) throws IOException{
+		ArrayList<File> metaData = new ArrayList<File>();
+		ChildList children = getFilesInFolder(folderOnServer);
+        for (ChildReference child : children.getItems()) {
+	          File thisFile = drive.files().get(child.getId()).execute();
+	          metaData.add(thisFile);
+	        }
+        return metaData;
+	}
+	
+	  /**
+	   * returns a childList of all files belonging to the given folder.
+	   *
+	   * @param service Drive API service instance.
+	   * @param folderId ID of the folder to print files from.
+	   */
+	  public static ChildList getFilesInFolder(String folderId)
+	      throws IOException {
+	    Children.List request = drive.children().list(folderId);
+	    ChildList children = new ChildList();
+
+	    do {
+	      try {
+	        ChildList thisPageChildern = request.execute();
+	        children.putAll(thisPageChildern);
+	        request.setPageToken(thisPageChildern.getNextPageToken());
+	      } catch (IOException e) {
+	        System.out.println("An error occurred: " + e);
+	        request.setPageToken(null);
+	      }
+	    } while (request.getPageToken() != null &&
+	             request.getPageToken().length() > 0);
+	    return children;
+	  }
+
+	public static boolean addFolderToDrive(java.io.File FolderToupload)
+			throws IOException {
+		if (drive == null) {
+			return false;
+		}
+		ParentReference root_dir = new ParentReference();
+		root_dir.setId(DRIVE_LOG_FOLDER_ID);
+		boolean upload_status = uploadFolder(FolderToupload, root_dir);
+		if (!upload_status) {
+			return false;
+		}
+		// upload worked
+
+		return true;
+	}
+
+	public static boolean uploadFolder(java.io.File inputFile,
+			String whereToSave) throws IOException{
+		ParentReference parent = new ParentReference();
+		parent.setId(whereToSave);
+		return uploadFolder(inputFile,parent);
+	}
+	
+	/**
+	 * 
+	 * @param inputFile
+	 * @param whereToSave
+	 * @return return true if upload worked properly, return false if upload did
+	 *         not work properly
+	 * @throws IOException
+	 */
+	private static boolean uploadFolder(java.io.File inputFile,
+			ParentReference whereToSave) throws IOException {
+		String[] files = inputFile.list();
+		for (int i = 0; i < files.length; i++) {
+			java.io.File thisFile = new java.io.File(
+					inputFile.getAbsolutePath() + "/" + files[i]);
+			if (!thisFile.isHidden()) {
+				if (thisFile.isDirectory()) {
+					// upload directory
+					File thisFolder = createFolder(false, files[i],
+							Arrays.asList(whereToSave));
+					ParentReference parent = new ParentReference();
+					parent.setId(thisFolder.getId());
+					uploadFolder(thisFile, parent);
+				} else {
+					// upload file
+					uploadFile(false, Arrays.asList(whereToSave), thisFile);
+				}
+			}
+		}
+		// adds status file
+		markFolderAsUploaded(inputFile, whereToSave);
+		return true; // TODO provide actual feedback about the folder being
+						// uploaded or not.
+	}
+	
+	public boolean validFileId(String id) {
 	    try {
-	      httpTransport = GoogleNetHttpTransport.newTrustedTransport();
-	      dataStoreFactory = new FileDataStoreFactory(DATA_STORE_DIR);
-	      // authorization
-	      Credential credential = authorize();
-	      // set up the global Drive instance
-	      drive = new Drive.Builder(httpTransport, JSON_FACTORY, credential).setApplicationName(
-	              APPLICATION_NAME).build();
-	      
-	      return;
+	        File f = drive.files().get(id).execute();
+	        return !f.getLabels().getTrashed();
 	    } catch (IOException e) {
-	      System.err.println(e.getMessage());
-	    } catch (Throwable t) {
-	      t.printStackTrace();
+	        e.printStackTrace();
+	        System.out.println("bad id: " + id);
 	    }
-	    System.exit(1);
-  }
-  
-  // / Authorizes the installed application to access user's protected data.
-  private static Credential authorize() throws Exception {
-    // load client secrets
-    GoogleClientSecrets clientSecrets =
-        GoogleClientSecrets.load(JSON_FACTORY,
-            new InputStreamReader(ServerCommunication.class.getResourceAsStream("client_secrets.json")));
-    if (clientSecrets.getDetails().getClientId().startsWith("Enter")
-        || clientSecrets.getDetails().getClientSecret().startsWith("Enter ")) {
-      System.out
-          .println("Enter Client ID and Secret from https://code.google.com/apis/console/?api=drive "
-              + "into drive-cmdline-sample/src/main/resources/client_secrets.json");
-      System.exit(1);
-    }
-    // set up authorization code flow
-    GoogleAuthorizationCodeFlow flow =
-        new GoogleAuthorizationCodeFlow.Builder(httpTransport, JSON_FACTORY, clientSecrets,
-            Collections.singleton(DriveScopes.DRIVE_FILE)).setDataStoreFactory(dataStoreFactory)
-            .build();
-    // authorize
-    return new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver()).authorize("user");
-  }
-  private static ServerCommunication instance = null;
-  public static ServerCommunication getInstance(){
-	  if(instance == null){
-		  instance = new ServerCommunication();
-	  }
-	return instance;  
-  }
-  
-  public static boolean addFolderToDrive(java.io.File FolderToupload) throws IOException{
-	  if(drive==null){
-		  return false;
-	  }
-	  ParentReference root_dir = new ParentReference();
-      root_dir.setId(DRIVE_LOG_FOLDER_ID);
-      boolean upload_status = uploadFolder(FolderToupload, root_dir);
-      if(!upload_status){
-    	  return false;
-      }
-    	//upload worked 
+	    return false;
+	}
 
-      return true;
-  }	
-  
+	
 
-  //TODO
-  public static boolean hasInterntAcess(){
-	  return false;
-  }
-  
-  
+	private static void markFolderAsUploaded(java.io.File folder,
+			ParentReference whereToSave) throws IOException {
+		String filePath = folder.getAbsolutePath() + "/.uploadStatus.txt";
+		PrintWriter writer = new PrintWriter(folder, "UTF-8");
+		writer.println("uploaded");
+		writer.close();
+		java.io.File statusFile = new java.io.File(filePath);
+		uploadFile(false, Arrays.asList(whereToSave), statusFile);
+	}
+	
+	public static String createFolder(String title,String whereToSave) throws IOException{
+		ParentReference parent = new ParentReference();
+		parent.setId(whereToSave);
+		File folder = createFolder(true, title, Arrays.asList(parent));
+			return folder.getId();
+	}
 
-  
-  
-  /**
-   * 
-   * @param inputFile
-   * @param whereToSave
-   * @return return true if upload worked properly, return false if upload did not work properly 
-   * @throws IOException
-   */
-  private static boolean uploadFolder(java.io.File inputFile, ParentReference whereToSave)
-      throws IOException {
-	  if(hasFolderBeenUploaded()){
-		  return true;
+	// create a new folder at a specific location, set parent to be null if you
+	// want it to be root
+	private static File createFolder(boolean useDirectUpload, String title,
+			List<ParentReference> parentList) throws IOException {
+		File body = new File();
+		body.setTitle(title);
+		body.setMimeType("application/vnd.google-apps.folder");
+		body.setParents(parentList);
+		File file = drive.files().insert(body).execute();
+		return file;
+	}
+
+	/*
+	 * // If the folder has a uploaded textfile with the value "false" then
+	 * Recursively walks down the // folder uploading all files and sub folders
+	 * private static File uploadFolder(boolean
+	 */
+
+	/** Uploads a file using either resumable or direct media upload. */
+	private static File uploadFile(boolean useDirectUpload,
+			List<ParentReference> parentList, java.io.File fileToUpload)
+			throws IOException {
+		File fileMetadata = new File();
+		fileMetadata.setTitle(fileToUpload.getName());
+		fileMetadata.setParents(parentList);
+		FileContent mediaContent = new FileContent("image/jpeg", fileToUpload);
+		Drive.Files.Insert insert = drive.files().insert(fileMetadata,
+				mediaContent);
+		MediaHttpUploader uploader = insert.getMediaHttpUploader();
+		uploader.setDirectUploadEnabled(useDirectUpload);
+		uploader.setProgressListener(new FileUploadProgressListener());
+		return insert.execute();
+	}
+
+	public static void downloadFile(File uploadedFile,java.io.File parentDir) throws IOException {
+		downloadFile(true,uploadedFile,parentDir);
+	}
+	
+	/** Downloads a file using either resumable or direct media download. */
+	private static void downloadFile(boolean useDirectDownload,
+			File uploadedFile,java.io.File parentDir) throws IOException {
+		if (!parentDir.exists() && !parentDir.mkdirs()) {
+			throw new IOException("Unable to create parent directory");
+		}
+		OutputStream out = new FileOutputStream(new java.io.File(parentDir,
+				uploadedFile.getTitle()));
+
+		MediaHttpDownloader downloader = new MediaHttpDownloader(httpTransport,
+				drive.getRequestFactory().getInitializer());
+		downloader.setDirectDownloadEnabled(useDirectDownload);
+		downloader.setProgressListener(new FileDownloadProgressListener());
+		downloader.download(new GenericUrl(uploadedFile.getDownloadUrl()), out);
+	}
+
+	public void removeContentOfFolder(String logRefrenceOnServer) throws IOException {
+		ArrayList<File> files =  ListMetaDataInDrive(logRefrenceOnServer);
+		for( File file : files){
+			deleteFile(drive,file.getId());
+		}
+		
+	}
+	
+	  /**
+	   * Permanently delete a file, skipping the trash.
+	   *
+	   * @param service Drive API service instance.
+	   * @param fileId ID of the file to delete.
+	   */
+	  private static void deleteFile(Drive service, String fileId) {
+	    try {
+	      service.files().delete(fileId).execute();
+	    } catch (IOException e) {
+	      System.out.println("An error occurred: " + e);
+	    }
 	  }
-	  //folder has not been uploaded yet so we are going to upload it now
 	  
-    // todo mark as uploaded
-    String[] files = inputFile.list();
-    for (int i = 0; i < files.length; i++) {
-      java.io.File thisFile = new java.io.File(inputFile.getAbsolutePath() + "/" + files[i]);
-      if (!thisFile.isHidden()) {
-        if (thisFile.isDirectory()) {
-          // upload directory
-          File thisFolder = createFolder(false, files[i], Arrays.asList(whereToSave));
-          ParentReference parent = new ParentReference();
-          parent.setId(thisFolder.getId());
-          uploadFolder(thisFile, parent);
-        } else {
-          // upload file
-          uploadFile(false, Arrays.asList(whereToSave), thisFile);
-        }
-      }
-    }
-    //adds status file 
-    markFolderAsUploaded(inputFile, whereToSave);
-    return true; //TODO provide actual feedback about the folder being uploaded or not.
-  }
-  
-  private static boolean hasFolderBeenUploaded(){
-	  //checks to see if the folder has already been marked as  
-	  return false; //TODO
-  }
-  
-  private static void markFolderAsUploaded(java.io.File folder,ParentReference whereToSave) throws IOException{
-	    String filePath = folder.getAbsolutePath()+"/.uploadStatus.txt";
-	    PrintWriter writer = new PrintWriter(folder, "UTF-8");
-	    writer.println("uploaded");
-	    writer.close();
-	    java.io.File statusFile = new java.io.File(filePath);
-	    uploadFile(false, Arrays.asList(whereToSave),statusFile);
-  }
+	  /**
+	   * Move a file to the trash.
+	   *
+	   * @param service Drive API service instance.
+	   * @param fileId ID of the file to trash.
+	   * @return The updated file if successful, {@code null} otherwise.
+	   */
+	  private static File trashFile(Drive service, String fileId) {
+	    try {
+	      return service.files().trash(fileId).execute();
+	    } catch (IOException e) {
+	      System.out.println("An error occurred: " + e);
+	    }
+	    return null;
+	  }
 
-  // create a new folder at a specfic location, set parent to be null if you want it to be root
-  private static File createFolder(boolean useDirectUpload, String title,
-      List<ParentReference> parentList) throws IOException {
-    File body = new File();
-    body.setTitle(title);
-    body.setMimeType("application/vnd.google-apps.folder");
-    body.setParents(parentList);
-    File file = drive.files().insert(body).execute();
-    return file;
-  }
+	  //makes a copy of what is in the folder on the server into the folder on this computer
+	public void downloadFolder(java.io.File folderOnThisComptuer ,
+			String folderOnServer) throws IOException {
+		
+		ArrayList<File> files =  ListFileMetaDataInDrive(folderOnServer);
+		ArrayList<File> folders = ListFolderMetaDataInDrive(folderOnServer);
 
-  /*
-   * // If the folder has a uploaded textfile with the value "false" then Recursively walks down the
-   * // folder uploading all files and sub folders private static File uploadFolder(boolean
-   */
-
-
-  /** Uploads a file using either resumable or direct media upload. */
-  private static File uploadFile(boolean useDirectUpload, List<ParentReference> parentList,
-      java.io.File fileToUpload) throws IOException {
-    File fileMetadata = new File();
-    fileMetadata.setTitle(fileToUpload.getName());
-    fileMetadata.setParents(parentList);
-    FileContent mediaContent = new FileContent("image/jpeg", fileToUpload);
-    System.out.println(fileMetadata);
-    System.out.println(mediaContent);
-    Drive.Files.Insert insert = drive.files().insert(fileMetadata, mediaContent);
-    MediaHttpUploader uploader = insert.getMediaHttpUploader();
-    uploader.setDirectUploadEnabled(useDirectUpload);
-    uploader.setProgressListener(new FileUploadProgressListener());
-    return insert.execute();
-  }
-
-  /** Downloads a file using either resumable or direct media download. */
-  private static void downloadFile(boolean useDirectDownload, File uploadedFile) throws IOException {
-    // create parent directory (if necessary)
-    java.io.File parentDir = new java.io.File(DIR_FOR_DOWNLOADS);
-    if (!parentDir.exists() && !parentDir.mkdirs()) {
-      throw new IOException("Unable to create parent directory");
-    }
-    OutputStream out = new FileOutputStream(new java.io.File(parentDir, uploadedFile.getTitle()));
-
-    MediaHttpDownloader downloader =
-        new MediaHttpDownloader(httpTransport, drive.getRequestFactory().getInitializer());
-    downloader.setDirectDownloadEnabled(useDirectDownload);
-    downloader.setProgressListener(new FileDownloadProgressListener());
-    downloader.download(new GenericUrl(uploadedFile.getDownloadUrl()), out);
-  }
+		for(File f : files){
+			downloadFile(true,f,folderOnThisComptuer);		
+		}
+		
+		for(File f: folders){
+			java.io.File newFolder = new java.io.File(folderOnThisComptuer.getPath()+"/"+f.getTitle());
+			newFolder.mkdirs();
+			downloadFolder(newFolder,f.getId());
+		}
+		
+		
+	}
+	  
 }

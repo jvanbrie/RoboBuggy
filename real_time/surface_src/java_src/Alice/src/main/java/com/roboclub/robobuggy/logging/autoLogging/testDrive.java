@@ -1,5 +1,6 @@
 package com.roboclub.robobuggy.logging.autoLogging;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -10,7 +11,17 @@ public class testDrive {
 	static ServerCommunication test;
 
 	public static void main(String[] args) {
-		 try {
+		File whereToSave = new File("LOG_FILES");
+		String DriveStorageFolder_id ="";
+		try {
+			autoLogging autoLogger = new autoLogging(whereToSave, DriveStorageFolder_id);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		/*
+		try {
 			final URL url = new URL("http://www.google.com");
 			url.openConnection();
 			ServerCommunication drive = ServerCommunication.getInstance();
@@ -28,8 +39,8 @@ public class testDrive {
 			System.out.println("Can not connect to internet will try again later");
 			e.printStackTrace();
 		}  
+		*/
 		
-	
 	}
 
 }
