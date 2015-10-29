@@ -15,11 +15,8 @@ package com.roboclub.robobuggy.logging.autoLogging;
  * the License.
  */
 
-//TODO add upload only if has not yet been uploaded
-//TODO add ability to list the directory and see which ones have been download and chose what to download 
-//TOOD package in a factory for easy use
 //TODO add check for Internet connection
-//TODO add download stuff
+//TODO clean up this class
 
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
@@ -47,7 +44,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -81,6 +77,9 @@ public class ServerCommunication {
 	// / Global Drive API client.
 	private static Drive drive;
 
+	/**
+	 * Constructor for Server communication, will only be available inside this class to fit singleton pattern
+	 */
 	private ServerCommunication() {
 		// constructor for this class
 		System.out.println("Working directory" + System.getProperty("user.dir"));
@@ -103,7 +102,11 @@ public class ServerCommunication {
 		System.exit(1);
 	}
 
-	// / Authorizes the installed application to access user's protected data.
+	/**
+	 * Authorizes the installed application to access user's protected data.
+	 * @return
+	 * @throws Exception
+	 */
 	private static Credential authorize() throws Exception {
 		// load client secrets
 		GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(
@@ -128,8 +131,15 @@ public class ServerCommunication {
 				new LocalServerReceiver()).authorize("user");
 	}
 
+	/**
+	 * 
+	 */
 	private static ServerCommunication instance = null;
 
+	/**
+	 * 
+	 * @return
+	 */
 	public static ServerCommunication getInstance() {
 		if (instance == null) {
 			instance = new ServerCommunication();
@@ -137,18 +147,32 @@ public class ServerCommunication {
 		return instance;
 	}
 	
+	/**
+	 * 
+	 * @param folderOnServer
+	 * @return
+	 * @throws IOException
+	 */
 	public ArrayList<File> ListFileMetaDataInDrive(String folderOnServer) throws IOException{
 		return ListTypeMetaDataInDrive(folderOnServer,"application/vnd.google-apps.folder",false);
 
 	}
 	
+	/**
+	 * 
+	 * @param folderOnServer
+	 * @return
+	 * @throws IOException
+	 */
 	public ArrayList<File> ListFolderMetaDataInDrive(String folderOnServer) throws IOException{
 		return ListTypeMetaDataInDrive(folderOnServer,"application/vnd.google-apps.folder",true);
 
 	}
 	
-	//if accept is true then we will only keep files with data that has a type matching the typeName string
-	//if accept is false then we will only keep files with data that has a type that does not match the typeName string
+	/**
+	 *	if accept is true then we will only keep files with data that has a type matching the typeName string
+	 *	if accept is false then we will only keep files with data that has a type that does not match the typeName string
+	 **/
 	private ArrayList<File> ListTypeMetaDataInDrive(String folderOnServer,String typeName,boolean accept) throws IOException{
 		ArrayList<File> allMetaData = ListMetaDataInDrive(folderOnServer);
 		ArrayList<File> result = new ArrayList<File>();
@@ -167,6 +191,12 @@ public class ServerCommunication {
 		return result;
 	}
 	
+	/**
+	 * 
+	 * @param folderOnServer
+	 * @return
+	 * @throws IOException
+	 */
 	public ArrayList<File> ListMetaDataInDrive(String folderOnServer) throws IOException{
 		ArrayList<File> metaData = new ArrayList<File>();
 		ChildList children = getFilesInFolder(folderOnServer);
@@ -253,12 +283,15 @@ public class ServerCommunication {
 				}
 			}
 		}
-		// adds status file
-		markFolderAsUploaded(inputFile, whereToSave);
-		return true; // TODO provide actual feedback about the folder being
-						// uploaded or not.
-	}
+		// TODO provide actual feedback about the folder being uploaded or not.
+		return true; 
+		}
 	
+	/**
+	 * Returns true if the given string is a valid, not trashed file on drive, false otherwise
+	 * @param id
+	 * @return
+	 */
 	public boolean validFileId(String id) {
 	    try {
 	        File f = drive.files().get(id).execute();
@@ -270,17 +303,6 @@ public class ServerCommunication {
 	    return false;
 	}
 
-	
-
-	private static void markFolderAsUploaded(java.io.File folder,
-			ParentReference whereToSave) throws IOException {
-		String filePath = folder.getAbsolutePath() + "/.uploadStatus.txt";
-		PrintWriter writer = new PrintWriter(folder, "UTF-8");
-		writer.println("uploaded");
-		writer.close();
-		java.io.File statusFile = new java.io.File(filePath);
-		uploadFile(false, Arrays.asList(whereToSave), statusFile);
-	}
 	
 	public static String createFolder(String title,String whereToSave) throws IOException{
 		ParentReference parent = new ParentReference();
@@ -323,6 +345,13 @@ public class ServerCommunication {
 		return insert.execute();
 	}
 
+	/**
+	 * public facing function for downloading a given file from drive 
+	 * @param uploadedFile
+	 * @param parentDir
+	 * @throws IOException
+	 */
+	//TODO check this
 	public static void downloadFile(File uploadedFile,java.io.File parentDir) throws IOException {
 		downloadFile(true,uploadedFile,parentDir);
 	}
@@ -343,6 +372,11 @@ public class ServerCommunication {
 		downloader.download(new GenericUrl(uploadedFile.getDownloadUrl()), out);
 	}
 
+	/**
+	 * Trashes all of the files and folders inside the given folder on drive
+	 * @param logRefrenceOnServer
+	 * @throws IOException
+	 */
 	public void removeContentOfFolder(String logRefrenceOnServer) throws IOException {
 		ArrayList<File> files =  ListMetaDataInDrive(logRefrenceOnServer);
 		for( File file : files){
@@ -367,7 +401,6 @@ public class ServerCommunication {
 	  
 	  /**
 	   * Move a file to the trash.
-	   *
 	   * @param service Drive API service instance.
 	   * @param fileId ID of the file to trash.
 	   * @return The updated file if successful, {@code null} otherwise.
@@ -381,7 +414,12 @@ public class ServerCommunication {
 	    return null;
 	  }
 
-	  //makes a copy of what is in the folder on the server into the folder on this computer
+	 /**
+	  * makes a copy of what is in the folder on the server into the folder on this computer
+	  * @param folderOnThisComptuer
+	  * @param folderOnServer
+	  * @throws IOException
+	  */
 	public void downloadFolder(java.io.File folderOnThisComptuer ,
 			String folderOnServer) throws IOException {
 		

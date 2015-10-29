@@ -12,11 +12,13 @@ public class testDrive {
 
 	public static void main(String[] args) {
 		File whereToSave = new File("LOG_FILES");
-		String DriveStorageFolder_id ="";
+		String DriveStorageFolder_id ="0B1IjfVrCn6dNZjZfems2ZUlXNlE";
 		try {
 			autoLogging autoLogger = new autoLogging(whereToSave, DriveStorageFolder_id);
+			int count = 3;
+			File nFolder = new File("LOG_FILES/test"+count);
+			autoLogger.startTrackingLog(nFolder);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		

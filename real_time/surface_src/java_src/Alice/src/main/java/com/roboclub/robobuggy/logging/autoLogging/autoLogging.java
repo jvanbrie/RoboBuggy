@@ -30,57 +30,103 @@ import com.roboclub.robobuggy.logging.LogDataType;
  * 
  * When a new log file is created or a log file is changed then it is updated on the server
  * 
+ * Known Problems: 
+ *      A race condition exists when two computers attempt to upload data about a log change at the same time. 
+ * 
+ * Behaviors: 
+ * 		B1: All log files that have not yet been uploaded to the server shall be uploaded to the server
+ * 		B2: The system should be able to download log files from the server
+ * 		B3: The system should have a list of all log files and statistics about what happened in that log file
+ * 
  * @author Trevor Decker
  *
  */
 public class autoLogging {
+	boolean IN_OFFLINE_MODE = true;  //if true then try to connect to the server otherwise do not  
+	
 	private Hashtable<String, LogDataType> logData;
 	
+	//on google drive every file and folder is given a unique identifying string 
 	private String DriveStorageFolder_id;
-	private File whereToSave;
+	private File localFolderPath;
 	
+	/**
+	 *  The constructor for the auto logger, will load any local files 
+	 * @param whereToSave
+	 * @param DriveStorageFolder_id
+	 * @throws IOException
+	 */
 	public autoLogging(File whereToSave,String DriveStorageFolder_id) throws IOException{
 		logData = new Hashtable<String, LogDataType>();
 		setWhereToSave(whereToSave);
 		setServerFolderId(DriveStorageFolder_id);
 		readLogData();
-		//downloadLogData();
+		downloadLogData(DriveStorageFolder_id, whereToSave);
+		uploadLogs();
 	}
 	
+	/**
+	 * 
+	 * @param newServerFolderId
+	 */
 	public void setServerFolderId(String newServerFolderId){
 		DriveStorageFolder_id = newServerFolderId;
 	}
 	
+	/**
+	 * 
+	 * @return
+	 */
 	public String getServerFolderId(){
 		return DriveStorageFolder_id;
 	}
 	
-	//should be called when the program is finished to save to server and save to local file 
+	/**
+	 * should be called when the program is finished to save to server and save to local file 
+	 * @return
+	 * @throws IOException
+	 */
 	public boolean save() throws IOException{
 		boolean localSaveState = saveLogDataToFolders();
 		boolean serverSaveState = saveLogDataToServer();
 		return localSaveState && serverSaveState;
 	}
 	
+	/**
+	 * returns a file reference of the local path of where log files are to be saved
+	 * @return
+	 */
 	public File getWhereToSave(){
-		return whereToSave;
+		return localFolderPath;
 	}
 	
+	/**
+	 * 
+	 * @param whereToSave
+	 */
 	public void setWhereToSave(File whereToSave){
 		//makes sure that the folder exists, if it does not create the folder
 		if(!whereToSave.isDirectory()){	
 			whereToSave.mkdir();
 		}
 		
-		this.whereToSave = whereToSave;
+		this.localFolderPath = whereToSave;
 	}
 	
-	//Evaluates to a list of all of the log files
+	
+	/**
+	 * Evaluates to a list of all of the log files
+	 * @return
+	 */
 	LogDataType[] getListOfLogFiles(){
 		return (LogDataType[]) logData.values().toArray();
 	}	
 	
-	//will overwrite the current log file, should call readLogData before calling saveLogDataToFolder
+	/**
+	 * will overwrite the current log file, should call readLogData before calling saveLogDataToFolder
+	 * @return
+	 * @throws IOException
+	 */
 	public boolean saveLogDataToFolders() throws IOException{
 		boolean allLogsSavedCorrectly = true;
 		LogDataType[] data = getListOfLogFiles();
@@ -93,16 +139,34 @@ public class autoLogging {
 		return allLogsSavedCorrectly;
 	}
 	
-	//Assumes that any log files have already been loaded, ie can override any files on disk
-	boolean saveLogDataLocally(File logFolder) throws IOException{
-		LogDataType newLogData = readALogData(logFolder);
-		//if a file is already at location then it will be overwitten 
+	/**
+	 * Assumes that any log files have already been loaded, ie can override any files on disk
+	 * @param logFolder
+	 * @return
+	 * @throws IOException
+	 */
+	boolean saveLogDataLocally(LogDataType logData) throws IOException{
+		File logFolder = logData.getLogRefrenceOnComputer();
+		if(!logFolder.exists() ){
+			logFolder.mkdirs();
+		}
+		if(!logFolder.isDirectory()){
+			//TODO throw an error 
+		}
+		
+		//if a file is already at location then it will be over written 
 		File logDataFile = new File(logFolder.getPath()+"/"+LogDataType.FILE_NAME);
+		System.out.println(logDataFile.getPath());
 		logDataFile.delete();
-		newLogData.saveThisLogDataToFolder();
+		logData.saveThisLogDataToFolder();
 		return true;
 	}
 	
+	/**
+	 * 
+	 * @param logFolder
+	 * @return
+	 */
 	LogDataType readALogData(File logFolder){
 		LogDataType newLogData = LogDataType.readThisLogDataFromFolder(logFolder);
 		String oldLogData_key = lookUpLog(newLogData);
@@ -118,10 +182,13 @@ public class autoLogging {
 		return newLogData;
 	}
 	
-	//reads every folder inside whereToSave if it is a logfile then add it to the logDataType structure 
+	/**
+	 * reads every folder inside whereToSave if it is a logfile then add it to the logDataType structure 
+	 * @return
+	 */
 	boolean readLogData(){
 		boolean result = true;
-		for(File f : whereToSave.listFiles()){
+		for(File f : localFolderPath.listFiles()){
 			if(LogDataType.isLog(f)){
 				if(readALogData(f)== null){
 					result = false;
@@ -130,18 +197,29 @@ public class autoLogging {
 		}
 		return result;
 	}
-	
-	boolean addNewLog(File newLogLocation) throws IOException{
-		LogDataType newLog = readALogData(newLogLocation);
+
+	/**
+	 * adds logging data to a log folder that may or may not exist. 
+	 * @param LogLocation
+	 * @return
+	 * @throws IOException
+	 */
+	boolean startTrackingLog(File newLogLocation) throws IOException{
+		LogDataType newLog = new LogDataType(newLogLocation);	
+		saveLogDataLocally(newLog);
 		return uploadLog(newLog);
 	}
 	
-	//assumes that data on the server has been saved. This can cause race conditions
+	/**
+	 * assumes that data on the server has been saved. This can cause race conditions
+	 * @return
+	 * @throws IOException
+	 */
 	public boolean saveLogDataToServer() throws IOException{
 		boolean allLogsSavedCorrectly = true;
 		LogDataType[] data = getListOfLogFiles();
 		for (LogDataType thisLogData : data) {
-			if(!thisLogData.upToDateOnServer){
+			if(!thisLogData.isUpToDateOnServer()){
 				if(!uploadLog(thisLogData)){
 					allLogsSavedCorrectly = false;
 				}
@@ -150,17 +228,26 @@ public class autoLogging {
 		return allLogsSavedCorrectly;
 	}
 	
-	//assumes that most recent changes have been done locally, this can casue raceconditions and what is on the server will be over wirtten 
+	/**
+	 * assumes that most recent changes have been done locally, this can casue raceconditions and what is on the server will be over wirtten 
+	 * @param thisLog
+	 * @return
+	 * @throws IOException
+	 */
 	boolean uploadLog(LogDataType thisLog) throws IOException{
+		if(IN_OFFLINE_MODE){
+			return false;
+		}
+		
 		//check to see if log has already been uploaded, if it has been do nothing 
-		if(thisLog.upToDateOnServer){
+		if(thisLog.isUpToDateOnServer()){
 			return true;
 		}
 		//if the log file has not been uploaded then uploaded it	
 		ServerCommunication server = ServerCommunication.getInstance();
 		if(!thisLog.exsitsOnServer()){
 			//we need to create the folder to store this file
-			String location = server.createFolder(thisLog.getTitle(),DriveStorageFolder_id);
+			String location = server.createFolder(thisLog.getFolderName(),DriveStorageFolder_id);
 			thisLog.setLogRefrenceOnServer(location);
 		}
 		//we need to upload the Data inside the log so we delete the old data and upload new data 
@@ -168,24 +255,42 @@ public class autoLogging {
 		//now we upload the new data
 		ChildList serverFiles = server.getFilesInFolder(thisLog.getLogRefrenceOnServer());
 		server.uploadFolder(thisLog.getLogRefrenceOnComputer(),thisLog.getLogRefrenceOnServer());
-		thisLog.upToDateOnServer = true;
+		thisLog.setUpToDateOnServer(true);
 		//now we need to update the internal refrence in the data structure
 		logData.replace(thisLog.getKey(), thisLog);
 		return true;
 	}
 	
+	/**
+	 * 
+	 * @param thisLog
+	 * @return
+	 * @throws IOException
+	 */
 	boolean downloadLog(LogDataType thisLog) throws IOException{
+		if(IN_OFFLINE_MODE){
+			return false;
+		}
+		
 		ServerCommunication server = ServerCommunication.getInstance();
 		server.downloadFolder(thisLog.getLogRefrenceOnComputer(),thisLog.getLogRefrenceOnServer());
 		return true;
 	}
 	
-	//evaluates to null if the given logData is not already being stored
-	//evaluates to a refrence to that logData if an equivlent log is being stored 
+	/**
+	 * evaluates to null if the given logData is not already being stored
+	 * evaluates to a reference to that logData if an equivalent log is being stored 
+	 * @param aLogData
+	 * @return
+	 */
 	public String lookUpLog(LogDataType aLogData){
-		if(aLogData.getKey() == null){
+		System.out.println("key: "+aLogData.getKey());
+		//incase the log has not been added to server yet 
+		System.out.println("hereWeare"+aLogData.getKey());
+		if(aLogData.getKey() == null || aLogData.getKey().equals("")){
 			return null;
 		}
+	
 		//makes sure that the key is actually inside the log has table
 		if(logData.get(aLogData.getKey()) == null){
 			return null;
@@ -193,12 +298,22 @@ public class autoLogging {
 		return aLogData.getKey();	
 	}
 	
-	//goes to every folder inside the server folder and downloads the meta data for those logs  
+	/**
+	 * goes to every folder inside the server folder and downloads the meta data for those logs  
+	 * @param Folder_id
+	 * @param whereToSave
+	 * @return
+	 * @throws IOException
+	 */
 	boolean downloadLogData(String Folder_id,File whereToSave) throws IOException{
+		if(IN_OFFLINE_MODE){
+			return false;
+		}
+		
 		ServerCommunication server = ServerCommunication.getInstance();
 		ArrayList<com.google.api.services.drive.model.File> folders = server.ListFolderMetaDataInDrive(Folder_id);
 		for(com.google.api.services.drive.model.File f : folders){
-			if(isLogFolder(f)){
+			if(isLogFolderOnDrive(f)){
 				//for each folder see if we already have its log data, if so merge data
 				//if not then download and add the log data 
 				LogDataType newLogData = readThisLogDataFromServerFolder(f, whereToSave);
@@ -220,8 +335,19 @@ public class autoLogging {
 		return false;
 	}
 
+	/**
+	 * 
+	 * @param f
+	 * @param parentFile
+	 * @return
+	 * @throws IOException
+	 */
 	private LogDataType readThisLogDataFromServerFolder(
 			com.google.api.services.drive.model.File f,File parentFile) throws IOException {
+		if(IN_OFFLINE_MODE){
+			//throw an error for trying to connect to the server while in offline mode 
+		}
+		
 		ServerCommunication server =  ServerCommunication.getInstance();
 		 ArrayList<com.google.api.services.drive.model.File> files =  server.ListFileMetaDataInDrive(f.getId());
 		 for(com.google.api.services.drive.model.File thisFile : files){
@@ -234,7 +360,16 @@ public class autoLogging {
 		return null;
 	}
 
-	private boolean isLogFolder(com.google.api.services.drive.model.File f) throws IOException {
+	/**
+	 * 
+	 * @param f a local machine file path
+	 * @return true if f is a folder that encodes a log 
+	 * @throws IOException
+	 */
+	private boolean isLogFolderOnDrive(com.google.api.services.drive.model.File f) throws IOException {
+		if(IN_OFFLINE_MODE){
+			//TODO throw an error 
+		}
 		ServerCommunication server =  ServerCommunication.getInstance();
 		 ArrayList<com.google.api.services.drive.model.File> files =  server.ListFileMetaDataInDrive(f.getId());
 		 for(com.google.api.services.drive.model.File thisFile : files){
@@ -244,4 +379,19 @@ public class autoLogging {
 		 }
 		return false;
 	}
+
+	/**
+	 * attempts to upload all logs that have not been updated on ther server yet
+	 * @return
+	 * @throws IOException
+	 */
+	private boolean uploadLogs() throws IOException{
+		for(LogDataType log : logData.values()){
+			if(!log.isUpToDateOnServer()){
+				uploadLog(log);
+			}
+		}
+		return false;
+	}
+	
 }
