@@ -43,6 +43,7 @@ public class config {
 	public static boolean GPS_DEFAULT = true;
 	public static boolean ENCODER_DEFAULT = true;
 	public static boolean VISION_SYSTEM_DEFAULT = true;
+	public static boolean CPU_DEFAULT = true;
 	
 	//sensor com ports
 	public static String COM_PORT_IMU = "COM6";
@@ -63,7 +64,7 @@ public class config {
 
 	public static boolean GUI_ON_DEFAULT = true;
 	// iff false, connect to serial sensors 
-	public static boolean DATA_PLAY_BACK_DEFAULT = true;
+	public static boolean DATA_PLAY_BACK_DEFAULT = false;
 	
 	// current status values
 	public static boolean GUI_ON;

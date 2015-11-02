@@ -2,13 +2,16 @@ package com.roboclub.robobuggy.main;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import com.roboclub.robobuggy.localization.KalmanFilter;
 import com.roboclub.robobuggy.logging.RobotLogger;
+import com.roboclub.robobuggy.messages.CpuInfoMessage;
 import com.roboclub.robobuggy.messages.EncoderMeasurement;
 import com.roboclub.robobuggy.messages.GpsMeasurement;
 import com.roboclub.robobuggy.messages.ImuMeasurement;
 import com.roboclub.robobuggy.messages.SteeringMeasurement;
 import com.roboclub.robobuggy.messages.WheelAngleCommand;
+import com.roboclub.robobuggy.nodes.CpuUsageNode;
 import com.roboclub.robobuggy.nodes.RBSMNode;
 import com.roboclub.robobuggy.nodes.GpsNode;
 import com.roboclub.robobuggy.nodes.ImuNode;
@@ -51,7 +54,7 @@ public class Robot implements RosMaster {
 		
 		System.out.println();
 		
-		// Initialize Sensor
+		// Initialize gps Sensor
 		if (config.GPS_DEFAULT) {
 			System.out.println("Initializing GPS Serial Connection");
 			GpsNode gps = new GpsNode(SensorChannel.GPS);
@@ -65,7 +68,7 @@ public class Robot implements RosMaster {
 			});
 		}
 
-
+		// Initialize imu Sensor
 		if (config.IMU_DEFAULT) {
 			System.out.println("Initializing IMU Serial Connection");
 			ImuNode imu = new ImuNode(SensorChannel.IMU);
@@ -79,6 +82,7 @@ public class Robot implements RosMaster {
 			});
 		}
 
+		// Initialize rbsm Sensor
 		if (config.ENCODER_DEFAULT) {
 			System.out.println("Initializing Encoder Serial Connection");
 			RBSMNode encoder = new RBSMNode(SensorChannel.ENCODER,SensorChannel.STEERING);
@@ -91,7 +95,22 @@ public class Robot implements RosMaster {
 				}
 			});
 		}
+		
+		//inilize the cpu usage 
+		if (config.CPU_DEFAULT) {
+			System.out.println("Initializing CPU NODE");
+			CpuUsageNode cpu = new CpuUsageNode(SensorChannel.CPU_USSAGE);
+			sensorList.add(cpu);
+		
+			new Subscriber(SensorChannel.CPU_USSAGE.getMsgPath(), new MessageListener() {
+				@Override
+				public void actionPerformed(String topicName, Message m) {
+					updateCpu((CpuInfoMessage)m);
+				}
+			});
+		}	
 
+		// Initialize vision system
 		if (config.VISION_SYSTEM_DEFAULT) {
 			System.out.println("Initializing Vision System");
 			//vision = new VisionSystem(SensorChannel.VISION);
@@ -161,6 +180,10 @@ public class Robot implements RosMaster {
 	}
 
 	private void updateEnc(EncoderMeasurement m) {
+		// TODO update planner
+	}
+	
+	private void updateCpu(CpuInfoMessage m) {
 		// TODO update planner
 	}
 	

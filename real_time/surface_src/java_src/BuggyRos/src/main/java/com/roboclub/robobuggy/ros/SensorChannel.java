@@ -10,6 +10,7 @@ public enum SensorChannel {
 	VISION("vision"),
 	ENCODER("encoder"),
 	AUTO("auto"),
+	CPU_USSAGE("cpu_ussage"),
 	GUI_LOGGING_BUTTON("logging_button");
 	
 	private String rstPath;
