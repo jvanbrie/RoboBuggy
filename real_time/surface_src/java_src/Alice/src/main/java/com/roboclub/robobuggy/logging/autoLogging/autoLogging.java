@@ -1,6 +1,7 @@
 package com.roboclub.robobuggy.logging.autoLogging;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -166,8 +167,9 @@ public class autoLogging {
 	 * 
 	 * @param logFolder
 	 * @return
+	 * @throws FileNotFoundException 
 	 */
-	LogDataType readALogData(File logFolder){
+	LogDataType readALogData(File logFolder) throws FileNotFoundException{
 		LogDataType newLogData = LogDataType.readThisLogDataFromFolder(logFolder);
 		String oldLogData_key = lookUpLog(newLogData);
 		if(oldLogData_key == null){
@@ -185,8 +187,9 @@ public class autoLogging {
 	/**
 	 * reads every folder inside whereToSave if it is a logfile then add it to the logDataType structure 
 	 * @return
+	 * @throws FileNotFoundException 
 	 */
-	boolean readLogData(){
+	boolean readLogData() throws FileNotFoundException{
 		boolean result = true;
 		for(File f : localFolderPath.listFiles()){
 			if(LogDataType.isLog(f)){
