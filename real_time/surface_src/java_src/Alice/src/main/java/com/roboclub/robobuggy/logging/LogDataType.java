@@ -93,7 +93,7 @@ public class LogDataType {
 	 * @return
 	 */
 	public String getKey(){
-		return logRefrenceOnServer;
+		return folderName;//for now folder names need to be unique 
 	}
 	
 	/**
@@ -123,6 +123,7 @@ public class LogDataType {
 	 */
 	public static boolean isLog(File folder){
 		File dataFile = new File(folder.getPath()+"/"+FILE_NAME);
+		System.out.println("checking "+folder.getPath()+"/"+dataFile.getName() + "\t :"+dataFile.exists());
 		return dataFile.exists();
 	}
 	
@@ -216,6 +217,7 @@ public class LogDataType {
 		if(isLog(folder)){
 			//TOOD throw an error this is already a log you can not create a new log here use read log instead
 		}
+		this.folderName = folder.getName();
 		this.logRefrenceOnComputer = folder;
 	}
 	

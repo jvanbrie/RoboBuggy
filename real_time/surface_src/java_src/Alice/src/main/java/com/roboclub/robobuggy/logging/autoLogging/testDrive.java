@@ -15,9 +15,10 @@ public class testDrive {
 		String DriveStorageFolder_id ="0B1IjfVrCn6dNZjZfems2ZUlXNlE";
 		try {
 			autoLogging autoLogger = new autoLogging(whereToSave, DriveStorageFolder_id);
-			int count = 3;
+			int count = 1;
 			File nFolder = new File("LOG_FILES/test"+count);
 			autoLogger.startTrackingLog(nFolder);
+			System.out.println(autoLogger.getNumLogs());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

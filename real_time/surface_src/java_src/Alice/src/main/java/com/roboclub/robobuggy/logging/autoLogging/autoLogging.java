@@ -66,6 +66,10 @@ public class autoLogging {
 		uploadLogs();
 	}
 	
+	public int getNumLogs(){
+		return logData.size();
+	}
+	
 	/**
 	 * 
 	 * @param newServerFolderId
@@ -157,7 +161,6 @@ public class autoLogging {
 		
 		//if a file is already at location then it will be over written 
 		File logDataFile = new File(logFolder.getPath()+"/"+LogDataType.FILE_NAME);
-		System.out.println(logDataFile.getPath());
 		logDataFile.delete();
 		logData.saveThisLogDataToFolder();
 		return true;
@@ -173,8 +176,10 @@ public class autoLogging {
 		LogDataType newLogData = LogDataType.readThisLogDataFromFolder(logFolder);
 		String oldLogData_key = lookUpLog(newLogData);
 		if(oldLogData_key == null){
+			System.out.println("yo");
 			//this log is not already being tracked so we should start tracking it 
 			logData.put(newLogData.getKey(), newLogData);
+			System.out.println(logData.size());
 		}else{
 			//this log is not new so we should update the log
 			LogDataType mergedLogData = LogDataType.merge(logData.get(oldLogData_key), newLogData);
@@ -209,6 +214,7 @@ public class autoLogging {
 	 */
 	boolean startTrackingLog(File newLogLocation) throws IOException{
 		LogDataType newLog = new LogDataType(newLogLocation);	
+		logData.put(newLog.getKey(), newLog);
 		saveLogDataLocally(newLog);
 		return uploadLog(newLog);
 	}
