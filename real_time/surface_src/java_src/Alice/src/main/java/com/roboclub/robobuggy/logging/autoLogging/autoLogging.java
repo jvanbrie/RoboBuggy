@@ -67,6 +67,14 @@ public class autoLogging {
 	}
 	
 	/**
+	 * evaluates to the number of logs that are currently being tracked 
+	 * @return
+	 */
+	public int getNumLogs(){
+		return logData.size();
+	}
+	
+	/**
 	 * 
 	 * @param newServerFolderId
 	 */
@@ -284,12 +292,10 @@ public class autoLogging {
 	 * evaluates to null if the given logData is not already being stored
 	 * evaluates to a reference to that logData if an equivalent log is being stored 
 	 * @param aLogData
-	 * @return
+	 * @return	
 	 */
 	public String lookUpLog(LogDataType aLogData){
-		System.out.println("key: "+aLogData.getKey());
-		//incase the log has not been added to server yet 
-		System.out.println("hereWeare"+aLogData.getKey());
+		//in case the log has not been added to server yet 
 		if(aLogData.getKey() == null || aLogData.getKey().equals("")){
 			return null;
 		}
@@ -328,7 +334,7 @@ public class autoLogging {
 					logData.put(key, newLogData);
 				}
 			}else{
-				//if it is a folder then crate that folder locally and recru
+				//if it is a folder then crate that folder locally and recurse
 				String newFolderString = whereToSave+"/"+f.getTitle();
 				File newFolder = new File(newFolderString);
 				newFolder.mkdir();
