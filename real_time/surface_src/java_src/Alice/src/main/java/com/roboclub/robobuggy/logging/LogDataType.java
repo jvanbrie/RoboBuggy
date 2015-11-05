@@ -1,11 +1,16 @@
 package com.roboclub.robobuggy.logging;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Date;
+import java.util.Scanner;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.orsoncharts.util.json.JSONObject;
 import com.roboclub.robobuggy.logging.autoLogging.ServerCommunication;
 
@@ -28,15 +33,15 @@ public class LogDataType {
 	 ********************************************************************************************
 	 */
 
-	private boolean upToDateOnServer = false;                  // boolean encoding if a local change that has not been uploaded has been made
-	private String logRefrenceOnServer = "";		          // Drive Folder ID
+	private boolean upToDateOnServer = false;                // boolean encoding if a local change that has not been uploaded has been made
+	private String logRefrenceOnServer = "";		         // Drive Folder ID
 	private File logRefrenceOnComputer = null;               // Path to where the log is stored on the users computer
-	private String LogNotes = "";						          // A short description of what happened in this log 
-	private String folderName = "";						          // The name of the folder for the log 
-	private Date lastModified = new Date(0);						          // The date that this log was last modified
-	private Date recordedOn = new Date(0);                                  // The date that the log was collected on (the start of log)
-	private Date mostRecentlyUsed = new Date(0); 					          // The most recent use date on this computer will be epoch if log has never been used 
-	private int logSize = 0;                                      // The number of megabytes that are needed to store this log in its entirety 
+	private String LogNotes = "";						     // A short description of what happened in this log 
+	private String folderName = "";						     // The name of the folder for the log 
+	private Date lastModified = new Date(0);				 // The date that this log was last modified
+	private Date recordedOn = new Date(0);                   // The date that the log was collected on (the start of log)
+	private Date mostRecentlyUsed = new Date(0); 		     // The most recent use date on this computer will be epoch if log has never been used 
+	private int logSize = 0;                                 // The number of megabytes that are needed to store this log in its entirety 
 
 	/*
 	 *******************************************************************************************
@@ -123,7 +128,6 @@ public class LogDataType {
 	 */
 	public static boolean isLog(File folder){
 		File dataFile = new File(folder.getPath()+"/"+FILE_NAME);
-		System.out.println("checking "+folder.getPath()+"/"+dataFile.getName() + "\t :"+dataFile.exists());
 		return dataFile.exists();
 	}
 	
@@ -132,7 +136,7 @@ public class LogDataType {
 	}
 
 	public void setUpToDateOnServer(boolean upToDateOnServer) {
-		this.upToDateOnServer = upToDateOnServer;
+		this.upToDateOnServer  = upToDateOnServer;  
 	}
 
 	public String getLogNotes() {
@@ -186,16 +190,22 @@ public class LogDataType {
 		if(!logRefrenceOnComputer.exists()){
 			logRefrenceOnComputer.mkdirs();
 		} 
-	
+		
 		JSONObject jObject = new JSONObject();
 		jObject.put("upToDateOnServer",isUpToDateOnServer());
 		jObject.put("logRefrenceOnServer", getLogRefrenceOnServer());
-		jObject.put("logRefrenceOnComptuer",getLogRefrenceOnComputer());
+		jObject.put("logRefrenceOnComptuer",getLogRefrenceOnComputer().toString().replace("/", "\\"));//so that the json does not error out
 		jObject.put("LogNotes",getLogNotes());
 		jObject.put("folderName",getFolderName());
-		jObject.put("lastModified", getLastModified());
-		jObject.put("recordedOn",getRecordedOn());
-		jObject.put("mostRecentlyUsed",getMostRecentlyUsed());
+		//is only for readability 
+		jObject.put("lastModified_string", getLastModified().toString().replace(":", ";"));
+		jObject.put("lastModified", getLastModified().getTime());
+		//is only for readability 
+		jObject.put("recordedOn_string",getRecordedOn().toString().replace(":", ";"));
+		jObject.put("recordedOn",getRecordedOn().getTime());
+		//is only for readability 
+		jObject.put("mostRecentlyUsed_string",getMostRecentlyUsed().toString().replace(":", ";"));
+		jObject.put("mostRecentlyUsed", getMostRecentlyUsed().getTime());
 		jObject.put("logSize",getLogSize());
 		String dataToWrite = jObject.toJSONString();
 
@@ -208,7 +218,7 @@ public class LogDataType {
 	}
 	
 	/**
-	 * constructor for logData type creates a new log ie not from a prexisting log
+	 * constructor for logData type creates a new log ie not from a preexisting log
 	 * It is ok if the given log data folder is empty  
 	 * @param folder   the log files folder 
 	 * @return
@@ -221,38 +231,56 @@ public class LogDataType {
 		this.logRefrenceOnComputer = folder;
 	}
 	
-	
-	/*************************************************************************************
+	/**
 	 * 
-	 *  CODE below here needs to be finished 
-	 * @throws IOException 
-	 * 
-	 ************************************************************************************/
+	 * @param folder
+	 * @return
+	 * @throws FileNotFoundException 
+	 */
+	public static LogDataType readThisLogDataFromFolder(File folder) throws FileNotFoundException{
+		LogDataType result = new LogDataType(folder);
+		String logData_path = folder.getPath()+"/"+FILE_NAME;
+		File logData_file = new File(logData_path);
+		
+		//read a line from the file 
+		Scanner jsonScanner = new Scanner(logData_file);
+		String content  = jsonScanner.nextLine();
+		jsonScanner.close();
+		
+		//parse the json to populate result 
+		JsonParser parser = new JsonParser();
+		JsonObject jObject = (JsonObject)parser.parse(content);
+		result.setUpToDateOnServer(Boolean.valueOf(jObject.get("upToDateOnServer").toString()));
+		result.setLogRefrenceOnComputer(new File(jObject.get("logRefrenceOnServer").toString().replace("\\", "/")));
+		result.setLogRefrenceOnServer(jObject.get("logRefrenceOnServer").toString().replace("\\", "/"));
+		result.setLogNotes(jObject.get("LogNotes").toString());
+		result.setMostRecentlyUsed(new Date(Long.parseLong(jObject.get("mostRecentlyUsed").toString())));
+		result.setLastModified(new Date(Long.parseLong(jObject.get("lastModified").toString())));
+		result.setRecordedOn(new Date(Long.parseLong(jObject.get("recordedOn").toString())));		
+		result.setLogSize(Integer.parseInt(jObject.get("logSize").toString()));
+		result.folderName = jObject.get("folderName").toString();
+		
+		//return resulting LogDatType 
+		return result;
+	}
 	
 	/**
 	 * combines the otherLog into a new log
 	 * @param log_one
 	 * @param log_two
-	 * @return
+	 * @returns
 	 */
 	public static LogDataType merge(LogDataType log_one,LogDataType log_two){
-		//TODO
-		return null;
+		assert(log_one.folderName.equals(log_two.getFolderName()));
+		//update last modified 
+		if(log_one.lastModified.before(log_two.lastModified)){
+			return log_two;
+		}else{
+			return log_one;
+		}
 	}
 	
-	/**
-	 * 
-	 * @param folder
-	 * @return
-	 */
-	public static LogDataType readThisLogDataFromFolder(File folder){
-		LogDataType result = new LogDataType(folder);
-		JSONObject jObject = new JSONObject();
-		//TODO read data from jason file 
-		//result
- 		//TDOO
-		return result;
-	}
+
 	/*
 	 *******************************************************************************************
 	 * private  functions for logData
