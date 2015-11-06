@@ -39,6 +39,8 @@ import com.google.api.services.drive.model.ParentReference;
 import com.google.api.services.drive.Drive.Children;
 import com.google.api.services.drive.model.ChildList;
 import com.google.api.services.drive.model.ChildReference;
+import com.roboclub.robobuggy.main.MESSAGE_LEVEL;
+import com.roboclub.robobuggy.main.RobobuggyLogicException;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -250,6 +252,10 @@ public class ServerCommunication {
 
 	public static boolean uploadFolder(java.io.File inputFile,
 			String whereToSave) throws IOException{
+		if(inputFile == null){
+			new RobobuggyLogicException("tried to upload a null folder refrence", MESSAGE_LEVEL.EXCEPTION);
+		}
+		
 		ParentReference parent = new ParentReference();
 		parent.setId(whereToSave);
 		return uploadFolder(inputFile,parent);
@@ -265,6 +271,11 @@ public class ServerCommunication {
 	 */
 	private static boolean uploadFolder(java.io.File inputFile,
 			ParentReference whereToSave) throws IOException {
+		if(!inputFile.exists()){
+			new RobobuggyLogicException("Tired to upload a folder that does not exsit", MESSAGE_LEVEL.EXCEPTION);
+			return false;
+		}
+		
 		String[] files = inputFile.list();
 		for (int i = 0; i < files.length; i++) {
 			java.io.File thisFile = new java.io.File(
@@ -293,12 +304,17 @@ public class ServerCommunication {
 	 * @return
 	 */
 	public boolean validFileId(String id) {
-	    try {
+		//is not a hash so it can not be looked up 
+		if(id.equals("")){
+			return false;
+		}
+		
+		//attempt to find the hash of the files 
+		try {
 	        File f = drive.files().get(id).execute();
 	        return !f.getLabels().getTrashed();
 	    } catch (IOException e) {
-	        e.printStackTrace();
-	        System.out.println("bad id: " + id);
+	        new RobobuggyLogicException("bad google drive id: " + id, MESSAGE_LEVEL.EXCEPTION);
 	    }
 	    return false;
 	}

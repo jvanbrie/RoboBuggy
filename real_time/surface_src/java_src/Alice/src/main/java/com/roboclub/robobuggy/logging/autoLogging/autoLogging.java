@@ -13,6 +13,8 @@ import com.google.api.services.drive.Drive.Files;
 import com.google.api.services.drive.model.ChildList;
 import com.google.api.services.drive.model.ParentReference;
 import com.roboclub.robobuggy.logging.LogDataType;
+import com.roboclub.robobuggy.main.MESSAGE_LEVEL;
+import com.roboclub.robobuggy.main.RobobuggyLogicException;
 
 //TODO things to add in future versions: 
 // When a user edits a file outside of this system it should be detected and updated on the server
@@ -43,7 +45,7 @@ import com.roboclub.robobuggy.logging.LogDataType;
  *
  */
 public class autoLogging {
-	boolean IN_OFFLINE_MODE = true;  //if true then try to connect to the server otherwise do not  
+	boolean IN_OFFLINE_MODE = false;  //if true then try to connect to the server otherwise do not  
 	
 	private Hashtable<String, LogDataType> logData;
 	
@@ -180,10 +182,8 @@ public class autoLogging {
 		LogDataType newLogData = LogDataType.readThisLogDataFromFolder(logFolder);
 		String oldLogData_key = lookUpLog(newLogData);
 		if(oldLogData_key == null){
-			System.out.println("yo");
 			//this log is not already being tracked so we should start tracking it 
 			logData.put(newLogData.getKey(), newLogData);
-			System.out.println(logData.size());
 		}else{
 			//this log is not new so we should update the log
 			LogDataType mergedLogData = LogDataType.merge(logData.get(oldLogData_key), newLogData);
@@ -267,9 +267,21 @@ public class autoLogging {
 		server.removeContentOfFolder(thisLog.getLogRefrenceOnServer());
 		//now we upload the new data
 		ChildList serverFiles = server.getFilesInFolder(thisLog.getLogRefrenceOnServer());
+		//makes sure the server reference is valid
+		if(thisLog.getLogRefrenceOnServer().equals("")){
+			new RobobuggyLogicException("trying to upload a folder to empty location on google drive", MESSAGE_LEVEL.EXCEPTION);
+			return false;
+		} 
+		
+		//makes sure that the local folder reference is valid
+		if(thisLog.getLogRefrenceOnComputer().equals("")){
+			new RobobuggyLogicException("trying to upload a folder with out a path", MESSAGE_LEVEL.EXCEPTION);
+			return false;
+		}
 		server.uploadFolder(thisLog.getLogRefrenceOnComputer(),thisLog.getLogRefrenceOnServer());
 		thisLog.setUpToDateOnServer(true);
-		//now we need to update the internal refrence in the data structure
+
+		//now we need to update the internal reference in the data structure
 		logData.replace(thisLog.getKey(), thisLog);
 		return true;
 	}

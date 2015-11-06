@@ -7,12 +7,16 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.Date;
 import java.util.Scanner;
+import java.util.jar.JarException;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 import com.orsoncharts.util.json.JSONObject;
 import com.roboclub.robobuggy.logging.autoLogging.ServerCommunication;
+import com.roboclub.robobuggy.main.MESSAGE_LEVEL;
+import com.roboclub.robobuggy.main.RobobuggyLogicException;
 
 //TODO handle corruption 
 //TODO handle deadlock issues 
@@ -58,7 +62,9 @@ public class LogDataType {
 			return false;
 		}
 		ServerCommunication server = ServerCommunication.getInstance();
-		return server.validFileId(getLogRefrenceOnServer());
+		boolean result = false;
+				result = server.validFileId(getLogRefrenceOnServer());
+		return result;
 		}
 
 	/**
@@ -249,16 +255,20 @@ public class LogDataType {
 		
 		//parse the json to populate result 
 		JsonParser parser = new JsonParser();
-		JsonObject jObject = (JsonObject)parser.parse(content);
-		result.setUpToDateOnServer(Boolean.valueOf(jObject.get("upToDateOnServer").toString()));
-		result.setLogRefrenceOnComputer(new File(jObject.get("logRefrenceOnServer").toString().replace("\\", "/")));
-		result.setLogRefrenceOnServer(jObject.get("logRefrenceOnServer").toString().replace("\\", "/"));
-		result.setLogNotes(jObject.get("LogNotes").toString());
-		result.setMostRecentlyUsed(new Date(Long.parseLong(jObject.get("mostRecentlyUsed").toString())));
-		result.setLastModified(new Date(Long.parseLong(jObject.get("lastModified").toString())));
-		result.setRecordedOn(new Date(Long.parseLong(jObject.get("recordedOn").toString())));		
-		result.setLogSize(Integer.parseInt(jObject.get("logSize").toString()));
-		result.folderName = jObject.get("folderName").toString();
+		try{
+			JsonObject jObject = (JsonObject)parser.parse(content);
+			result.setUpToDateOnServer(Boolean.valueOf(jObject.get("upToDateOnServer").getAsString()));
+			result.setLogRefrenceOnComputer(new File(jObject.get("logRefrenceOnServer").getAsString().replace("\\", "/")));
+			result.setLogRefrenceOnServer(jObject.get("logRefrenceOnServer").toString().replace("\\", "/"));
+			result.setLogNotes(jObject.get("LogNotes").getAsString());
+			result.setMostRecentlyUsed(new Date(Long.parseLong(jObject.get("mostRecentlyUsed").getAsString())));
+			result.setLastModified(new Date(Long.parseLong(jObject.get("lastModified").getAsString())));
+			result.setRecordedOn(new Date(Long.parseLong(jObject.get("recordedOn").getAsString())));		
+			result.setLogSize(Integer.parseInt(jObject.get("logSize").getAsString()));
+			result.folderName = jObject.get("folderName").getAsString();
+		}catch(JsonParseException e){
+			new RobobuggyLogicException("error parsing logDataType: "+ e.toString(), MESSAGE_LEVEL.EXCEPTION);
+		}
 		
 		//return resulting LogDatType 
 		return result;

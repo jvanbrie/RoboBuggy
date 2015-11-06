@@ -2,15 +2,20 @@ package com.roboclub.robobuggy.logging.autoLogging;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 
-import com.roboclub.robobuggy.ui.Gui;
+import com.roboclub.robobuggy.main.RobobuggyLogicException;
+import com.roboclub.robobuggy.ros.SensorChannel;
+
+//TODO problem file gets uploaded even if it is already on the server 
+//TODO does not download files properly 
+//TODO integrate into Alice 
 
 public class testDrive {
 	static ServerCommunication test;
 
 	public static void main(String[] args) {
+		RobobuggyLogicException.setupLogicException(SensorChannel.LOGIC_EXCEPTION);
+		
 		File whereToSave = new File("LOG_FILES");
 		String DriveStorageFolder_id ="0B1IjfVrCn6dNZjZfems2ZUlXNlE";
 		try {
