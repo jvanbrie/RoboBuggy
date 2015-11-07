@@ -15,8 +15,8 @@ install:
 
 before_script:
   - git clone https://github.com/Itseez/opencv.git
+  - cd opencv 
   - git checkout 3.0.0
-  - cd opencv
   - mkdir build
   - cd build
   - cmake ..
