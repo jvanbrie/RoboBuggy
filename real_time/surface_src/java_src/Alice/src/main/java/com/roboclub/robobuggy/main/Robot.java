@@ -45,13 +45,6 @@ public class Robot implements RosMaster {
 		System.out.println("Starting Robot");
 		autonomous = config.AUTONOMUS_DEFAULT;
 
-		//creates a log file even if no data is used
-		if(config.logging){
-			System.out.println("Starting Logging");
-			RobotLogger.getInstance();
-		}
-		
-
 		// Initialize Logic errors
 		RobobuggyLogicException.setupLogicException(SensorChannel.LOGIC_EXCEPTION);
 		new Subscriber(SensorChannel.LOGIC_EXCEPTION.getMsgPath(), new MessageListener() {
@@ -60,6 +53,15 @@ public class Robot implements RosMaster {
 					updateLogicException((RobobuggyLogicExceptionMeasurment)m);
 				}
 			});
+		
+		//creates a log file even if no data is used
+		if(config.logging){
+			System.out.println("Starting Logging");
+			RobotLogger.getInstance();
+		}
+		
+
+
 		//sends startup note
 		new RobobuggyLogicException("Logic Exception Setup properly" ,  MESSAGE_LEVEL.NOTE);
 		

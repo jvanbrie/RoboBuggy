@@ -52,6 +52,27 @@ public class autoLogging {
 	//on google drive every file and folder is given a unique identifying string 
 	private String DriveStorageFolder_id;
 	private File localFolderPath;
+	private static autoLogging autoLogger = null;
+	
+	public static autoLogging startAutoLogger(File whereToSave,String DriveStorageFolder_id){
+		if(autoLogger== null){
+			try {
+				autoLogger = new autoLogging( whereToSave, DriveStorageFolder_id);
+			} catch (IOException e) {
+				new RobobuggyLogicException("error while creating autologger", MESSAGE_LEVEL.EXCEPTION);
+			}
+		}else{
+			new RobobuggyLogicException("autoLogger already created", MESSAGE_LEVEL.EXCEPTION);
+		}
+		return autoLogger;
+	}
+	
+	public static autoLogging getLogger(){
+		if(autoLogger==null){
+			 new RobobuggyLogicException("you need to start the auto logger before using it", MESSAGE_LEVEL.EXCEPTION);
+		}
+		return autoLogger;
+	}
 	
 	/**
 	 *  The constructor for the auto logger, will load any local files 
@@ -59,7 +80,7 @@ public class autoLogging {
 	 * @param DriveStorageFolder_id
 	 * @throws IOException
 	 */
-	public autoLogging(File whereToSave,String DriveStorageFolder_id) throws IOException{
+	private autoLogging(File whereToSave,String DriveStorageFolder_id) throws IOException{
 		logData = new Hashtable<String, LogDataType>();
 		setWhereToSave(whereToSave);
 		setServerFolderId(DriveStorageFolder_id);
@@ -129,8 +150,12 @@ public class autoLogging {
 	 * Evaluates to a list of all of the log files
 	 * @return
 	 */
-	LogDataType[] getListOfLogFiles(){
-		return (LogDataType[]) logData.values().toArray();
+	ArrayList<LogDataType> getListOfLogFiles(){
+		ArrayList<LogDataType> result = new ArrayList<LogDataType>();
+		for(LogDataType l: logData.values()){
+			result.add(l);
+		}
+		return result;
 	}	
 	
 	/**
@@ -140,7 +165,7 @@ public class autoLogging {
 	 */
 	public boolean saveLogDataToFolders() throws IOException{
 		boolean allLogsSavedCorrectly = true;
-		LogDataType[] data = getListOfLogFiles();
+		ArrayList<LogDataType> data = getListOfLogFiles();
 		for (LogDataType thisLogData : data) {
 			boolean thisLogSavedState = thisLogData.saveThisLogDataToFolder();
 			if(!thisLogSavedState){
@@ -153,7 +178,7 @@ public class autoLogging {
 	/**
 	 * Assumes that any log files have already been loaded, ie can override any files on disk
 	 * @param logFolder
-	 * @return
+	 * @returnsaveLogDataLocally
 	 * @throws IOException
 	 */
 	boolean saveLogDataLocally(LogDataType logData) throws IOException{
@@ -162,7 +187,7 @@ public class autoLogging {
 			logFolder.mkdirs();
 		}
 		if(!logFolder.isDirectory()){
-			//TODO throw an error 
+			new RobobuggyLogicException("Attempted to save a log folder that is not a folder", MESSAGE_LEVEL.EXCEPTION);
 		}
 		
 		//if a file is already at location then it will be over written 
@@ -216,10 +241,18 @@ public class autoLogging {
 	 * @return
 	 * @throws IOException
 	 */
-	boolean startTrackingLog(File newLogLocation) throws IOException{
-		LogDataType newLog = new LogDataType(newLogLocation);	
-		logData.put(newLog.getKey(), newLog);
-		saveLogDataLocally(newLog);
+	public boolean startTrackingLog(File newLogLocation) throws IOException{
+		System.out.println("logfile:"+newLogLocation);
+		LogDataType newLog = new LogDataType(newLogLocation);
+		LogDataType oldLog = logData.get(newLog.getKey());
+		if(oldLog == null){
+			//is a new log
+			logData.put(newLog.getKey(), newLog);
+		}else{
+			// is not a new log so we should merge 
+			newLog = oldLog.merge(oldLog, newLog);
+			logData.replace(newLog.getKey(), newLog);
+		}
 		return uploadLog(newLog);
 	}
 	
@@ -230,7 +263,7 @@ public class autoLogging {
 	 */
 	public boolean saveLogDataToServer() throws IOException{
 		boolean allLogsSavedCorrectly = true;
-		LogDataType[] data = getListOfLogFiles();
+		ArrayList<LogDataType> data = getListOfLogFiles();
 		for (LogDataType thisLogData : data) {
 			if(!thisLogData.isUpToDateOnServer()){
 				if(!uploadLog(thisLogData)){
@@ -256,6 +289,7 @@ public class autoLogging {
 		if(thisLog.isUpToDateOnServer()){
 			return true;
 		}
+		
 		//if the log file has not been uploaded then uploaded it	
 		ServerCommunication server = ServerCommunication.getInstance();
 		if(!thisLog.exsitsOnServer()){
@@ -278,7 +312,12 @@ public class autoLogging {
 			new RobobuggyLogicException("trying to upload a folder with out a path", MESSAGE_LEVEL.EXCEPTION);
 			return false;
 		}
-		server.uploadFolder(thisLog.getLogRefrenceOnComputer(),thisLog.getLogRefrenceOnServer());
+		boolean result = server.uploadFolder(thisLog.getLogRefrenceOnComputer(),thisLog.getLogRefrenceOnServer());
+		if(result){
+			thisLog.setUpToDateOnServer(true);
+		}else{
+			new RobobuggyLogicException("trouble uploading log file, will try again later", MESSAGE_LEVEL.WARNING);
+		}
 		thisLog.setUpToDateOnServer(true);
 
 		//now we need to update the internal reference in the data structure
@@ -299,6 +338,7 @@ public class autoLogging {
 		
 		ServerCommunication server = ServerCommunication.getInstance();
 		server.downloadFolder(thisLog.getLogRefrenceOnComputer(),thisLog.getLogRefrenceOnServer());
+		thisLog.setUpToDateOnServer(true);
 		return true;
 	}
 	
@@ -337,17 +377,25 @@ public class autoLogging {
 		ArrayList<com.google.api.services.drive.model.File> folders = server.ListFolderMetaDataInDrive(Folder_id);
 		for(com.google.api.services.drive.model.File f : folders){
 			if(isLogFolderOnDrive(f)){
+				System.out.println("downloading"+f.getTitle());
+
 				//for each folder see if we already have its log data, if so merge data
 				//if not then download and add the log data 
 				LogDataType newLogData = readThisLogDataFromServerFolder(f, whereToSave);
-				String key = lookUpLog(newLogData);
-				if(key != null){
-					LogDataType oldData = logData.get(key);
-					logData.replace(key, LogDataType.merge(oldData, newLogData));
+				if(newLogData == null){
+					new RobobuggyLogicException("Tried to download a null file", MESSAGE_LEVEL.EXCEPTION);
 				}else{
-					logData.put(key, newLogData);
+					newLogData.setUpToDateOnServer(true);
+					String key = lookUpLog(newLogData);
+					if(key != null){
+						LogDataType oldData = logData.get(key);
+						logData.replace(key, LogDataType.merge(oldData, newLogData));
+					}else{
+						logData.put(key, newLogData);
+					}
 				}
 			}else{
+				System.out.println("is not a log folder"+f.getTitle());
 				//if it is a folder then crate that folder locally and recurse
 				String newFolderString = whereToSave+"/"+f.getTitle();
 				File newFolder = new File(newFolderString);
@@ -377,7 +425,8 @@ public class autoLogging {
 			 if(thisFile.getTitle() == LogDataType.FILE_NAME){
 				 //download the file 
 				 server.downloadFile(thisFile,parentFile);
-				 return LogDataType.readThisLogDataFromFolder(parentFile);
+				 File logFolder = new File(parentFile.getPath()+"/"+thisFile.getTitle());
+				 return LogDataType.readThisLogDataFromFolder(logFolder);
 			 }
 		 }
 		return null;
@@ -391,12 +440,14 @@ public class autoLogging {
 	 */
 	private boolean isLogFolderOnDrive(com.google.api.services.drive.model.File f) throws IOException {
 		if(IN_OFFLINE_MODE){
-			//TODO throw an error 
+			new RobobuggyLogicException("tried to check if a file is a log folder when in offline mode", MESSAGE_LEVEL.EXCEPTION);
+			return false;
 		}
 		ServerCommunication server =  ServerCommunication.getInstance();
 		 ArrayList<com.google.api.services.drive.model.File> files =  server.ListFileMetaDataInDrive(f.getId());
 		 for(com.google.api.services.drive.model.File thisFile : files){
-			 if(thisFile.getTitle() == LogDataType.FILE_NAME){
+			 System.out.println("checking Title"+thisFile.getTitle()+"\t"+LogDataType.FILE_NAME);
+			 if(thisFile.getTitle().equals(LogDataType.FILE_NAME)){
 				 return true;
 			 }
 		 }

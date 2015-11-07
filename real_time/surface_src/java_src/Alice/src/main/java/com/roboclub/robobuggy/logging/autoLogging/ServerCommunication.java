@@ -58,7 +58,6 @@ public class ServerCommunication {
 	// "MyCompany-ProductName/1.0".
 
 	private static final String APPLICATION_NAME = "Robotic_Buggy";
-	private static final String DRIVE_LOG_FOLDER_ID = "0B1IjfVrCn6dNZjZfems2ZUlXNlE";
 
 	// / Directory to store user credentials.
 	private static final java.io.File DATA_STORE_DIR = new java.io.File(
@@ -203,8 +202,12 @@ public class ServerCommunication {
 		ArrayList<File> metaData = new ArrayList<File>();
 		ChildList children = getFilesInFolder(folderOnServer);
         for (ChildReference child : children.getItems()) {
-	          File thisFile = drive.files().get(child.getId()).execute();
-	          metaData.add(thisFile);
+        	try{
+        		File thisFile = drive.files().get(child.getId()).execute();
+  	          metaData.add(thisFile);
+        	}catch(IOException e){
+        		new RobobuggyLogicException("Trouble downloading a file: "+e.toString(), MESSAGE_LEVEL.EXCEPTION);
+        	}
 	        }
         return metaData;
 	}
@@ -226,21 +229,21 @@ public class ServerCommunication {
 	        children.putAll(thisPageChildern);
 	        request.setPageToken(thisPageChildern.getNextPageToken());
 	      } catch (IOException e) {
-	        System.out.println("An error occurred: " + e);
-	        request.setPageToken(null);
+	    	  new RobobuggyLogicException("an error occureced geting file in a folder "+e, MESSAGE_LEVEL.EXCEPTION);
+	    	  request.setPageToken(null);
 	      }
 	    } while (request.getPageToken() != null &&
 	             request.getPageToken().length() > 0);
 	    return children;
 	  }
 
-	public static boolean addFolderToDrive(java.io.File FolderToupload)
+	public static boolean addFolderToDrive(java.io.File FolderToupload,String Drive_folder_Location)
 			throws IOException {
 		if (drive == null) {
 			return false;
 		}
 		ParentReference root_dir = new ParentReference();
-		root_dir.setId(DRIVE_LOG_FOLDER_ID);
+		root_dir.setId(Drive_folder_Location);
 		boolean upload_status = uploadFolder(FolderToupload, root_dir);
 		if (!upload_status) {
 			return false;
@@ -338,12 +341,6 @@ public class ServerCommunication {
 		File file = drive.files().insert(body).execute();
 		return file;
 	}
-
-	/*
-	 * // If the folder has a uploaded textfile with the value "false" then
-	 * Recursively walks down the // folder uploading all files and sub folders
-	 * private static File uploadFolder(boolean
-	 */
 
 	/** Uploads a file using either resumable or direct media upload. */
 	private static File uploadFile(boolean useDirectUpload,

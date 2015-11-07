@@ -104,7 +104,8 @@ public class LogDataType {
 	 * @return
 	 */
 	public String getKey(){
-		return folderName;//for now folder names need to be unique 
+		System.out.println("key="+getLogRefrenceOnComputer().toString());
+		return getLogRefrenceOnComputer().toString();//for now folder names need to be unique 
 	}
 	
 	/**
@@ -215,11 +216,16 @@ public class LogDataType {
 		jObject.put("logSize",getLogSize());
 		String dataToWrite = jObject.toJSONString();
 
-		logDataFile.delete();
-		logDataFile.createNewFile();
-		FileWriter output = new FileWriter(logDataFile);
-		output.write(dataToWrite);
-		output.close();
+		try{
+			logDataFile.delete();
+			logDataFile.createNewFile();
+			FileWriter output = new FileWriter(logDataFile);
+			output.write(dataToWrite);
+			output.close();
+		}catch(IOException e){
+			new  RobobuggyLogicException("error saving log file locally: "+getLogRefrenceOnComputer()+"/"+getFolderName()+"\t"+e, MESSAGE_LEVEL.EXCEPTION);
+			return false;
+		}
 		return true;
 	}
 	
@@ -258,7 +264,7 @@ public class LogDataType {
 		try{
 			JsonObject jObject = (JsonObject)parser.parse(content);
 			result.setUpToDateOnServer(Boolean.valueOf(jObject.get("upToDateOnServer").getAsString()));
-			result.setLogRefrenceOnComputer(new File(jObject.get("logRefrenceOnServer").getAsString().replace("\\", "/")));
+			result.setLogRefrenceOnComputer(new File(jObject.get("logRefrenceOnComptuer").getAsString().replace("\\", "/")));
 			result.setLogRefrenceOnServer(jObject.get("logRefrenceOnServer").toString().replace("\\", "/"));
 			result.setLogNotes(jObject.get("LogNotes").getAsString());
 			result.setMostRecentlyUsed(new Date(Long.parseLong(jObject.get("mostRecentlyUsed").getAsString())));

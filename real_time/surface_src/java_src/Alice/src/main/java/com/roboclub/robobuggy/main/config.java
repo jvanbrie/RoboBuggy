@@ -1,5 +1,6 @@
 package com.roboclub.robobuggy.main;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -25,7 +26,6 @@ public class config {
 	public static String VISION_SYSTEM_EXECUTABLE_LOCATION = "C:\\Users\\Robot\\Documents\\GitHub\\RoboBuggy\\surface_src\\VisionSystem\\Debug\\VisionSystem.exe";
 	// "C:\\Users\\abc\\buggy-log\\VisionSystem.exe";
 
-	public static String LOG_FILE_LOCATION = "logs";
 
 	// default logging state, should the buggy start logging as soon as this
 	// program is started
@@ -55,6 +55,11 @@ public class config {
 	public static  boolean FRONT_CAM_ON = false;
 	public static  boolean REAR_CAM_ON = false;
 	public static  boolean OVERLOOK_CAM_ON = false;
+	
+	//where to save files in logs
+	public static String LOG_FILE_LOCATION = "LOG_FILES";
+	public static final File LOCAL_FOLDER_STORAGE_FOLDER = new File(LOG_FILE_LOCATION);
+	public static final String DRIVE_STORAGE_FOLDER_ID ="0B1IjfVrCn6dNZjZfems2ZUlXNlE";
 	
 	
 	// number of times that we will allow for the brakes to be deployed and

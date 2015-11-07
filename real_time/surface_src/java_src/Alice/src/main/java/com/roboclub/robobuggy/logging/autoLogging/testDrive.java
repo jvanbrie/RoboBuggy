@@ -6,8 +6,8 @@ import java.io.IOException;
 import com.roboclub.robobuggy.main.RobobuggyLogicException;
 import com.roboclub.robobuggy.ros.SensorChannel;
 
-//TODO problem file gets uploaded even if it is already on the server 
-//TODO does not download files properly 
+//Future todo handle sub folders properly  
+//Future todo handle log folder location being moved 
 //TODO integrate into Alice 
 
 public class testDrive {
@@ -19,11 +19,12 @@ public class testDrive {
 		File whereToSave = new File("LOG_FILES");
 		String DriveStorageFolder_id ="0B1IjfVrCn6dNZjZfems2ZUlXNlE";
 		try {
-			autoLogging autoLogger = new autoLogging(whereToSave, DriveStorageFolder_id);
-			int count = 1;
+			autoLogging autoLogger  = autoLogging.startAutoLogger(whereToSave, DriveStorageFolder_id);
+			int count = 6;
 			File nFolder = new File("LOG_FILES/test"+count);
 			autoLogger.startTrackingLog(nFolder);
 			System.out.println(autoLogger.getNumLogs());
+			autoLogger.saveLogDataToFolders();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

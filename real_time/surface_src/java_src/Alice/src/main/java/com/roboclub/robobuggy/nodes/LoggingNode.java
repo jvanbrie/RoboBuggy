@@ -6,6 +6,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import com.roboclub.robobuggy.logging.autoLogging.autoLogging;
+import com.roboclub.robobuggy.main.config;
 import com.roboclub.robobuggy.messages.BaseMessage;
 import com.roboclub.robobuggy.messages.GuiLoggingButton;
 import com.roboclub.robobuggy.ros.Message;
@@ -27,9 +29,9 @@ public class LoggingNode implements Node {
 	// Get the folder that we're going to use
 
 	// TODO get folder name from file.
-	public LoggingNode(String topicName, final String directoryPath) {
+	public LoggingNode(String topicName) {
 		this.topicName = topicName;
-		this.directoryPath  = directoryPath;
+		this.directoryPath  = config.LOCAL_FOLDER_STORAGE_FOLDER.toString();
 		// Start the subscriber
 		s = new Subscriber(topicName, new MessageListener() {
 			@Override
@@ -47,6 +49,7 @@ public class LoggingNode implements Node {
 				}
 			}
 		});
+		
 	
 		
 		logging_button_sub = new Subscriber(SensorChannel.GUI_LOGGING_BUTTON.getMsgPath(), new MessageListener() {
@@ -70,6 +73,10 @@ public class LoggingNode implements Node {
 				
 			}
 		});
+		
+        //starts auto logging in a new thread 
+        autoLogging.startAutoLogger(config.LOCAL_FOLDER_STORAGE_FOLDER,config.DRIVE_STORAGE_FOLDER_ID);
+        
 		
 	}
 
@@ -99,6 +106,13 @@ public class LoggingNode implements Node {
 			bos.close();
 		} catch (IOException e) {
 			System.out.println("Could not close file properly!");
+			e.printStackTrace();
+		}
+		autoLogging autoLogger = autoLogging.getLogger();
+		try {
+			autoLogger.startTrackingLog(new File(directoryPath));
+			autoLogger.saveLogDataToFolders();
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
