@@ -26,7 +26,6 @@ public class config {
 	public static String VISION_SYSTEM_EXECUTABLE_LOCATION = "C:\\Users\\Robot\\Documents\\GitHub\\RoboBuggy\\surface_src\\VisionSystem\\Debug\\VisionSystem.exe";
 	// "C:\\Users\\abc\\buggy-log\\VisionSystem.exe";
 
-
 	// default logging state, should the buggy start logging as soon as this
 	// program is started
 	public static boolean LOGGING_DEFAULT = true;
@@ -58,6 +57,7 @@ public class config {
 	
 	//where to save files in logs
 	public static String LOG_FILE_LOCATION = "LOG_FILES";
+	public static String LOG_STOP_MESSAGE = "STOP_LOGGING";
 	public static final File LOCAL_FOLDER_STORAGE_FOLDER = new File(LOG_FILE_LOCATION);
 	public static final String DRIVE_STORAGE_FOLDER_ID ="0B1IjfVrCn6dNZjZfems2ZUlXNlE";
 	

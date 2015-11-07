@@ -8,69 +8,40 @@ import java.io.IOException;
 
 import com.roboclub.robobuggy.logging.autoLogging.autoLogging;
 import com.roboclub.robobuggy.main.config;
+import com.orsoncharts.util.json.JSONObject;
 import com.roboclub.robobuggy.messages.BaseMessage;
-import com.roboclub.robobuggy.messages.GuiLoggingButton;
+import com.roboclub.robobuggy.messages.GuiLoggingButtonMessage;
 import com.roboclub.robobuggy.ros.Message;
 import com.roboclub.robobuggy.ros.MessageListener;
 import com.roboclub.robobuggy.ros.Node;
+import com.roboclub.robobuggy.ros.Publisher;
 import com.roboclub.robobuggy.ros.SensorChannel;
 import com.roboclub.robobuggy.ros.Subscriber;
+import com.roboclub.robobuggy.ui.Gui;
 
 // When logging begins, a new folder is created, and then logging begins to that folder
 public class LoggingNode implements Node {
 
-	String directoryPath;
+	static String directoryPath;
 	String topicName;
 	
 	BufferedOutputStream outputFile = null;
 	
 	Subscriber s;
 	Subscriber logging_button_sub;
+	
+	public Publisher loggingButtonPub;
 	// Get the folder that we're going to use
 
 	// TODO get folder name from file.
-	public LoggingNode(String topicName) {
-		this.topicName = topicName;
-		this.directoryPath  = config.LOCAL_FOLDER_STORAGE_FOLDER.toString();
-		// Start the subscriber
-		s = new Subscriber(topicName, new MessageListener() {
-			@Override
-			public void actionPerformed(String topicName, Message m) {
-				if(outputFile == null) {
-					return;
-				}
-				
-				try {
-					outputFile.write(m.toLogString().getBytes());
-					outputFile.write('\n');
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		});
+	public LoggingNode() {
+		loggingButtonPub = new Publisher(SensorChannel.GUI_LOGGING_BUTTON.getMsgPath());
+
 		
-	
-		
-		logging_button_sub = new Subscriber(SensorChannel.GUI_LOGGING_BUTTON.getMsgPath(), new MessageListener() {
+		logging_button_sub = new Subscriber(Gui.GuiPubSubTopics.GUI_LOG_BUTTON_UPDATED.toString(), new MessageListener() {
 			@Override 
 			public void actionPerformed(String topicName, Message m) {
-				GuiLoggingButton glb = (GuiLoggingButton) m;
-				switch (glb.lm) {
-				case START:
-					String d = BaseMessage.format_the_date(glb.timestamp).replace(':', '-'); 
-					startLogging(directoryPath + "\\" +  d.replace(" ", "-").replace('/', '\\'));
-					break;
-
-				case STOP:
-					stopLogging();
-					break;
-					
-				default:
-					System.out.println("CANNOT BE HERE NOWW WHYYY");
-					return;
-				}
-				
+				loggingButtonPub.publish(m);
 			}
 		});
 		
@@ -79,35 +50,23 @@ public class LoggingNode implements Node {
         
 		
 	}
+	
 
-	public void startLogging(String directoryPath) {
-		try {
-			File tmp = new File(directoryPath + "\\" + topicName + ".txt");
-			tmp.getParentFile().mkdirs();
-			System.out.println(tmp.getAbsolutePath());
-			tmp.createNewFile();
-			outputFile = new BufferedOutputStream(new FileOutputStream(tmp));
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-			System.out.printf("file is screwed");
-			return;
-		} catch (IOException e) {
-			System.out.printf("file is screwed");
-			e.printStackTrace();
+	@SuppressWarnings("unchecked")
+	public static JSONObject translatePeelMessageToJObject(String message) {
+		// TODO Auto-generated method stub
+		JSONObject data = new JSONObject();
+		JSONObject params = new JSONObject();
+		if (message.contains(GuiLoggingButtonMessage.LoggingMessage.START.toString())) {
+			params.put("logging_status", "start");
 		}
-
+		else {
+			params.put("logging_status", "stop");
+		}
+		data.put("timestamp", message.split(",")[1]);
+		data.put("name", "logging button");
+		data.put("params", params);
 		
-	}
-
-	public void stopLogging() {
-		BufferedOutputStream bos = outputFile;
-		outputFile = null;
-		try {
-			bos.close();
-		} catch (IOException e) {
-			System.out.println("Could not close file properly!");
-			e.printStackTrace();
-		}
 		autoLogging autoLogger = autoLogging.getLogger();
 		try {
 			autoLogger.startTrackingLog(new File(directoryPath));
@@ -115,12 +74,18 @@ public class LoggingNode implements Node {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
-	
-	@Override
-	public boolean shutdown() {
-		// TODO Actually shutdown stuff.
-		return false;
+		
+		return data;
+
 	}
 
+
+	@Override
+	public boolean shutdown() {
+		// TODO Auto-generated method stub
+		loggingButtonPub = null;
+		logging_button_sub = null;
+		return true;
+	}
+	
 }

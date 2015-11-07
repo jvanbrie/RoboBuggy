@@ -38,7 +38,7 @@ public final class RobotLogger {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-	        autoLogging.startAutoLogger(config.LOCAL_FOLDER_STORAGE_FOLDER,config.DRIVE_STORAGE_FOLDER_ID);
+			autoLogging.startAutoLogger(config.LOCAL_FOLDER_STORAGE_FOLDER,config.DRIVE_STORAGE_FOLDER_ID);
 		}
 		return instance;
 
@@ -109,6 +109,5 @@ public final class RobotLogger {
 	private RobotLogger(File logdir) throws Exception {
 		this.message = Logger.getLogger("RoboBuggy");
 		this.sensor = null;
-        //starts auto logging in a new thread 
 	}
 }
