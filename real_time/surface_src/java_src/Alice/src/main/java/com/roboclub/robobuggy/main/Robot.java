@@ -3,6 +3,8 @@ package com.roboclub.robobuggy.main;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.opencv.core.Core;
+
 import com.roboclub.robobuggy.localization.KalmanFilter;
 import com.roboclub.robobuggy.logging.RobotLogger;
 import com.roboclub.robobuggy.messages.EncoderMeasurement;
@@ -42,6 +44,8 @@ public class Robot implements RosMaster {
 	}
 
 	private Robot() {
+        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);  //note this can only be called once, is to allow open cv calls
+
 		sensorList = new ArrayList<>();
 		kf = new KalmanFilter();
 		System.out.println("Starting Robot");

@@ -54,10 +54,22 @@ public class DataPanel extends JPanel {
 		gbc.gridx = 0;
 		gbc.gridy = 0;
 		gbc.weightx = 0.34;
-		gbc.weighty = 1.0;
+		gbc.weighty = 1;
 		gpsPanel = new GpsPanel();
-		this.add(gpsPanel, gbc);
-		
+		JPanel p = new JPanel();
+		p.setLayout(new GridBagLayout());
+		gbc.weightx = 1.0;
+		gbc.weighty = .5;
+		p.add(gpsPanel,gbc);
+		gbc.gridy = 1;		
+		gbc.weighty = .5;
+
+		p.add(new ImagePanel(),gbc);
+		gbc.weightx = 1.0;
+		gbc.gridy = 0;
+		this.add(p,gbc);
+
+		gbc.gridy = 0;
 		gbc.gridx = 1;
 		gbc.weightx = 0.66;
 		this.add(createDataPanel(), gbc);
