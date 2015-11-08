@@ -45,7 +45,7 @@ import com.roboclub.robobuggy.main.RobobuggyLogicException;
  *
  */
 public class autoLogging {
-	boolean IN_OFFLINE_MODE = false;  //if true then try to connect to the server otherwise do not  
+	boolean IN_OFFLINE_MODE = true;  //if true then try to connect to the server otherwise do not  
 	
 	private Hashtable<String, LogDataType> logData;
 	

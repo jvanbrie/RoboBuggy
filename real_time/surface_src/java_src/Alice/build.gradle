@@ -14,8 +14,10 @@ dependencies {
     //for jason object extraction from strings 
     compile 'com.google.code.gson:gson:2.2.+'
 
+    
 
     // TODO: this is stupid. find a way to use mavencentral repo.
+    compile files('../../../../../../opencv/opencv/build/bin/opencv-300.jar')
     compile files('library/orsoncharts-1.4-eval-nofx.jar')
     compile files('library/RXTXcomm.jar')
     compile files('library/google-api-java-client/libs/commons-logging-1.1.1.jar')

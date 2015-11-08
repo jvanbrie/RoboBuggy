@@ -10,10 +10,12 @@ import com.roboclub.robobuggy.messages.GpsMeasurement;
 import com.roboclub.robobuggy.messages.ImuMeasurement;
 import com.roboclub.robobuggy.messages.RobobuggyLogicExceptionMeasurment;
 import com.roboclub.robobuggy.messages.SteeringMeasurement;
+import com.roboclub.robobuggy.messages.VisionMeasurement;
 import com.roboclub.robobuggy.messages.WheelAngleCommand;
 import com.roboclub.robobuggy.nodes.RBSMNode;
 import com.roboclub.robobuggy.nodes.GpsNode;
 import com.roboclub.robobuggy.nodes.ImuNode;
+import com.roboclub.robobuggy.nodes.VisionNode;
 import com.roboclub.robobuggy.ros.ActuatorChannel;
 import com.roboclub.robobuggy.ros.Message;
 import com.roboclub.robobuggy.ros.MessageListener;
@@ -110,11 +112,15 @@ public class Robot implements RosMaster {
 
 		if (config.VISION_SYSTEM_DEFAULT) {
 			System.out.println("Initializing Vision System");
-			//vision = new VisionSystem(SensorChannel.VISION);
-			System.out.println("JUST KIDDING VISION SYSTEM CANNOT WORK NOW");
-			//sensorList.add(vision);
-			
-			// TODO add subscriber for vision messages
+			VisionNode vision = new VisionNode(SensorChannel.VISION);
+			sensorList.add(vision);
+		
+			new Subscriber(SensorChannel.VISION.getMsgPath(), new MessageListener() {
+				@Override
+				public void actionPerformed(String topicName, Message m) {
+					updateVision((VisionMeasurement)m);
+				}
+			});
 		}
 
 		System.out.println();
@@ -166,6 +172,10 @@ public class Robot implements RosMaster {
 	
 	/* Methods for Updating Current State */
 	private void updateGps(GpsMeasurement m) {
+		// TODO Update planner
+	}
+	
+	private void updateVision(VisionMeasurement m) {
 		// TODO Update planner
 	}
 	
