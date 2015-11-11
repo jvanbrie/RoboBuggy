@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.roboclub.robobuggy.localization.KalmanFilter;
 import com.roboclub.robobuggy.logging.RobotLogger;
+import com.roboclub.robobuggy.logging.autoLogging.autoLogging;
 import com.roboclub.robobuggy.messages.EncoderMeasurement;
 import com.roboclub.robobuggy.messages.GpsMeasurement;
 import com.roboclub.robobuggy.messages.ImuMeasurement;
@@ -156,6 +157,9 @@ public class Robot implements RosMaster {
 				}
 			}
 		}
+		//cleaning up logging 
+		RobotLogger.CloseLog();
+		//closeing system 
 		System.exit(0);
 	}
 
