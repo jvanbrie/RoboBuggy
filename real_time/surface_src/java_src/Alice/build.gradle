@@ -13,6 +13,8 @@ dependencies {
     compile project (':BuggyRos')
     //for jason object extraction from strings 
     compile 'com.google.code.gson:gson:2.2.+'
+    compile 'org.eclipse.jetty:jetty-server:9.3.5.v20151012'
+
 
 
     // TODO: this is stupid. find a way to use mavencentral repo.
