@@ -145,12 +145,15 @@ public class RBSMNode extends SerialNode implements Node {
 		
 		if(message.getHeaderByte() == RBSerialMessage.RBSM_MID_ERROR){
 			switch(message.getDataWord()){
-			case 20:
-				new RobobuggyLogicException("code 20 lost rc message", MESSAGE_LEVEL.EXCEPTION);
+			case 0: 
+				new RobobuggyLogicException("code 0 no error", MESSAGE_LEVEL.EXCEPTION);
 			case 1: 
 				new RobobuggyLogicException("code 1 lost  stream message", MESSAGE_LEVEL.EXCEPTION);
 			case 2: 
 				new RobobuggyLogicException("code 2 lost invalid mid message", MESSAGE_LEVEL.EXCEPTION);
+			case 20:
+				new RobobuggyLogicException("code 20 lost rc message", MESSAGE_LEVEL.EXCEPTION);
+
 			default: 
 				new RobobuggyLogicException("RBSM unknown error", MESSAGE_LEVEL.EXCEPTION);
 
