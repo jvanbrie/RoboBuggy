@@ -44,8 +44,9 @@ public class Robot implements RosMaster {
 	}
 
 	private Robot() {
-        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);  //note this can only be called once, is to allow open cv calls
-
+	       System.out.println("here we go");
+		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);  //note this can only be called once, is to allow open cv calls
+        //System.out.println(System.getProperties());
 		sensorList = new ArrayList<>();
 		kf = new KalmanFilter();
 		System.out.println("Starting Robot");

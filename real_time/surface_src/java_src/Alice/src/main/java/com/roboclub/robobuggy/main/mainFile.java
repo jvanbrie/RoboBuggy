@@ -1,5 +1,7 @@
 package com.roboclub.robobuggy.main;
 
+import java.io.File;
+
 import com.roboclub.robobuggy.logging.RobotLogger;
 import com.roboclub.robobuggy.nodes.RealNodeEnum;
 import com.roboclub.robobuggy.ros.SensorChannel;
@@ -11,6 +13,34 @@ public class mainFile {
     static int num = 0;
     
     public static void main(String args[]) {
+    //	System.load(new File("/Users/trevordecker/Desktop/myWork/roboBuggy1/RoboBuggy/real_time/surface_src/opencv/build/lib/libopencv_core.3.0.0.dylib").getAbsolutePath());
+    //	System.load(new File("/Users/trevordecker/Desktop/myWork/roboBuggy1/RoboBuggy/real_time/surface_src/opencv/build/lib/libopencv_imgproc.3.0.0.dylib").getAbsolutePath());
+    //	System.load(new File("/Users/trevordecker/Desktop/myWork/roboBuggy1/RoboBuggy/real_time/surface_src/opencv/build/lib/libopencv_ml.dylib").getAbsolutePath());
+    //	System.load(new File("/Users/trevordecker/Desktop/myWork/roboBuggy1/RoboBuggy/real_time/surface_src/opencv/build/lib/libopencv_flann.dylib").getAbsolutePath());
+    //	System.load(new File("/Users/trevordecker/Desktop/myWork/roboBuggy1/RoboBuggy/real_time/surface_src/opencv/build/lib/highgui.dylib").getAbsolutePath());
+    //	System.load(new File("/Users/trevordecker/Desktop/myWork/roboBuggy1/RoboBuggy/real_time/surface_src/opencv/build/lib/libopencv_imgcodecs.dylib").getAbsolutePath());
+    	File f = new File("/Users/trevordecker/Desktop/myWork/roboBuggy1/RoboBuggy/real_time/surface_src/opencv/build/lib/libopencv_java300.dylib");
+    	System.out.println(f.exists());
+    	System.load(f.getAbsolutePath());
+
+    	
+    	
+   	String path="/Users/trevordecker/Desktop/myWork/roboBuggy1/RoboBuggy/real_time/surface_src/opencv/build/lib,";
+    	String path2 = System.getProperty("java.library.path");
+    	String path3 = path2+":"+path;
+    	System.setProperty("java.library.path","Users/trevordecker/Desktop/myWork/roboBuggy1/RoboBuggy/real_time/surface_src/opencv/build/lib");
+    	System.out.println(System.getProperties());
+//    	System.out.println(System.getProperty("java.library.path"));
+    	
+  /*
+    	System.load(new File("/Users/trevordecker/Desktop/myWork/roboBuggy1/RoboBuggy/real_time/surface_src/opencv/build/lib/libopencv_core.3.0.0.dylib").getAbsolutePath());
+    	System.load(new File("/Users/trevordecker/Desktop/myWork/roboBuggy1/RoboBuggy/real_time/surface_src/opencv/build/lib/libopencv_imgproc.3.0.0.dylib").getAbsolutePath());
+    	System.load(new File("/Users/trevordecker/Desktop/myWork/roboBuggy1/RoboBuggy/real_time/surface_src/opencv/build/lib/libopencv_ml.dylib").getAbsolutePath());
+    	System.load(new File("/Users/trevordecker/Desktop/myWork/roboBuggy1/RoboBuggy/real_time/surface_src/opencv/build/lib/libopencv_flann.dylib").getAbsolutePath());
+*/
+    	
+    	
+	     //  System.setProperty("java.library.path","/Users/trevordecker/Desktop/myWork/roboBuggy1/RoboBuggy/real_time/surface_src/opencv/build/lib");
         config.getInstance();//must be run at least once
                 
         for (int i = 0; i < args.length; i++) {
@@ -42,7 +72,7 @@ public class mainFile {
         } else {
             Robot.getInstance();
         }
-        
+   
     }
     
     //going to start by just connecting to the IMU
