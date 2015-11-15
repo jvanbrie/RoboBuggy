@@ -8,12 +8,8 @@ import java.util.List;
 
 import com.roboclub.robobuggy.logging.RobotLogger;
 import com.roboclub.robobuggy.nodes.RealNodeEnum;
-import com.roboclub.robobuggy.ros.Message;
-import com.roboclub.robobuggy.ros.MessageListener;
 import com.roboclub.robobuggy.ros.SensorChannel;
-import com.roboclub.robobuggy.ros.Subscriber;
 import com.roboclub.robobuggy.sensors.SensorManager;
-import com.roboclub.robobuggy.simulation.SensorPlayer;
 import com.roboclub.robobuggy.ui.Gui;
 
 public class mainFile {
@@ -43,7 +39,6 @@ public class mainFile {
         }
         
         // Starts the robot
-//        if(config.DATA_PLAY_BACK_DEFAULT){
             try {           
             	Robot.getInstance();
                 bringup_sim();
@@ -53,9 +48,7 @@ public class mainFile {
                 e.printStackTrace();
                 return;
             }
-//        } else {
-//        	
-//        }   
+        
     }
     
     //going to start by just connecting to the IMU
