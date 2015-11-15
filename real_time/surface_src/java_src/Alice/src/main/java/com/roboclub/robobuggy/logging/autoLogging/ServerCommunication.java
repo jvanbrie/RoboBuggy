@@ -39,6 +39,8 @@ import com.google.api.services.drive.model.ParentReference;
 import com.google.api.services.drive.Drive.Children;
 import com.google.api.services.drive.model.ChildList;
 import com.google.api.services.drive.model.ChildReference;
+
+import com.roboclub.robobuggy.logging.LogDataType;
 import com.roboclub.robobuggy.main.MessageLevel;
 import com.roboclub.robobuggy.main.RobobuggyLogicException;
 
@@ -293,7 +295,10 @@ public class ServerCommunication {
 					uploadFolder(thisFile, parent);
 				} else {
 					// upload file
-					uploadFile(false, Arrays.asList(whereToSave), thisFile);
+					//will not upload the file if it is the stats file that is added later, to avoid a race condition 
+					if(!thisFile.getName().equals(LogDataType.FILE_NAME)){
+						uploadFile(false, Arrays.asList(whereToSave), thisFile);
+					}
 				}
 			}
 		}
@@ -342,6 +347,19 @@ public class ServerCommunication {
 		return file;
 	}
 
+	public static File uploadFile(java.io.File inputFile,
+			String whereToSave) throws IOException{
+		if(inputFile == null){
+			new RobobuggyLogicException("tried to upload a null file refrence", MessageLevel.EXCEPTION);
+		}
+		
+		ParentReference parent = new ParentReference();
+		parent.setId(whereToSave);
+		List<ParentReference> parentList = new ArrayList<ParentReference>();
+		parentList.add(parent);
+		return uploadFile(true,parentList,inputFile);
+	}
+	
 	/** Uploads a file using either resumable or direct media upload. */
 	private static File uploadFile(boolean useDirectUpload,
 			List<ParentReference> parentList, java.io.File fileToUpload)
@@ -397,6 +415,11 @@ public class ServerCommunication {
 		}
 		
 	}
+	
+	  public static void deleteFile(String fileId) {
+		  deleteFile(drive,  fileId);
+	  }
+
 	
 	  /**
 	   * Permanently delete a file, skipping the trash.

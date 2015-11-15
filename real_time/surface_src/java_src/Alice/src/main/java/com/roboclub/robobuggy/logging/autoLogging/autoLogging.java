@@ -15,6 +15,7 @@ import com.google.api.services.drive.model.ParentReference;
 import com.roboclub.robobuggy.logging.LogDataType;
 import com.roboclub.robobuggy.main.MessageLevel;
 import com.roboclub.robobuggy.main.RobobuggyLogicException;
+import com.roboclub.robobuggy.main.config;
 
 //TODO things to add in future versions: 
 // When a user edits a file outside of this system it should be detected and updated on the server
@@ -44,11 +45,12 @@ import com.roboclub.robobuggy.main.RobobuggyLogicException;
  * @author Trevor Decker
  *
  */
-public class autoLogging {
-	boolean IN_OFFLINE_MODE = true;  //if true then try to connect to the server otherwise do not  
-	
+
+public class autoLogging {	
+
 	private Hashtable<String, LogDataType> logData;
-	
+	private Thread logThread = null;
+
 	//on google drive every file and folder is given a unique identifying string 
 	private String DriveStorageFolder_id;
 	private File localFolderPath;
@@ -85,9 +87,42 @@ public class autoLogging {
 		setWhereToSave(whereToSave);
 		setServerFolderId(DriveStorageFolder_id);
 		readLogData();
-		downloadLogData(DriveStorageFolder_id, whereToSave);
-		uploadLogs();
 	}
+
+	public void startLogSync(){
+		//can only run one sync at a time so we should stop the old one 
+		if(logThread!= null && logThread.isAlive()){
+			stopLogSync();
+		}
+		logSyncThread newThead = new logSyncThread(getWhereToSave());
+        logThread = new Thread(newThead);
+        logThread.start();		
+	}
+	
+	//will cause for the thread that is currently syncing with the server to stop
+	public void stopLogSync(){
+		//TODO make this cleaner 
+		if(logThread != null){
+			logThread.stop();
+		}
+	}
+	
+	public class logSyncThread implements Runnable {
+		File whereToSave;
+
+	    public logSyncThread(File whereToSave) {
+	    	this.whereToSave = whereToSave;
+	    }
+
+	    public void run() {
+	    	try {
+				uploadLogs();
+				downloadLogData(DriveStorageFolder_id, whereToSave);
+			} catch (IOException e) {
+				new RobobuggyLogicException("trouble syncing", MessageLevel.WARNING);
+			}	    }
+	}
+	
 	
 	/**
 	 * evaluates to the number of logs that are currently being tracked 
@@ -248,12 +283,13 @@ public class autoLogging {
 		if(oldLog == null){
 			//is a new log
 			logData.put(newLog.getKey(), newLog);
+			saveLogDataLocally(newLog);
 		}else{
 			// is not a new log so we should merge 
 			newLog = oldLog.merge(oldLog, newLog);
 			logData.replace(newLog.getKey(), newLog);
 		}
-		return uploadLog(newLog);
+		return true;//uploadLog(newLog);
 	}
 	
 	/**
@@ -281,7 +317,7 @@ public class autoLogging {
 	 * @throws IOException
 	 */
 	boolean uploadLog(LogDataType thisLog) throws IOException{
-		if(IN_OFFLINE_MODE){
+		if(config.IN_OFFLINE_MODE){
 			return false;
 		}
 		
@@ -322,6 +358,11 @@ public class autoLogging {
 
 		//now we need to update the internal reference in the data structure
 		logData.replace(thisLog.getKey(), thisLog);
+	    //log saved correctly so we should update our log of it locally 
+		saveLogDataLocally(thisLog);
+		//now reupload the logDataFile
+		server.uploadFile(thisLog.getLocalLogDataFile(), thisLog.getLogRefrenceOnServer());
+		
 		return true;
 	}
 	
@@ -332,7 +373,7 @@ public class autoLogging {
 	 * @throws IOException
 	 */
 	boolean downloadLog(LogDataType thisLog) throws IOException{
-		if(IN_OFFLINE_MODE){
+		if(config.IN_OFFLINE_MODE){
 			return false;
 		}
 		
@@ -369,7 +410,7 @@ public class autoLogging {
 	 * @throws IOException
 	 */
 	boolean downloadLogData(String Folder_id,File whereToSave) throws IOException{
-		if(IN_OFFLINE_MODE){
+		if(config.IN_OFFLINE_MODE){
 			return false;
 		}
 		
@@ -415,7 +456,7 @@ public class autoLogging {
 	 */
 	private LogDataType readThisLogDataFromServerFolder(
 			com.google.api.services.drive.model.File f,File parentFile) throws IOException {
-		if(IN_OFFLINE_MODE){
+		if(config.IN_OFFLINE_MODE){
 			//throw an error for trying to connect to the server while in offline mode 
 		}
 		
@@ -439,7 +480,7 @@ public class autoLogging {
 	 * @throws IOException
 	 */
 	private boolean isLogFolderOnDrive(com.google.api.services.drive.model.File f) throws IOException {
-		if(IN_OFFLINE_MODE){
+		if(config.IN_OFFLINE_MODE){
 			new RobobuggyLogicException("tried to check if a file is a log folder when in offline mode", MessageLevel.EXCEPTION);
 			return false;
 		}

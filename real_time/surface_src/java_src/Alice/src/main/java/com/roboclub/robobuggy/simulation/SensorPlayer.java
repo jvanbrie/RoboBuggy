@@ -1,6 +1,9 @@
 package com.roboclub.robobuggy.simulation;
 
+import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -18,6 +21,8 @@ import com.roboclub.robobuggy.messages.GuiLoggingButtonMessage;
 import com.roboclub.robobuggy.messages.GuiLoggingButtonMessage.LoggingMessage;
 import com.roboclub.robobuggy.messages.ImuMeasurement;
 import com.roboclub.robobuggy.messages.SteeringMeasurement;
+import com.roboclub.robobuggy.messages.VisionMeasurement;
+import com.roboclub.robobuggy.nodes.VisionNode;
 import com.roboclub.robobuggy.ros.Publisher;
 import com.roboclub.robobuggy.ros.SensorChannel;
 import com.roboclub.robobuggy.utilities.RobobuggyDateFormatter;
@@ -32,6 +37,10 @@ public class SensorPlayer implements Runnable {
 	private Publisher brakePub;
 	private Publisher steeringPub;
 	private Publisher loggingButtonPub;
+	private Publisher visionPub;
+	
+	private FileInputStream inputStream;
+
 
 
 	public SensorPlayer(String filePath) {
@@ -42,6 +51,7 @@ public class SensorPlayer implements Runnable {
 		brakePub = new Publisher(SensorChannel.BRAKE.getMsgPath());
 		steeringPub = new Publisher(SensorChannel.STEERING.getMsgPath());
 		loggingButtonPub = new Publisher(SensorChannel.GUI_LOGGING_BUTTON.getMsgPath());
+		visionPub = new Publisher(SensorChannel.VISION.getMsgPath());
 		
 		System.out.println("initializing the SensorPlayer");
 		
@@ -50,6 +60,16 @@ public class SensorPlayer implements Runnable {
 		if(!f.exists()) {
 			new RobobuggyLogicException("File doesn't exist!", MessageLevel.EXCEPTION);
 		}
+		
+		 try {
+			 //TODO use another file 
+			 File test = new File(filePath);
+			inputStream = new FileInputStream(test.getParent()+"/video");
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 	}
 	
 	
@@ -84,7 +104,7 @@ public class SensorPlayer implements Runnable {
 				}
 				long sensorTime_fromStart = currentSensorTimeInMillis -sensorStartTimeInMilis; 
 				long realTime_fromStart = currentTime - prevTimeInMillis;				
-				long PLAY_BACK_SPEED = 100;
+				long PLAY_BACK_SPEED = 1;
 				long sleepTime = PLAY_BACK_SPEED*realTime_fromStart - sensorTime_fromStart;
 				System.out.println("sleepTime:"+sleepTime);
 				if(sleepTime < 0 ){ 
@@ -99,7 +119,11 @@ public class SensorPlayer implements Runnable {
 				JSONObject sensorParams = (JSONObject) sensor.get("params");
 				
 				switch(sensorName) {
-				
+					case "Vision":
+		    			BufferedImage image = VisionNode.readImage(inputStream,1280,720);
+		    			visionPub.publish(new VisionMeasurement(image, "playback", 0));
+
+						break;
 					case "IMU":
 						double yaw = (double) sensorParams.get("yaw");
 						double pitch = (double) sensorParams.get("pitch");

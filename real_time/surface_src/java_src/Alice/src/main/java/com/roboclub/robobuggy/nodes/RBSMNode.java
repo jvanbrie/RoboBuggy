@@ -70,10 +70,11 @@ public class RBSMNode extends SerialNode implements Node {
 	}
 	
 	@Override
-	public void setSerialPort(SerialPort sp) {
-		super.setSerialPort(sp);
+	public boolean setSerialPort(SerialPort sp) {
+		boolean didSuperFail = super.setSerialPort(sp);
 		statePub_enc.publish(new StateMessage(SensorState.ON));
 		statePub_pot.publish(new StateMessage(SensorState.ON));
+		return didSuperFail;
 	}
 	
 	private EncoderMeasurement estimateVelocity(int dataWord) {

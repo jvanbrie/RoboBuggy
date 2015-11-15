@@ -21,7 +21,6 @@ public class GraphPanel extends JPanel {
 	private static final long serialVersionUID = -5453262887347328140L;
 
 	private AngleGraph steering;
-	private AngleGraph roll;
 	private AngleGraph pitch;
 	private AngleGraph yaw;
 	
@@ -30,12 +29,11 @@ public class GraphPanel extends JPanel {
 		this.setLayout(new GridLayout(1,4));
 		
 		steering = new AngleGraph("STEERING");
-		roll = new AngleGraph("ROLL");
 		pitch = new AngleGraph("PITCH");
 		yaw = new AngleGraph("YAW");
 		
 		this.add(steering);
-		this.add(roll);
+		this.add(new ImagePanel());
 		this.add(pitch);
 		this.add(yaw);
 		

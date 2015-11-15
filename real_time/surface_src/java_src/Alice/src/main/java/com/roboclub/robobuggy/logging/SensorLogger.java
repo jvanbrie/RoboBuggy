@@ -16,6 +16,7 @@ import com.roboclub.robobuggy.nodes.GpsNode;
 import com.roboclub.robobuggy.nodes.ImuNode;
 import com.roboclub.robobuggy.nodes.LoggingNode;
 import com.roboclub.robobuggy.nodes.RBSMNode;
+import com.roboclub.robobuggy.nodes.VisionNode;
 import com.roboclub.robobuggy.ros.Message;
 import com.roboclub.robobuggy.ros.MessageListener;
 import com.roboclub.robobuggy.ros.SensorChannel;
@@ -48,6 +49,7 @@ public final class SensorLogger {
 			int logButtonHits = 0;
 			int gpsHits = 0;
 			int imuHits = 0;
+			int visionHits = 0;
 			int encoderHits = 0;
 			int brakeHits = 0;
 			int steeringHits = 0;
@@ -79,6 +81,10 @@ public final class SensorLogger {
 				JSONObject sensorEntryObject;
 
 				switch (sensor) {
+				case "vision":
+					sensorEntryObject = VisionNode.translatePeelMessageToJObject(line);
+					visionHits++;
+					break;
 				case "imu":
 					sensorEntryObject = ImuNode.translatePeelMessageToJObject(line);
 					imuHits++;
@@ -118,6 +124,7 @@ public final class SensorLogger {
 				dataBreakdownObj.put("logging_button", logButtonHits);
 				dataBreakdownObj.put("gps", gpsHits);
 				dataBreakdownObj.put("IMU", imuHits);
+				dataBreakdownObj.put("Vision",visionHits);
 				dataBreakdownObj.put("encoder", encoderHits);
 				dataBreakdownObj.put("brake", brakeHits);
 				dataBreakdownObj.put("steering", steeringHits);

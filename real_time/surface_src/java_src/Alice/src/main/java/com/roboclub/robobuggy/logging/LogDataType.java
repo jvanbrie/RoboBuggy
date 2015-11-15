@@ -29,7 +29,7 @@ public class LogDataType {
 	 ******************************************************************************************
 	 */
 
-	public static final String FILE_NAME = "LOGDATA"; //the file name where this data is stored 
+	public static final String FILE_NAME = "LOGDATA.txt"; //the file name where this data is stored 
 	
 	/*
 	 *******************************************************************************************
@@ -134,6 +134,9 @@ public class LogDataType {
 	 * @return
 	 */
 	public static boolean isLog(File folder){
+		if(folder == null ||folder.getPath() == null){
+			return false;
+		}
 		File dataFile = new File(folder.getPath()+"/"+FILE_NAME);
 		return dataFile.exists();
 	}
@@ -185,6 +188,10 @@ public class LogDataType {
 	public void setLogSize(int logSize) {
 		this.logSize = logSize;
 	}	
+	
+	public File getLocalLogDataFile(){
+		return new File(getLogRefrenceOnComputer().getPath()+"/"+FILE_NAME);
+	}
 	
 	/**
 	 * 

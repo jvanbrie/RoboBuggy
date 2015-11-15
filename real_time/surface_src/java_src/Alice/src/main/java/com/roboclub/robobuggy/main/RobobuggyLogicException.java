@@ -25,7 +25,7 @@ public static void setupLogicException(SensorChannel sensor){
 }
 	
 public RobobuggyLogicException(String error,MessageLevel level){
-	System.out.println(error);
+	System.out.println(level.toString()+": \t"+error);
 	errorPub.publish(new RobobuggyLogicExceptionMeasurment(error, level));
 	
 	//only halt the program if it is an exception 

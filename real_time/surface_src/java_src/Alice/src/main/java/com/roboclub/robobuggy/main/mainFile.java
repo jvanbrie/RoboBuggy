@@ -9,12 +9,8 @@ import java.util.List;
 
 import com.roboclub.robobuggy.logging.RobotLogger;
 import com.roboclub.robobuggy.nodes.RealNodeEnum;
-import com.roboclub.robobuggy.ros.Message;
-import com.roboclub.robobuggy.ros.MessageListener;
 import com.roboclub.robobuggy.ros.SensorChannel;
-import com.roboclub.robobuggy.ros.Subscriber;
 import com.roboclub.robobuggy.sensors.SensorManager;
-import com.roboclub.robobuggy.simulation.SensorPlayer;
 import com.roboclub.robobuggy.ui.Gui;
 
 public class mainFile {
@@ -51,7 +47,7 @@ public class mainFile {
     	
 	     //  System.setProperty("java.library.path","/Users/trevordecker/Desktop/myWork/roboBuggy1/RoboBuggy/real_time/surface_src/opencv/build/lib");
         config.getInstance();//must be run at least once
-                
+        
         List<String> ports = getAvailablePorts();
         System.out.println(ports);
         
@@ -94,28 +90,20 @@ public class mainFile {
         Gui.EnableLogging();
         SensorManager sm = SensorManager.getInstance();
         
-        if (config.DATA_PLAY_BACK_DEFAULT) {
         	//initialize a new real sensor with type, port, and channel(s)
         	//sensormanager will (eventually) continue to look on same port for the sensor
         	//returns a key to the new sensor -- remove with this key.
+        try{
         	String ImuKey = sm.newRealSensor(RealNodeEnum.IMU, config.COM_PORT_IMU, SensorChannel.IMU);
         	String GpsKey = sm.newRealSensor(RealNodeEnum.GPS, config.COM_PORT_GPS_INTEGRATED, SensorChannel.GPS);
         	String RBSMKey = sm.newRealSensor(RealNodeEnum.RBSM, config.COM_PORT_ENCODER, SensorChannel.ENCODER, SensorChannel.STEERING);
         	String LoggingKey = sm.newRealSensor(RealNodeEnum.LOGGING_BUTTON, "", SensorChannel.GUI_LOGGING_BUTTON);
+        }catch(java.lang.NullPointerException e){
+        	new RobobuggyLogicException("trouble creating at least one of the sensors", MessageLevel.EXCEPTION);
+        	//TOOD add retry and make one per each sensor 
+        	}
         }
-        
-        else {
-        	SensorPlayer sp = new SensorPlayer("logs/2015-11-14-03-43-56/sensors.txt");
-        	new Thread(new Runnable() {
-				
-				@Override
-				public void run() {
-					// TODO Auto-generated method stub
-					sp.run();
-				}
-			}).start();
-        }
-    }
+
     
     public static List<String> getAvailablePorts() {
 

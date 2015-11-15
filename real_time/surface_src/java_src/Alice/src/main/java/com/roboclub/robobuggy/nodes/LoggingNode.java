@@ -44,10 +44,19 @@ public class LoggingNode implements Node {
 				loggingButtonPub.publish(m);
 			}
 		});
-		
+	
+		/*
         //starts auto logging in a new thread 
         autoLogging.startAutoLogger(config.LOCAL_FOLDER_STORAGE_FOLDER,config.DRIVE_STORAGE_FOLDER_ID);
-        
+		//TODO move to some place usefull and uncomment 
+        autoLogging autoLogger = autoLogging.getLogger();
+		try {
+			autoLogger.startTrackingLog(new File(directoryPath));
+			autoLogger.saveLogDataToFolders();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		*/
 		
 	}
 	
@@ -67,13 +76,7 @@ public class LoggingNode implements Node {
 		data.put("name", "logging button");
 		data.put("params", params);
 		
-		autoLogging autoLogger = autoLogging.getLogger();
-		try {
-			autoLogger.startTrackingLog(new File(directoryPath));
-			autoLogger.saveLogDataToFolders();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+
 		
 		return data;
 

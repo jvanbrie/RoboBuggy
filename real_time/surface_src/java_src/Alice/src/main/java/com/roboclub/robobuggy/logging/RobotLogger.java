@@ -38,13 +38,16 @@ public final class RobotLogger {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			autoLogging.startAutoLogger(config.LOCAL_FOLDER_STORAGE_FOLDER,config.DRIVE_STORAGE_FOLDER_ID);
+			autoLogging autoLoger = autoLogging.startAutoLogger(config.LOCAL_FOLDER_STORAGE_FOLDER,config.DRIVE_STORAGE_FOLDER_ID);
+			autoLoger.startLogSync();
 		}
 		return instance;
 
 	}
 
 	public static void CloseLog() {
+		System.out.println("CLOSING LOG");
+		
 		if (instance != null) {
 			Handler[] handlers = instance.message.getHandlers();
 
@@ -55,8 +58,11 @@ public final class RobotLogger {
 		}
 		autoLogging autoLogger = autoLogging.getLogger();
 		try {
-			autoLogger.startTrackingLog(logFolder);
-			autoLogger.saveLogDataToFolders();
+			if(logFolder != null){
+				autoLogger.startTrackingLog(logFolder);
+				autoLogger.saveLogDataToFolders();
+				autoLogger.startLogSync();
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

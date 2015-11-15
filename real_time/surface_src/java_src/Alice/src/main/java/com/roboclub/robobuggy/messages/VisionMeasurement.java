@@ -3,6 +3,7 @@ package com.roboclub.robobuggy.messages;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 import java.awt.image.WritableRaster;
+import java.util.Date;
 
 import org.opencv.core.Mat;
 
@@ -11,17 +12,21 @@ import com.roboclub.robobuggy.ros.Message;
 public class VisionMeasurement extends BaseMessage implements Message  {
 	BufferedImage frame;
 	String source;
+	Date timestamp;
 	int frameId;  //is used for indexing this frame in a video representation of this vision source
 	
 	public VisionMeasurement(BufferedImage frame,String source,int frameId) {
+		this.timestamp = new Date(); //TODO fix
 		this.frame = frame;
 		this.source = source;
 		this.frameId = frameId;
 	}
 
+	
 	@Override
 	public String toLogString() {
-		return source+"\t"+frameId;
+		String s = super.formatter.format(timestamp);
+		return s;
 	}
 
 	@Override

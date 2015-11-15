@@ -13,6 +13,8 @@ import com.roboclub.robobuggy.calculatedNodes.CalculatedGPSNode;
 import com.roboclub.robobuggy.calculatedNodes.CalculatedIMUNode;
 import com.roboclub.robobuggy.calculatedNodes.CalculatedNodeEnum;
 import com.roboclub.robobuggy.calculatedNodes.NodeCalculator;
+import com.roboclub.robobuggy.main.MessageLevel;
+import com.roboclub.robobuggy.main.RobobuggyLogicException;
 import com.roboclub.robobuggy.nodes.GpsNode;
 import com.roboclub.robobuggy.nodes.ImuNode;
 import com.roboclub.robobuggy.nodes.LoggingNode;
@@ -70,18 +72,30 @@ public class SensorManager {
 		switch (nodeType) {
 		case IMU:
 			ImuNode imu = new ImuNode(sensor[0]);
-			imu.setSerialPort(connect(port, imu.baudRate()));
-			realSensors.put(portKey, imu);
+			boolean imuCreatedProperly = imu.setSerialPort(connect(port, imu.baudRate()));
+			if(imuCreatedProperly){
+				realSensors.put(portKey, imu);
+			}else{
+				new RobobuggyLogicException("Had trouble creating IMU connection,", MessageLevel.WARNING);
+			}
 			break;
 		case GPS:
 			GpsNode gps = new GpsNode(sensor[0]);
-			gps.setSerialPort(connect(port, gps.baudRate()));
-			realSensors.put(portKey, gps);
+			boolean gpsCreatedProperly = gps.setSerialPort(connect(port, gps.baudRate()));
+			if(gpsCreatedProperly){
+				realSensors.put(portKey, gps);
+			}else{
+				new RobobuggyLogicException("Had trouble creating GPS connection,", MessageLevel.WARNING);
+			}
 			break;
 		case RBSM:
 			RBSMNode rbsm = new RBSMNode(sensor[0], sensor[1]);
-			rbsm.setSerialPort(connect(port, rbsm.baudRate()));
-			realSensors.put(portKey, rbsm);
+			boolean rbsmNodeCreatedProperly = rbsm.setSerialPort(connect(port, rbsm.baudRate()));
+			if(rbsmNodeCreatedProperly){
+				realSensors.put(portKey, rbsm);
+			}else{
+				new RobobuggyLogicException("Had trouble creating rbsm connection,", MessageLevel.WARNING);
+			}
 			break;
 		case LOGGING_BUTTON:
 			LoggingNode loggingButton = new LoggingNode();
