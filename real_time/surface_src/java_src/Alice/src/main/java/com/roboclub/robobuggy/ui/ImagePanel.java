@@ -29,7 +29,7 @@ public class ImagePanel extends JPanel{
 		@Override
 		public void actionPerformed(String topicName, Message m) {
 			VisionMeasurement vm = (VisionMeasurement)m;
-			img = vm.ToBufferedImage();		
+			img = vm.getBuffredImage();		
 			repaint();
 		}
 	});

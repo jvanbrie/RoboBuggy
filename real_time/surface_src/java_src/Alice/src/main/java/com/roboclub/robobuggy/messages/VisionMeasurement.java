@@ -9,11 +9,11 @@ import org.opencv.core.Mat;
 import com.roboclub.robobuggy.ros.Message;
 
 public class VisionMeasurement extends BaseMessage implements Message  {
-	Mat frame;
+	BufferedImage frame;
 	String source;
 	int frameId;  //is used for indexing this frame in a video representation of this vision source
 	
-	public VisionMeasurement(Mat frame,String source,int frameId) {
+	public VisionMeasurement(BufferedImage frame,String source,int frameId) {
 		this.frame = frame;
 		this.source = source;
 		this.frameId = frameId;
@@ -30,19 +30,23 @@ public class VisionMeasurement extends BaseMessage implements Message  {
 		return null;
 	}
 	
-    public BufferedImage ToBufferedImage() {
+	public BufferedImage getBuffredImage(){
+		return frame;
+	}
+	
+    public static BufferedImage ToBufferedImage(Mat thisFrame) {
         //Mat() to BufferedImage
         int type = 0;
-        if (frame.channels() == 1) {
+        if (thisFrame.channels() == 1) {
             type = BufferedImage.TYPE_BYTE_GRAY;
-        } else if (frame.channels() == 3) {
+        } else if (thisFrame.channels() == 3) {
             type = BufferedImage.TYPE_3BYTE_BGR;
         }
-        BufferedImage image = new BufferedImage(frame.width(), frame.height(), type);
+        BufferedImage image = new BufferedImage(thisFrame.width(), thisFrame.height(), type);
         WritableRaster raster = image.getRaster();
         DataBufferByte dataBuffer = (DataBufferByte) raster.getDataBuffer();
         byte[] data = dataBuffer.getData();
-        frame.get(0, 0, data);
+        thisFrame.get(0, 0, data);
 
         return image;
     }

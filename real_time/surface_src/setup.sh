@@ -1,4 +1,3 @@
-
 #!/bin/bash
 #This downloads and installs all of the software projects that robobuggy needs 
 
@@ -8,8 +7,8 @@
   git checkout 3.0.0
   mkdir build
   cd build
-  cmake -DCMAKE_BUILD_TYPE="Release" ..
-  make -j4
+  cmake -DCMAKE_BUILD_TYPE="Release" -DWITH_FFMPEG=OFF ..
+  sudo  make -j4
   sudo make -j4 install
   mvn install:install-file -Dfile=/usr/local/share/OpenCV/java/opencv-300.jar -DgroupId=opencv -DartifactId=opencv -Dversion=3.0.0 -Dpackaging=jar
   cd ../..
