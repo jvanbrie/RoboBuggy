@@ -10,12 +10,14 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import com.roboclub.robobuggy.messages.EncoderMeasurement;
+import com.roboclub.robobuggy.messages.GpsMeasurement;
 import com.roboclub.robobuggy.messages.ImuMeasurement;
 import com.roboclub.robobuggy.messages.SteeringMeasurement;
 import com.roboclub.robobuggy.ros.Message;
 import com.roboclub.robobuggy.ros.MessageListener;
 import com.roboclub.robobuggy.ros.SensorChannel;
 import com.roboclub.robobuggy.ros.Subscriber;
+//import com.roboclub.robobuggy.ui.GpsPanel.LocTuple;
 
 /**
  * @author Trevor Decker
@@ -43,6 +45,8 @@ public class DataPanel extends JPanel {
 	private JLabel distance;
 	private JLabel steeringAng;
 	private JLabel errorNum;
+	private JLabel latitude,longitude;
+	private Subscriber gpsSub;
 	
 	public DataPanel() {
 		this.setBorder(BorderFactory.createLineBorder(Color.black));
@@ -56,6 +60,8 @@ public class DataPanel extends JPanel {
 		gbc.weightx = 0.34;
 		gbc.weighty = 1;
 		gpsPanel = new GpsPanel();
+
+/*
 		JPanel p = new JPanel();
 		p.setLayout(new GridBagLayout());
 		gbc.weightx = 1.0;
@@ -71,6 +77,15 @@ public class DataPanel extends JPanel {
 
 		gbc.gridy = 0;
 		gbc.gridx = 1;
+		*/
+
+		this.add(gpsPanel, gbc);
+		
+		gbc.gridx = 0;
+		gbc.gridy = 1;
+		gbc.weighty = 0;
+	
+		
 		gbc.weightx = 0.66;
 		this.add(createDataPanel(), gbc);
 	}
@@ -125,6 +140,16 @@ public class DataPanel extends JPanel {
 		panel.add(label);
 		panel.add(mZ);
 		
+		latitude = new JLabel();
+		label = new JLabel("  lat: ");
+		panel.add(label);
+		panel.add(latitude);
+		
+		longitude = new JLabel();
+		label = new JLabel(" long: ");
+		panel.add(label);
+		panel.add(longitude);
+		
 		// Subscriber for Imu updates
 		new Subscriber(SensorChannel.IMU.getMsgPath(), new MessageListener() {
 			@Override
@@ -148,6 +173,17 @@ public class DataPanel extends JPanel {
 				
 			}
 		});
+		
+		gpsSub = new Subscriber(SensorChannel.GPS.getMsgPath(), new MessageListener() {
+			@Override
+			public void actionPerformed(String topicName, Message m) {
+				double lat = ((GpsMeasurement)m).latitude;
+				double longit = ((GpsMeasurement)m).longitude;
+			    latitude.setText(Double.toString(lat));
+			    longitude.setText(Double.toString(longit));
+				//latitude and longitude are both needed 
+			}
+		});		
 		
 		velocity = new JLabel();
 		label = new JLabel("   Velocity: ");
@@ -188,6 +224,14 @@ public class DataPanel extends JPanel {
 			}
 		});
 		
+		//Subscriber for GPS data - agirish
+		new Subscriber(SensorChannel.GPS.getMsgPath(), new MessageListener() {
+			public void actionPerformed(String topicName, Message m) {
+				aX.setText(Double.toString(((GpsMeasurement)m).latitude)); //adding a value 
+				
+			}
+		});
+		
 		errorNum = new JLabel();
 		label = new JLabel("   Errors: ");
 		panel.add(label);
@@ -195,4 +239,23 @@ public class DataPanel extends JPanel {
 		
 		return panel;
 	}
+	
+	//added by Abhinav Girish ; only temporary
+	public String getValues()
+	{
+		String values = "";
+		values += "aX: "+aX.getText() + " ";
+		values += "aY: "+aY.getText() + " ";
+		values += "aZ: "+aZ.getText() + " ";
+		values += "rX: "+rX.getText() + " ";
+		values += "rY: "+rY.getText() + " ";
+		values += "rZ: "+rZ.getText() + " ";
+		values += "mX: "+mX.getText() + " ";
+		values += "mY: "+mY.getText() + " ";
+		values += "mZ: "+mZ.getText() + " ";
+		
+		return values;
+	}
+	
+	
 }

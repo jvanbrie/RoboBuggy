@@ -13,7 +13,7 @@ import com.google.api.services.drive.Drive.Files;
 import com.google.api.services.drive.model.ChildList;
 import com.google.api.services.drive.model.ParentReference;
 import com.roboclub.robobuggy.logging.LogDataType;
-import com.roboclub.robobuggy.main.MESSAGE_LEVEL;
+import com.roboclub.robobuggy.main.MessageLevel;
 import com.roboclub.robobuggy.main.RobobuggyLogicException;
 
 //TODO things to add in future versions: 
@@ -59,17 +59,17 @@ public class autoLogging {
 			try {
 				autoLogger = new autoLogging( whereToSave, DriveStorageFolder_id);
 			} catch (IOException e) {
-				new RobobuggyLogicException("error while creating autologger", MESSAGE_LEVEL.EXCEPTION);
+				new RobobuggyLogicException("error while creating autologger", MessageLevel.EXCEPTION);
 			}
 		}else{
-			new RobobuggyLogicException("autoLogger already created", MESSAGE_LEVEL.EXCEPTION);
+			new RobobuggyLogicException("autoLogger already created", MessageLevel.EXCEPTION);
 		}
 		return autoLogger;
 	}
 	
 	public static autoLogging getLogger(){
 		if(autoLogger==null){
-			 new RobobuggyLogicException("you need to start the auto logger before using it", MESSAGE_LEVEL.EXCEPTION);
+			 new RobobuggyLogicException("you need to start the auto logger before using it", MessageLevel.EXCEPTION);
 		}
 		return autoLogger;
 	}
@@ -187,7 +187,7 @@ public class autoLogging {
 			logFolder.mkdirs();
 		}
 		if(!logFolder.isDirectory()){
-			new RobobuggyLogicException("Attempted to save a log folder that is not a folder", MESSAGE_LEVEL.EXCEPTION);
+			new RobobuggyLogicException("Attempted to save a log folder that is not a folder", MessageLevel.EXCEPTION);
 		}
 		
 		//if a file is already at location then it will be over written 
@@ -303,20 +303,20 @@ public class autoLogging {
 		ChildList serverFiles = server.getFilesInFolder(thisLog.getLogRefrenceOnServer());
 		//makes sure the server reference is valid
 		if(thisLog.getLogRefrenceOnServer().equals("")){
-			new RobobuggyLogicException("trying to upload a folder to empty location on google drive", MESSAGE_LEVEL.EXCEPTION);
+			new RobobuggyLogicException("trying to upload a folder to empty location on google drive", MessageLevel.EXCEPTION);
 			return false;
 		} 
 		
 		//makes sure that the local folder reference is valid
 		if(thisLog.getLogRefrenceOnComputer().equals("")){
-			new RobobuggyLogicException("trying to upload a folder with out a path", MESSAGE_LEVEL.EXCEPTION);
+			new RobobuggyLogicException("trying to upload a folder with out a path", MessageLevel.EXCEPTION);
 			return false;
 		}
 		boolean result = server.uploadFolder(thisLog.getLogRefrenceOnComputer(),thisLog.getLogRefrenceOnServer());
 		if(result){
 			thisLog.setUpToDateOnServer(true);
 		}else{
-			new RobobuggyLogicException("trouble uploading log file, will try again later", MESSAGE_LEVEL.WARNING);
+			new RobobuggyLogicException("trouble uploading log file, will try again later", MessageLevel.WARNING);
 		}
 		thisLog.setUpToDateOnServer(true);
 
@@ -383,7 +383,7 @@ public class autoLogging {
 				//if not then download and add the log data 
 				LogDataType newLogData = readThisLogDataFromServerFolder(f, whereToSave);
 				if(newLogData == null){
-					new RobobuggyLogicException("Tried to download a null file", MESSAGE_LEVEL.EXCEPTION);
+					new RobobuggyLogicException("Tried to download a null file", MessageLevel.EXCEPTION);
 				}else{
 					newLogData.setUpToDateOnServer(true);
 					String key = lookUpLog(newLogData);
@@ -440,7 +440,7 @@ public class autoLogging {
 	 */
 	private boolean isLogFolderOnDrive(com.google.api.services.drive.model.File f) throws IOException {
 		if(IN_OFFLINE_MODE){
-			new RobobuggyLogicException("tried to check if a file is a log folder when in offline mode", MESSAGE_LEVEL.EXCEPTION);
+			new RobobuggyLogicException("tried to check if a file is a log folder when in offline mode", MessageLevel.EXCEPTION);
 			return false;
 		}
 		ServerCommunication server =  ServerCommunication.getInstance();

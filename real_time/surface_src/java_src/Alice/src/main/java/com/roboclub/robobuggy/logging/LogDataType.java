@@ -15,7 +15,7 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 import com.orsoncharts.util.json.JSONObject;
 import com.roboclub.robobuggy.logging.autoLogging.ServerCommunication;
-import com.roboclub.robobuggy.main.MESSAGE_LEVEL;
+import com.roboclub.robobuggy.main.MessageLevel;
 import com.roboclub.robobuggy.main.RobobuggyLogicException;
 
 //TODO handle corruption 
@@ -223,7 +223,7 @@ public class LogDataType {
 			output.write(dataToWrite);
 			output.close();
 		}catch(IOException e){
-			new  RobobuggyLogicException("error saving log file locally: "+getLogRefrenceOnComputer()+"/"+getFolderName()+"\t"+e, MESSAGE_LEVEL.EXCEPTION);
+			new  RobobuggyLogicException("error saving log file locally: "+getLogRefrenceOnComputer()+"/"+getFolderName()+"\t"+e, MessageLevel.EXCEPTION);
 			return false;
 		}
 		return true;
@@ -273,7 +273,7 @@ public class LogDataType {
 			result.setLogSize(Integer.parseInt(jObject.get("logSize").getAsString()));
 			result.folderName = jObject.get("folderName").getAsString();
 		}catch(JsonParseException e){
-			new RobobuggyLogicException("error parsing logDataType: "+ e.toString(), MESSAGE_LEVEL.EXCEPTION);
+			new RobobuggyLogicException("error parsing logDataType: "+ e.toString(), MessageLevel.EXCEPTION);
 		}
 		
 		//return resulting LogDatType 

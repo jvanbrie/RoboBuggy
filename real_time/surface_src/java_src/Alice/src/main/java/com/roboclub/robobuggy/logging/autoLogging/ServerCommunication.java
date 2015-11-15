@@ -39,7 +39,7 @@ import com.google.api.services.drive.model.ParentReference;
 import com.google.api.services.drive.Drive.Children;
 import com.google.api.services.drive.model.ChildList;
 import com.google.api.services.drive.model.ChildReference;
-import com.roboclub.robobuggy.main.MESSAGE_LEVEL;
+import com.roboclub.robobuggy.main.MessageLevel;
 import com.roboclub.robobuggy.main.RobobuggyLogicException;
 
 import java.io.FileOutputStream;
@@ -206,7 +206,7 @@ public class ServerCommunication {
         		File thisFile = drive.files().get(child.getId()).execute();
   	          metaData.add(thisFile);
         	}catch(IOException e){
-        		new RobobuggyLogicException("Trouble downloading a file: "+e.toString(), MESSAGE_LEVEL.EXCEPTION);
+        		new RobobuggyLogicException("Trouble downloading a file: "+e.toString(), MessageLevel.EXCEPTION);
         	}
 	        }
         return metaData;
@@ -229,7 +229,7 @@ public class ServerCommunication {
 	        children.putAll(thisPageChildern);
 	        request.setPageToken(thisPageChildern.getNextPageToken());
 	      } catch (IOException e) {
-	    	  new RobobuggyLogicException("an error occureced geting file in a folder "+e, MESSAGE_LEVEL.EXCEPTION);
+	    	  new RobobuggyLogicException("an error occureced geting file in a folder "+e, MessageLevel.EXCEPTION);
 	    	  request.setPageToken(null);
 	      }
 	    } while (request.getPageToken() != null &&
@@ -256,7 +256,7 @@ public class ServerCommunication {
 	public static boolean uploadFolder(java.io.File inputFile,
 			String whereToSave) throws IOException{
 		if(inputFile == null){
-			new RobobuggyLogicException("tried to upload a null folder refrence", MESSAGE_LEVEL.EXCEPTION);
+			new RobobuggyLogicException("tried to upload a null folder refrence", MessageLevel.EXCEPTION);
 		}
 		
 		ParentReference parent = new ParentReference();
@@ -275,7 +275,7 @@ public class ServerCommunication {
 	private static boolean uploadFolder(java.io.File inputFile,
 			ParentReference whereToSave) throws IOException {
 		if(!inputFile.exists()){
-			new RobobuggyLogicException("Tired to upload a folder that does not exsit", MESSAGE_LEVEL.EXCEPTION);
+			new RobobuggyLogicException("Tired to upload a folder that does not exsit", MessageLevel.EXCEPTION);
 			return false;
 		}
 		
@@ -317,7 +317,7 @@ public class ServerCommunication {
 	        File f = drive.files().get(id).execute();
 	        return !f.getLabels().getTrashed();
 	    } catch (IOException e) {
-	        new RobobuggyLogicException("bad google drive id: " + id, MESSAGE_LEVEL.EXCEPTION);
+	        new RobobuggyLogicException("bad google drive id: " + id, MessageLevel.EXCEPTION);
 	    }
 	    return false;
 	}

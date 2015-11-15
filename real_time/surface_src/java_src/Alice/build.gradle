@@ -1,3 +1,5 @@
+    import org.apache.tools.ant.taskdefs.condition.Os
+
 // TODO figure out what is supposed to go here
 jar {
     manifest {
@@ -13,11 +15,19 @@ dependencies {
     compile project (':BuggyRos')
     //for jason object extraction from strings 
     compile 'com.google.code.gson:gson:2.2.+'
+    compile 'net.bramp.ffmpeg:ffmpeg:0.1'
 
-    
+
+
+    if (Os.isFamily(Os.FAMILY_WINDOWS)) {
+        println "*** Running on WINDOWS "
+	 compile files('../../opencv/build/bin/opencv-300.jar')
+     }else{
+	println "*** Running on UNIX "
+	 compile files('../../opencv/build/bin/opencv-300.jar')
+     }
 
     // TODO: this is stupid. find a way to use mavencentral repo.
-    compile files('../../opencv/build/bin/opencv-300.jar')
     compile files('library/orsoncharts-1.4-eval-nofx.jar')
     compile files('library/RXTXcomm.jar')
     compile files('library/google-api-java-client/libs/commons-logging-1.1.1.jar')
