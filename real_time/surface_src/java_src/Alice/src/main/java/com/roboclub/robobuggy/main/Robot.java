@@ -12,6 +12,7 @@ import com.roboclub.robobuggy.messages.ImuMeasurement;
 import com.roboclub.robobuggy.messages.RobobuggyLogicExceptionMeasurment;
 import com.roboclub.robobuggy.messages.SteeringMeasurement;
 import com.roboclub.robobuggy.messages.WheelAngleCommand;
+import com.roboclub.robobuggy.nodes.ClockNode;
 import com.roboclub.robobuggy.nodes.RBSMNode;
 import com.roboclub.robobuggy.nodes.GpsNode;
 import com.roboclub.robobuggy.nodes.ImuNode;
@@ -66,6 +67,9 @@ public class Robot implements RosMaster {
 		//sends startup note
 		new RobobuggyLogicException("Logic Exception Setup properly" ,  MessageLevel.NOTE);
 		
+		//Init clock
+		ClockNode clock = new ClockNode(SensorChannel.CLOCK);
+		sensorList.add(clock);
 		
 		// Initialize Sensor
 		if (config.GPS_DEFAULT) {

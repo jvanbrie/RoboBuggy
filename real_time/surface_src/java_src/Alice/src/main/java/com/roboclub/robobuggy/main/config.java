@@ -13,7 +13,7 @@ import com.orsoncharts.util.json.parser.ParseException;
 // add jason parser for config
 
 public class config {
-	public static boolean IN_OFFLINE_MODE = false;  //if true then try to connect to the server otherwise do not  
+	public static boolean IN_OFFLINE_MODE = true;  //if true then try to connect to the server otherwise do not  
 
 	
 	// port index of the front camera

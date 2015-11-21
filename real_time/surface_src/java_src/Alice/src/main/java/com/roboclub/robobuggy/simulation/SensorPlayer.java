@@ -66,7 +66,7 @@ public class SensorPlayer implements Runnable {
 			//get info from the header file
 			Date loggingDate = new Date();
 			
-			long prevTimeInMillis = loggingDate.getTime();
+			long realTimeStart = loggingDate.getTime();
 			
 			JSONArray sensorDataArray = (JSONArray) completeLogFile.get("sensor_data");
 			long sensorStartTimeInMilis = 0;
@@ -76,20 +76,20 @@ public class SensorPlayer implements Runnable {
 				
 				Date sensorTimestamp = RobobuggyDateFormatter.formatRobobuggyDate((String) sensor.get("timestamp"));
 				long currentSensorTimeInMillis = sensorTimestamp.getTime();
-				long currentTime = loggingDate.getTime();
+				long currentTime = new Date().getTime();
 
 				//grab the first sensors time for reference
 				if(sensorStartTimeInMilis == 0){
 					sensorStartTimeInMilis = currentSensorTimeInMillis;
 				}
 				long sensorTime_fromStart = currentSensorTimeInMillis -sensorStartTimeInMilis; 
-				long realTime_fromStart = currentTime - prevTimeInMillis;				
-				long PLAY_BACK_SPEED = 100;
-				long sleepTime = PLAY_BACK_SPEED*realTime_fromStart - sensorTime_fromStart;
-				System.out.println("sleepTime:"+sleepTime);
-				if(sleepTime < 0 ){ 
+				long PLAY_BACK_SPEED = 10;
+				long realTime_fromStart = PLAY_BACK_SPEED*(currentTime - realTimeStart);				
+				long sleepTime = realTime_fromStart - sensorTime_fromStart;
+				//greater then 10000 is a hack to just print values that are 10 seconds away since this is a bug
+				if(sleepTime < 0 && sleepTime > -10000){
 					//TODO change back to sleepTime
-					Thread.sleep(-sleepTime/10000);
+					Thread.sleep(-sleepTime/PLAY_BACK_SPEED);
 //					Thread.sleep(500);
 				}
 				//prevTimeInMillis = currentSensorTimeInMillis;
@@ -166,6 +166,7 @@ public class SensorPlayer implements Runnable {
 						
 						double dataword = (double) sensorParams.get("dataword");
 						double distance = (double) sensorParams.get("distance");
+						System.out.println(sensorParams.get("distance"));
 						double velocity = sensorParams.get("velocity") != null ? (double) sensorParams.get("velocity") : 0;
 						Double accel = sensorParams.get("acceleration") != null ? (double) sensorParams.get("acceleration") : 0;
 						
@@ -187,8 +188,7 @@ public class SensorPlayer implements Runnable {
 				
 				}
 				
-				System.out.println("sent out data from " + sensorName);
-				
+			new RobobuggyLogicException("sent out data from " + sensorName, MessageLevel.NOTE);
 				
 			}
 			

@@ -116,6 +116,7 @@ public class GpsPanel extends JPanel {
 
 		g.drawImage(map, 0, 0, frameWidth, frameHeight, Color.black, null);
 
+		//TODO fix concurrent modification exception which occurs here 
 		for	(LocTuple mTuple : locs) {
 			drawTuple(g2d, mTuple);
 		}
