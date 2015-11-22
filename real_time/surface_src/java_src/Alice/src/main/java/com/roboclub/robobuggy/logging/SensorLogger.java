@@ -96,6 +96,7 @@ public final class SensorLogger {
 					break;
 					
 				case "steering":
+				case "commanded_steering":
 					steeringHits++;
 				case "encoder":
 					sensorEntryObject = RBSMNode.translatePeelMessageToJObject(line);
