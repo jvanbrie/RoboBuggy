@@ -110,9 +110,7 @@ public class SensorPlayer implements Runnable {
 				long sleepTime = realTime_fromStart - sensorTime_fromStart;
 				//greater then 10000 is a hack to just print values that are 10 seconds away since this is a bug
 				if(sleepTime < 0 && sleepTime > -10000){
-					//TODO change back to sleepTime
 					Thread.sleep(-sleepTime/PLAY_BACK_SPEED);
-//					Thread.sleep(500);
 				}
 				//prevTimeInMillis = currentSensorTimeInMillis;
 			

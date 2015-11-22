@@ -13,7 +13,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public class VideoReader {
-	final static int IMAGE_BYTE_SIZE =  2764800;  //TODO get ride of magic number
+	//final static int IMAGE_BYTE_SIZE =  2764800;  //TODO get ride of magic number
 	static ColorModel CM;
 	FileInputStream inputStream; 
 	
@@ -25,26 +25,31 @@ public class VideoReader {
 	
 	//for reading images
 		public  BufferedImage readImage(){
-	    			byte[] b = new byte[IMAGE_BYTE_SIZE+8];
 	    			int readBytes;
 					try {
+						//reads 4 bytes for the image size
+						byte[]b1 = new byte[4];
+						readBytes = inputStream.read(b1, 0, 4);
+						int imageByteSize = toInt(b1);
+		    			byte[] b = new byte[imageByteSize+8];
 						//unpack the image 
-						readBytes = inputStream.read(b, 0, IMAGE_BYTE_SIZE+8); //TODO make fault tolerant 
+						readBytes = inputStream.read(b, 0, imageByteSize+8); //TODO make fault tolerant 
 						//package is width, height, then image
 						byte[] widthBytes = new byte[4];
 						byte[] heightBytes = new byte[4];
-						byte[] imageBytes = new byte[IMAGE_BYTE_SIZE];
+						byte[] imageBytes = new byte[imageByteSize];
 						System.arraycopy(b, 0, widthBytes,0, widthBytes.length);
 						System.arraycopy(b, 4, heightBytes,0, heightBytes.length);
-						System.arraycopy(b, 8, imageBytes,0, IMAGE_BYTE_SIZE);
+						System.arraycopy(b, 8, imageBytes,0, imageByteSize);
 						int width = toInt(widthBytes);
 						int height = toInt(heightBytes);
-						ColorModel CM = new ComponentColorModel(ColorSpace.getInstance(ColorSpace.CS_sRGB), false, false, 1, 0) ;
+//						ColorSpace.CS_sRGB
+						ColorModel CM = new ComponentColorModel(ColorSpace.getInstance(ColorSpace.CS_LINEAR_RGB), false, false, 1, 0) ;
 
 
 
 											
-		    			DataBufferByte Db = new DataBufferByte(b, IMAGE_BYTE_SIZE);
+		    			DataBufferByte Db = new DataBufferByte(b, imageByteSize);
 		    			WritableRaster w = Raster.createInterleavedRaster(Db, width, height, 3 * width, 3, new int[]{0, 1, 2}, (Point) null);
 		    			BufferedImage newImage = new BufferedImage(CM, w, false, null);
 		    			return newImage;

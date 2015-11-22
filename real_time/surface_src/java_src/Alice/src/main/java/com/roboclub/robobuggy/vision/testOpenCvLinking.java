@@ -30,12 +30,15 @@ public class testOpenCvLinking extends JPanel{
 
     public static void main (String args[]) throws InterruptedException, FileNotFoundException{
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-
+        boolean shouldRead = true;
+        
         testOpenCvLinking t = new testOpenCvLinking();
         VideoCapture camera = new VideoCapture(0);
-		VideoWriter vWriter = new VideoWriter("testvideo_2");
-		VideoReader vReader = new VideoReader("testvideo_1");
-
+		VideoWriter vWriter = new VideoWriter("testvideo_1");
+		VideoReader vReader = null;
+		if(shouldRead){
+			 vReader = new VideoReader("testvideo_2");
+		}
 
 
 
@@ -60,11 +63,13 @@ public class testOpenCvLinking extends JPanel{
                     }else{
                     	image = t.MatToBufferedImage(frame);
                     	vWriter.writeImage(image);
-                   	 image = vReader.readImage();
+                    	if(shouldRead){
+                    		image = vReader.readImage();
+                    	}
                     		w.setContentPane(new testOpenCvLinking(image));
                     		w.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                     		w.setTitle("oldImage");
-                    		w.setSize(image.getWidth()/2, image.getHeight()/2 + 30);
+                    		w.setSize(image.getWidth(), image.getHeight() + 30);
                     		w.setLocation(0, 0);
                     		w.setVisible(true);
                     	       
@@ -76,6 +81,9 @@ public class testOpenCvLinking extends JPanel{
         }
         camera.release();
         vWriter.close();
+        if(shouldRead){
+        	vReader.close();
+        }
         
     }
 
@@ -97,7 +105,7 @@ public class testOpenCvLinking extends JPanel{
         frame0.getContentPane().add(new testOpenCvLinking(img));
         frame0.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame0.setTitle(text);
-        frame0.setSize(img.getWidth()/2, img.getHeight()/2 + 30);
+        frame0.setSize(img.getWidth(), img.getHeight() + 30);
         frame0.setLocation(x, y);
         frame0.setVisible(true);
         return frame0;

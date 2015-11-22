@@ -28,6 +28,10 @@ public class VideoWriter {
 	}
 	
 	public void writeImage(BufferedImage image){
+		BufferedImage image_to_save2=new BufferedImage(image.getWidth(),image.getHeight(), BufferedImage.TYPE_3BYTE_BGR);
+		image_to_save2.getGraphics().drawImage(image,0,0,null);
+		image = image_to_save2;
+		
 		//for writing images
 		WritableRaster raster = image.getRaster();
 		DataBufferByte Db   = (DataBufferByte) raster.getDataBuffer();
@@ -43,8 +47,10 @@ public class VideoWriter {
 	 	System.arraycopy(widthBytes, 0, sendData,0, widthBytes.length);
 		System.arraycopy(heightBytes, 0, sendData,4, heightBytes.length);
 		System.arraycopy(imageData, 0, sendData,8, imageData.length);
+		byte[] imageSize = ByteBuffer.allocate(4).putInt(imageData.length).array();
 
 		try {
+			outputStream.write(imageSize);
 			outputStream.write(sendData);
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
