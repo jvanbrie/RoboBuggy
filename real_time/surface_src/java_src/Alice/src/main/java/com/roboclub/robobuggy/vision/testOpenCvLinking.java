@@ -10,6 +10,9 @@ import java.awt.image.DataBufferByte;
 import java.awt.image.WritableRaster;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.InputStream;
 
 import javax.imageio.ImageIO;
@@ -19,15 +22,22 @@ import javax.swing.JPanel;
 import org.opencv.core.*;
 import org.opencv.videoio.VideoCapture;
 
+import com.roboclub.robobuggy.nodes.VisionNode;
+
 public class testOpenCvLinking extends JPanel{
 
     BufferedImage image;
 
-    public static void main (String args[]) throws InterruptedException{
+    public static void main (String args[]) throws InterruptedException, FileNotFoundException{
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 
         testOpenCvLinking t = new testOpenCvLinking();
         VideoCapture camera = new VideoCapture(0);
+		VideoWriter vWriter = new VideoWriter("testvideo_2");
+		VideoReader vReader = new VideoReader("testvideo_1");
+
+
+
 
         Mat frame = new Mat();
         camera.read(frame); 
@@ -40,28 +50,33 @@ public class testOpenCvLinking extends JPanel{
 
         	 int count = 0;
              JFrame w = null;
-            while(true){        
+            while(count<100){        
 
                 if (camera.read(frame)){
 
                     if(count == 0){
                 	image = t.MatToBufferedImage(frame);
                     w = t.window(image, "Original Image", 0, 0);
-                    count++;
                     }else{
                     	image = t.MatToBufferedImage(frame);
+                    	vWriter.writeImage(image);
+                   	 image = vReader.readImage();
                     		w.setContentPane(new testOpenCvLinking(image));
                     		w.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                     		w.setTitle("oldImage");
-                    		w.setSize(image.getWidth(), image.getHeight() + 30);
+                    		w.setSize(image.getWidth()/2, image.getHeight()/2 + 30);
                     		w.setLocation(0, 0);
                     		w.setVisible(true);
                     	       
                     }
+                    count++;
+
                 }
             }   
         }
         camera.release();
+        vWriter.close();
+        
     }
 
     @Override

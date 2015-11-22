@@ -36,6 +36,8 @@ public class Robot implements RosMaster {
 	private KalmanFilter kf;
 	private static Publisher steerPub;
 	private static Publisher brakePub;
+	public static boolean isLogging; //flag to tell if we are currently writing data to a log file
+	public static boolean isPlayBack; //flag to tell if we are currently replaying data from a log file 
 	
 	public static Robot getInstance() {
 		if (instance == null) {
@@ -45,6 +47,8 @@ public class Robot implements RosMaster {
 	}
 
 	private Robot() {
+		isLogging = false;
+		isPlayBack = false;
 	       System.out.println("here we go");
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);  //note this can only be called once, is to allow open cv calls
         //System.out.println(System.getProperties());

@@ -15,6 +15,7 @@ import com.orsoncharts.util.json.parser.JSONParser;
 import com.orsoncharts.util.json.parser.ParseException;
 import com.roboclub.robobuggy.main.MessageLevel;
 import com.roboclub.robobuggy.main.RobobuggyLogicException;
+import com.roboclub.robobuggy.main.Robot;
 import com.roboclub.robobuggy.messages.EncoderMeasurement;
 import com.roboclub.robobuggy.messages.GpsMeasurement;
 import com.roboclub.robobuggy.messages.GuiLoggingButtonMessage;
@@ -26,6 +27,7 @@ import com.roboclub.robobuggy.nodes.VisionNode;
 import com.roboclub.robobuggy.ros.Publisher;
 import com.roboclub.robobuggy.ros.SensorChannel;
 import com.roboclub.robobuggy.utilities.RobobuggyDateFormatter;
+import com.roboclub.robobuggy.vision.VideoReader;
 
 public class SensorPlayer implements Runnable {
 
@@ -39,12 +41,10 @@ public class SensorPlayer implements Runnable {
 	private Publisher loggingButtonPub;
 	private Publisher visionPub;
 	
-	private FileInputStream inputStream;
-
+	private VideoReader vReader;
 
 
 	public SensorPlayer(String filePath) {
-	
 		imuPub = new Publisher(SensorChannel.IMU.getMsgPath());
 		gpsPub = new Publisher(SensorChannel.GPS.getMsgPath());
 		encoderPub = new Publisher(SensorChannel.ENCODER.getMsgPath());
@@ -54,6 +54,7 @@ public class SensorPlayer implements Runnable {
 		visionPub = new Publisher(SensorChannel.VISION.getMsgPath());
 		
 		System.out.println("initializing the SensorPlayer");
+		Robot.isPlayBack = true;
 		
 		path = filePath;
 		File f = new File(path);
@@ -62,9 +63,9 @@ public class SensorPlayer implements Runnable {
 		}
 		
 		 try {
-			 //TODO use another file 
-			 File test = new File(filePath);
-			inputStream = new FileInputStream(test.getParent()+"/video");
+			 File sensorsFile = new File(filePath);
+			 System.out.println(filePath);
+			 vReader = new VideoReader(sensorsFile.getParent()+"/video");   //TODO set filePath
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -104,13 +105,12 @@ public class SensorPlayer implements Runnable {
 				}
 				long sensorTime_fromStart = currentSensorTimeInMillis -sensorStartTimeInMilis; 
 				long realTime_fromStart = currentTime - prevTimeInMillis;				
-				long PLAY_BACK_SPEED = 1;
+				long PLAY_BACK_SPEED = 1;//speed is incorrect
 				long sleepTime = PLAY_BACK_SPEED*realTime_fromStart - sensorTime_fromStart;
 				System.out.println("sleepTime:"+sleepTime);
 				if(sleepTime < 0 ){ 
 					//TODO change back to sleepTime
-					Thread.sleep(-sleepTime/10000);
-//					Thread.sleep(500);
+					Thread.sleep(-sleepTime/PLAY_BACK_SPEED);
 				}
 				//prevTimeInMillis = currentSensorTimeInMillis;
 			
@@ -119,10 +119,9 @@ public class SensorPlayer implements Runnable {
 				JSONObject sensorParams = (JSONObject) sensor.get("params");
 				
 				switch(sensorName) {
-					case "Vision":
-		    			BufferedImage image = VisionNode.readImage(inputStream,1280,720);
+					case "Vision":		
+						BufferedImage image = vReader.readImage();
 		    			visionPub.publish(new VisionMeasurement(image, "playback", 0));
-
 						break;
 					case "IMU":
 						double yaw = (double) sensorParams.get("yaw");
@@ -215,6 +214,8 @@ public class SensorPlayer implements Runnable {
 				
 				
 			}
+			Robot.isPlayBack = false;
+
 			
 		}
 		catch(IOException e) {

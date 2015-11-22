@@ -23,6 +23,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import com.roboclub.robobuggy.logging.RobotLogger;
 import com.roboclub.robobuggy.main.MessageLevel;
 import com.roboclub.robobuggy.main.RobobuggyLogicException;
+import com.roboclub.robobuggy.main.Robot;
 import com.roboclub.robobuggy.logging.RobotLogger;
 import com.roboclub.robobuggy.logging.autoLogging.autoLogging;
 import com.roboclub.robobuggy.main.config;
@@ -107,6 +108,7 @@ public class ControlPanel extends JPanel {
 				System.out.println("System Started");
 				play_btn.setBackground(Color.RED);
 				play_btn.setText("STOP");
+				Robot.isLogging = true;
 				timer.start();
 				
 				autoLogging autoLoger = autoLogging.getLogger();
@@ -118,6 +120,7 @@ public class ControlPanel extends JPanel {
 				System.out.println("System Paused");
 				play_btn.setBackground(Color.GREEN);
 				play_btn.setText("START");
+				Robot.isLogging = false;
 				
 				RobotLogger.CloseLog();
 				logging_button_pub.publish(new GuiLoggingButtonMessage(GuiLoggingButtonMessage.LoggingMessage.STOP));
