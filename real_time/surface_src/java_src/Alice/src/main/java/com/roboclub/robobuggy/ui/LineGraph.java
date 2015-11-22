@@ -1,7 +1,6 @@
 package com.roboclub.robobuggy.ui;
 
-import java.util.List;
-
+import java.awt.Dimension;
 import javax.swing.JPanel;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -18,8 +17,11 @@ import com.roboclub.robobuggy.map.Point;
 public class LineGraph extends JPanel {
 	
 	private static final long serialVersionUID = 170388164155408874L;
+	private static final int WIDTH = 300;
+	private static final int HEIGHT = 300;
 	
 	private XYSeriesCollection dataset;
+	private final XYSeries series1;
 	
 	/**
 	 * Constructs a new LineGraph object
@@ -29,23 +31,22 @@ public class LineGraph extends JPanel {
 	 */
 	public LineGraph(String title, String xLabel, String yLabel) {
         dataset = new XYSeriesCollection();
+		series1 = new XYSeries("series1");
+		dataset.addSeries(series1);
         boolean legend = false, tooltips = false, url = false;
         JFreeChart chart = ChartFactory.createXYLineChart(title,
                 xLabel, yLabel, dataset, PlotOrientation.VERTICAL,
                 legend, tooltips, url);
         ChartPanel chartPanel = new ChartPanel(chart);
+        chartPanel.setPreferredSize(new Dimension(WIDTH, HEIGHT));
         this.add(chartPanel);
 	}
 	
 	/**
 	 * Update the data being shown on the line graph
-	 * @param data list of points to display on the graph
+	 * @param point next point to display on the graph
 	 */
-	public void updateGraph(List<Point> data) {
-		dataset.removeAllSeries();
-		final XYSeries series1 = new XYSeries("series1");
-		for(Point p : data)
-            series1.add(p.getX(), p.getY());
-		dataset.addSeries(series1);
+	public void updateGraph(Point point) {
+		series1.add(point.getX(), point.getY());
 	}
 }

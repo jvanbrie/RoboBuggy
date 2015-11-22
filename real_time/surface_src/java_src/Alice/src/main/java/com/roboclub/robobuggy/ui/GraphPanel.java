@@ -2,9 +2,6 @@ package com.roboclub.robobuggy.ui;
 
 import java.awt.Color;
 import java.awt.GridLayout;
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
@@ -22,7 +19,6 @@ public class GraphPanel extends JPanel {
 	private AngleGraph steering;
 	private AngleGraph roll;
 	private LineGraph encoderLineGraph;
-	private List<Point> encoderData;
 	private AngleGraph yaw;
 	
 	public GraphPanel() {
@@ -32,7 +28,6 @@ public class GraphPanel extends JPanel {
 		steering = new AngleGraph("STEERING");
 		roll = new AngleGraph("ROLL");
 		encoderLineGraph = new LineGraph("Encoder distance", "Time", "Distance");
-		encoderData = new ArrayList<>();
 		yaw = new AngleGraph("YAW");
 		
 		this.add(steering);
@@ -61,8 +56,7 @@ public class GraphPanel extends JPanel {
 			@Override
 			public void actionPerformed(String topicName, Message m) {
 				EncoderMeasurement em = (EncoderMeasurement)m;
-				encoderData.add(new Point(encoderData.size(), em.distance));
-				encoderLineGraph.updateGraph(encoderData);
+				encoderLineGraph.updateGraph(new Point(em.timestamp.getTime(), em.distance));
 			}
 		});
 	}
