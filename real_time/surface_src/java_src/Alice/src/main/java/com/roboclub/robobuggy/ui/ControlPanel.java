@@ -1,5 +1,7 @@
 package com.roboclub.robobuggy.ui;
 
+//TODO have clock update based on published time message 
+
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
