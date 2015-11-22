@@ -2,8 +2,14 @@ package com.roboclub.robobuggy.ui;
 
 import java.awt.Color;
 import java.awt.GridLayout;
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
+
+import com.roboclub.robobuggy.map.Point;
+import com.roboclub.robobuggy.messages.EncoderMeasurement;
 import com.roboclub.robobuggy.messages.SteeringMeasurement;
 import com.roboclub.robobuggy.ros.Message;
 import com.roboclub.robobuggy.ros.MessageListener;
@@ -15,7 +21,8 @@ public class GraphPanel extends JPanel {
 
 	private AngleGraph steering;
 	private AngleGraph roll;
-	private AngleGraph pitch;
+	private LineGraph encoderLineGraph;
+	private List<Point> encoderData;
 	private AngleGraph yaw;
 	
 	public GraphPanel() {
@@ -24,12 +31,13 @@ public class GraphPanel extends JPanel {
 		
 		steering = new AngleGraph("STEERING");
 		roll = new AngleGraph("ROLL");
-		pitch = new AngleGraph("PITCH");
+		encoderLineGraph = new LineGraph("Encoder distance", "Time", "Distance");
+		encoderData = new ArrayList<>();
 		yaw = new AngleGraph("YAW");
 		
 		this.add(steering);
 		this.add(roll);
-		this.add(pitch);
+		this.add(encoderLineGraph);
 		this.add(yaw);
 		
 		// Subscriber for drive control updates
@@ -45,6 +53,16 @@ public class GraphPanel extends JPanel {
 			@Override
 			public void actionPerformed(String topicName, Message m) {
 				// TODO handle imu updates for graphs
+			}
+		});
+		
+		// Subscriber for encoder updates
+		new Subscriber(SensorChannel.ENCODER.getMsgPath(), new MessageListener() {
+			@Override
+			public void actionPerformed(String topicName, Message m) {
+				EncoderMeasurement em = (EncoderMeasurement)m;
+				encoderData.add(new Point(encoderData.size(), em.distance));
+				encoderLineGraph.updateGraph(encoderData);
 			}
 		});
 	}
