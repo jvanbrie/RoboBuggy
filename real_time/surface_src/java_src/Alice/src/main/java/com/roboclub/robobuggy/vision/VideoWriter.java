@@ -14,6 +14,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
+import com.roboclub.robobuggy.main.MessageLevel;
+import com.roboclub.robobuggy.main.RobobuggyLogicException;
+
 /**
  * This is a custom native java video writer reader, it creates a output b
  * @author Trevor Decker
@@ -64,8 +67,7 @@ public class VideoWriter {
 		 try {
 				outputStream.close();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				new RobobuggyLogicException("Error closing Video Writer:"+e.toString(), MessageLevel.EXCEPTION);
 			}
 	}
 	
