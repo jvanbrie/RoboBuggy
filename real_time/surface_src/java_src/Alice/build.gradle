@@ -18,6 +18,8 @@ dependencies {
     // TODO: this is stupid. find a way to use mavencentral repo.
     compile files('library/orsoncharts-1.4-eval-nofx.jar')
     compile files('library/RXTXcomm.jar')
+	compile files('library/jcommon-1.0.23.jar')
+	compile files('library/jfreechart-1.0.19.jar')
 }
 
 uploadArchives {
