@@ -26,6 +26,9 @@ import com.roboclub.robobuggy.ros.Subscriber;
 import com.roboclub.robobuggy.ui.Gui;
 
 public class Robot implements RosMaster {
+	
+	public static final int COMMAND_PERIOD = 1000;
+	
 	private static Robot instance;
 	private static Thread alice;
 	private static boolean autonomous;
@@ -99,9 +102,11 @@ public class Robot implements RosMaster {
 			});
 		}
 
+
 		if (config.ENCODER_DEFAULT) {
 			System.out.println("Initializing Encoder Serial Connection");
-			RBSMNode encoder = new RBSMNode(SensorChannel.ENCODER,SensorChannel.STEERING);
+			RBSMNode encoder = new RBSMNode(SensorChannel.ENCODER,SensorChannel.STEERING,
+					COMMAND_PERIOD);
 			sensorList.add(encoder);
 		
 			new Subscriber(SensorChannel.ENCODER.getMsgPath(), new MessageListener() {

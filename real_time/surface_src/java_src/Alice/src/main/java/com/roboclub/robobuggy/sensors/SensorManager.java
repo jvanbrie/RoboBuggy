@@ -15,6 +15,7 @@ import com.roboclub.robobuggy.calculatedNodes.CalculatedNodeEnum;
 import com.roboclub.robobuggy.calculatedNodes.NodeCalculator;
 import com.roboclub.robobuggy.main.MessageLevel;
 import com.roboclub.robobuggy.main.RobobuggyLogicException;
+import com.roboclub.robobuggy.main.Robot;
 import com.roboclub.robobuggy.nodes.GpsNode;
 import com.roboclub.robobuggy.nodes.ImuNode;
 import com.roboclub.robobuggy.nodes.LoggingNode;
@@ -89,13 +90,9 @@ public class SensorManager {
 			}
 			break;
 		case RBSM:
-			RBSMNode rbsm = new RBSMNode(sensor[0], sensor[1]);
-			boolean rbsmNodeCreatedProperly = rbsm.setSerialPort(connect(port, rbsm.baudRate()));
-			if(rbsmNodeCreatedProperly){
-				realSensors.put(portKey, rbsm);
-			}else{
-				new RobobuggyLogicException("Had trouble creating rbsm connection,", MessageLevel.WARNING);
-			}
+			RBSMNode rbsm = new RBSMNode(sensor[0], sensor[1], Robot.COMMAND_PERIOD);
+			rbsm.setSerialPort(connect(port, rbsm.baudRate()));
+			realSensors.put(portKey, rbsm);
 			break;
 		case LOGGING_BUTTON:
 			LoggingNode loggingButton = new LoggingNode();
