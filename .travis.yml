@@ -20,6 +20,8 @@ script:
     - echo $HOME
     - echo $BUGGY_ROOT
     - (cd real_time/surface_src/java_src/Alice && $GRADLE_BIN/gradle build)
-    
+    - cd $BUGGY_ROOT/travis_files
+    - ./validateCommitMetadata.sh
+
 notifications:
   slack: robobuggy:bnKltZMACloBdOGvYOINInyE
