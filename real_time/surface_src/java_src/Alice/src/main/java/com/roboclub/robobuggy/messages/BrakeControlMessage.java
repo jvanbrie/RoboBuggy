@@ -31,7 +31,7 @@ public class BrakeControlMessage extends BaseMessage implements Message {
 	 * @return true iff the brake is commanded to be engaged
 	 */
 	public boolean isBrakeEngaged() {
-		return sensorData.get(brakeEngaged_key).getAsBoolean();
+		return getParamFromSensorData(brakeEngaged_key).getAsBoolean();
 	}
 	
 

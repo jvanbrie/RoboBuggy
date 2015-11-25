@@ -45,5 +45,21 @@ public class EncoderMeasurement extends BaseMessage implements Message {
 		addParamToSensorData(velocity_key, new JsonPrimitive(velocity));
 		addParamToSensorData(acceleration_key, new JsonPrimitive(accel));
 	}
+	
+	public double getDataWord() {
+		return getParamFromSensorData(dataWord_key).getAsDouble();
+	}
+	
+	public double getDistance() {
+		return getParamFromSensorData(distance_key).getAsDouble();
+	}
+	
+	public double getVelocity() {
+		return getParamFromSensorData(velocity_key).getAsDouble();
+	}
+	
+	public double getAcceleration() {
+		return getParamFromSensorData(acceleration_key).getAsDouble();
+	}
 
 }

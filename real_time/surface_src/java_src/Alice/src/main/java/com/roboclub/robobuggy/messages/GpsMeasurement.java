@@ -2,7 +2,10 @@ package com.roboclub.robobuggy.messages;
 
 import java.util.Date;
 
+import com.google.gson.JsonPrimitive;
 import com.roboclub.robobuggy.ros.Message;
+import com.roboclub.robobuggy.ros.SensorChannel;
+import com.roboclub.robobuggy.utilities.RobobuggyDateFormatter;
 
 /**
  * @author Matt Sebek (msebek)
@@ -19,94 +22,88 @@ import com.roboclub.robobuggy.ros.Message;
 public class GpsMeasurement extends BaseMessage implements Message {
 	public static final String version_id = "gpsV0.2";
 
-	public Date timestamp;
-	public Date gpsTimestamp;
-	public double latitude;
-	public boolean north;
-	public double longitude;
-	public boolean west;
-	public int quality_value;
-	public int num_satellites;
-	public double horizontal_dilution_of_precision;
-	public double antenna_altitude;
-	public double rawGPSLat;
-	public double rawGPSLong;
-	
-	public GpsMeasurement(Date gpsTimestamp, double latitude, boolean north, double longitude, 
-			boolean west, int quality_value, int num_satellites, 
-			double horizontal_dulition_of_precision, double antenna_altitude, double rawGPSLat, double rawGPSLong) {
-	
-		this.timestamp = new Date();
-		this.gpsTimestamp = gpsTimestamp;
-		this.latitude = latitude;
-		this.north = north;
-		this.longitude = longitude;
-		this.west = west;
-		this.quality_value = quality_value;
-		this.num_satellites = num_satellites;
-		this.horizontal_dilution_of_precision = horizontal_dulition_of_precision;
-		this.antenna_altitude = antenna_altitude;
-		this.rawGPSLat = rawGPSLat;
-		this.rawGPSLong = rawGPSLong;
-	}
+	public static final String gps_timestamp_key = "gps_timestamp";
+	public static final String latitude_key = "latitude";
+	public static final String longitude_key = "longitude";
+	public static final String lat_dir_key = "lat_dir";
+	public static final String lon_dir_key = "lon_dir";
+	public static final String quality_val_key = "quality";
+	public static final String num_satellites_key = "num_satellites";
+	public static final String HDOP_key = "HDOP";
+	public static final String antenna_altitude_key = "antenna_altitude";
+	public static final String raw_latitude_key = "raw_gps_lat";
+	public static final String raw_longitude_key = "raw_gps_lon";
+
 
 	public GpsMeasurement(Date messageTimestamp, Date gpsTimestamp, double latitude, boolean north, double longitude,
-			boolean west, int quality_value, int num_satellites, double horizontal_dilution_of_precision, double antenna_altitude) {
+			boolean west, int quality_value, int num_satellites, double horizontal_dilution_of_precision, double antenna_altitude, double rawGPSLat, double rawGPSLong) {
 		
-		this.timestamp = messageTimestamp;
-		this.gpsTimestamp = gpsTimestamp;
-		this.latitude = latitude;
-		this.north = north;
-		this.longitude = longitude;
-		this.west = west;
-		this.quality_value = quality_value;
-		this.num_satellites = num_satellites;
-		this.horizontal_dilution_of_precision = horizontal_dilution_of_precision;
-		this.antenna_altitude = antenna_altitude;
+		super(SensorChannel.GPS.getMsgPath(), RobobuggyDateFormatter.getFormattedRobobuggyDateAsString(messageTimestamp));
+		
+		addParamToSensorData(gps_timestamp_key, new JsonPrimitive(RobobuggyDateFormatter.getFormattedRobobuggyDateAsString(gpsTimestamp)));
+		addParamToSensorData(latitude_key, new JsonPrimitive(latitude));
+		addParamToSensorData(longitude_key, new JsonPrimitive(longitude));
+		addParamToSensorData(lat_dir_key, new JsonPrimitive(north));
+		addParamToSensorData(lon_dir_key, new JsonPrimitive(west));
+		addParamToSensorData(quality_val_key, new JsonPrimitive(quality_value));
+		addParamToSensorData(num_satellites_key, new JsonPrimitive(num_satellites));
+		addParamToSensorData(HDOP_key, new JsonPrimitive(horizontal_dilution_of_precision));
+		addParamToSensorData(antenna_altitude_key, new JsonPrimitive(antenna_altitude));
+		addParamToSensorData(raw_latitude_key, new JsonPrimitive(rawGPSLat));
+		addParamToSensorData(raw_longitude_key, new JsonPrimitive(rawGPSLong));
 	}
 	
-	@Override
-	public String toLogString() {
-		String s = super.format_the_date(timestamp);
-		
-		s += ',' + super.format_the_date(gpsTimestamp);
-		
-		s += ',' + Double.toString(latitude);
-		if (north) s += ",N";
-		else s += ",S";
-		
-		s += ',' + Double.toString(longitude);
-		if (west) s += ",W";
-		else s += ",E";
-	
-		s += "," + Integer.toString(quality_value);
-		s += "," + Integer.toString(num_satellites);
-		s += "," + Double.toString(horizontal_dilution_of_precision);
-		s += "," + Double.toString(antenna_altitude);
-		s += "," + Double.toString(rawGPSLat);
-		s += "," + Double.toString(rawGPSLong);
-		
-		return s;
+	public Date getGPSTimestamp() {
+		return RobobuggyDateFormatter.getDatefromRobobuggyDateString(getParamFromSensorData(gps_timestamp_key).getAsString());
 	}
-
-	@Override
-	public Message fromLogString(String str) {
-		String[] ar = str.split(",");
-
-		Date messageTimestamp = super.try_to_parse_date(ar[1]);
-		Date gpsTimestamp = super.try_to_parse_date(ar[0]);
-		if(messageTimestamp == null || gpsTimestamp == null) {
-			return null;
+	
+	public double getLatitude() {
+		return getParamFromSensorData(latitude_key).getAsDouble();
+	}
+	
+	public double getLongitude() {
+		return getParamFromSensorData(longitude_key).getAsDouble();
+	}
+	
+	public String getLatitudeDir() {
+		boolean north = getParamFromSensorData(lat_dir_key).getAsBoolean();
+		if(north) {
+			return "N";
 		}
-		double latitude = Double.parseDouble(ar[1]);
-		boolean north = ar[2].equalsIgnoreCase("N");
-		double longitude = Double.parseDouble(ar[3]);
-		boolean west = ar[3].equalsIgnoreCase("W");
-		int quality_value = Integer.parseInt(ar[4]);
-		int num_satellites = Integer.parseInt(ar[5]);
-		double horizontal_diluation = Double.parseDouble(ar[6]);
-		double antenna_altitude = Double.parseDouble(ar[7]);
-		return new GpsMeasurement(messageTimestamp, gpsTimestamp, latitude, north, longitude,
-				west, quality_value, num_satellites, horizontal_diluation, antenna_altitude);
+		return "S";
 	}
+	
+	public String getLongitudeDir() {
+		boolean west = getParamFromSensorData(lon_dir_key).getAsBoolean();
+		if(west) {
+			return "W";
+		}
+		return "E";
+	}
+	
+	public int getQualityValue() {
+		return getParamFromSensorData(quality_val_key).getAsInt();
+	}
+	
+	public int getNumSatellites() {
+		return getParamFromSensorData(num_satellites_key).getAsInt();
+	}
+	
+	public double getHDOP() {
+		return getParamFromSensorData(HDOP_key).getAsDouble();
+	}
+	
+	public double getAntennaAltitude() {
+		return getParamFromSensorData(antenna_altitude_key).getAsDouble();
+	}
+	
+	public double getRawGPSOutput_Latitude() {
+		return getParamFromSensorData(raw_latitude_key).getAsDouble();
+	}
+	
+	public double getRawGPSOutput_Longitude() {
+		return getParamFromSensorData(raw_longitude_key).getAsDouble();
+	}
+	
+	
 }
