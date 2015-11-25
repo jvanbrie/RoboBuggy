@@ -28,6 +28,10 @@ public class BaseMessage implements Message {
 		((JsonObject) sensor.get("data")).add(key, value);
 	}
 	
+	public JsonPrimitive getParamFromSensorData(String key) {
+		return ((JsonObject)sensor.get("data")).getAsJsonPrimitive(key);
+	}
+	
 	public String toLogString() {
 		return sensor.getAsString();
 	}

@@ -23,7 +23,7 @@ public enum SensorChannel {
 	
 	private SensorChannel(String name) {
 		this.rstPath = "sensors/" + name + "/reset";
-		this.msgPath = "sensors/" + name;
+		this.msgPath = name;
 		this.statePath = "sensor/" + name + "/state";
 	}
 	

@@ -2,7 +2,10 @@ package com.roboclub.robobuggy.messages;
 
 import java.util.Date;
 
+import com.google.gson.JsonPrimitive;
 import com.roboclub.robobuggy.ros.Message;
+import com.roboclub.robobuggy.ros.SensorChannel;
+import com.roboclub.robobuggy.utilities.RobobuggyDateFormatter;
 
 /**
  * Message for passing the desired commanded value of the steering
@@ -11,8 +14,7 @@ public class DriveControlMessage extends BaseMessage implements Message {
 
 	private static final String version_id = "drive_control_message";
 	
-	private final double angle;
-	private final Date timestamp;
+	private static final String angle_key = "commanded_angle";
 	
 	/**
 	 * Construct a new DriveControlMessage
@@ -20,8 +22,8 @@ public class DriveControlMessage extends BaseMessage implements Message {
 	 * @param brakeEngagged
 	 */
 	public DriveControlMessage(Date timestamp, double angle) {
-		this.angle = angle;
-		this.timestamp = timestamp;
+		super(SensorChannel.DRIVE_CTRL.getMsgPath(), RobobuggyDateFormatter.getFormattedRobobuggyDateAsString(timestamp));
+		addParamToSensorData(angle_key, new JsonPrimitive(angle));
 	}
 	
 	/**
@@ -29,7 +31,7 @@ public class DriveControlMessage extends BaseMessage implements Message {
 	 * @return the commanded angle of the steering as a double (in degrees)
 	 */
 	public double getAngleDouble() {
-		return angle;
+		return getParamFromSensorData(angle_key).getAsDouble();
 	}
 	
 	/**
@@ -37,23 +39,8 @@ public class DriveControlMessage extends BaseMessage implements Message {
 	 * @return the commanded angle of the steering as a short (in thousandths of degrees)
 	 */
 	public short getAngleShort() {
-		return (short)(angle*1000.0);
+		return (short)(getAngleDouble()*1000.0);
 	}
 	
-	/**{@inheritDoc}*/
-	@Override
-	public String toLogString() {
-		return String.format("%s,'%s',%s\n", format_the_date(timestamp),
-				version_id, String.valueOf(angle));
-	}
-
-	/**{@inheritDoc}*/
-	@Override
-	public Message fromLogString(String str) {
-		String[] spl = str.split(",");
-		Date d = try_to_parse_date(spl[0]);
-		double readAngle = Short.parseShort(spl[2]);
-		return new DriveControlMessage(d, readAngle);
-	}
 
 }

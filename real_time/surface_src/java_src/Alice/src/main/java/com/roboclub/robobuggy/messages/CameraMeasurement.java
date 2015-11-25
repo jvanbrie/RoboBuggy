@@ -20,17 +20,5 @@ public class CameraMeasurement extends BaseMessage implements Message {
 
 	public Date timestamp;
 
-	@Override
-	public String toLogString() {
-		return String.format("%s,%s\n", format_the_date(timestamp),
-				String.valueOf(5));
-	}
-
-	@Override
-	public Message fromLogString(String str) {
-		String[] spl = str.split(",");
-		Date d = try_to_parse_date(spl[0]);
-		//todo actually send a message that is usefull
-		return new CameraMeasurement();
-	}
+	
 }
