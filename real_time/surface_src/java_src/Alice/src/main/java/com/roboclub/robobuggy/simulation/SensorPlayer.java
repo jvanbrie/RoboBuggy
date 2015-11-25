@@ -73,7 +73,7 @@ public class SensorPlayer implements Runnable {
 				
 				JSONObject sensor = (JSONObject)senObj;
 				
-				Date sensorTimestamp = RobobuggyDateFormatter.formatRobobuggyDate((String) sensor.get("timestamp"));
+				Date sensorTimestamp = RobobuggyDateFormatter.getDatefromRobobuggyDateString((String) sensor.get("timestamp"));
 				long currentSensorTimeInMillis = sensorTimestamp.getTime();
 				long sleepTime = currentSensorTimeInMillis - prevTimeInMillis;
 				if(sleepTime < 0 && false) {
@@ -108,7 +108,7 @@ public class SensorPlayer implements Runnable {
 						boolean west = longDir.equals("W");
 
 						String gpsTimestampString = (String) sensor.get("timestamp");
-						Date gpsTimestamp = RobobuggyDateFormatter.formatRobobuggyDate(gpsTimestampString);
+						Date gpsTimestamp = RobobuggyDateFormatter.getDatefromRobobuggyDateString(gpsTimestampString);
 						int qualityValue = Integer.valueOf((String) sensorParams.get("gps_quality"));
 						int numSatellites = Integer.valueOf((String) sensorParams.get("num_satellites"));
 						double hdop = (double) sensorParams.get("HDOP");
@@ -159,7 +159,7 @@ public class SensorPlayer implements Runnable {
 						Double accel = sensorParams.get("acceleration") != null ? (double) sensorParams.get("acceleration") : 0;
 						
 						String timestampString = (String) sensor.get("timestamp");
-						Date timestamp = RobobuggyDateFormatter.formatRobobuggyDate(timestampString);
+						Date timestamp = RobobuggyDateFormatter.getDatefromRobobuggyDateString(timestampString);
 						
 						encoderPub.publish(new EncoderMeasurement(timestamp, dataword, distance, velocity, accel));
 						

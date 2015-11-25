@@ -21,6 +21,7 @@ import com.roboclub.robobuggy.ros.MessageListener;
 import com.roboclub.robobuggy.ros.SensorChannel;
 import com.roboclub.robobuggy.ros.Subscriber;
 import com.roboclub.robobuggy.serial.SerialNode;
+import com.roboclub.robobuggy.utilities.RobobuggyDateFormatter;
 
 /**
  * Logs data from the sensors
@@ -39,7 +40,7 @@ public final class SensorLogger {
 		
 		String name = "\"name\": \"Robobuggy Data Logs\",";
 		String schema_version = "\"schema_version\": 1.0,";
-		String date_recorded = "\"date_recorded\": \"" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date()) + "\",";
+		String date_recorded = "\"date_recorded\": \"" + RobobuggyDateFormatter.getFormattedRobobuggyDateAsString(new Date()) + "\",";
 		String swVersion = "\"software_version\": \"" + getCurrentSoftwareVersion() + "\",";
 		String sensorDataHeader = "\"sensor_data\": [";
 		stream.println("{" + "\n    " + name + "\n    " + schema_version + "\n    " + date_recorded + "\n    " + swVersion + "\n    " + sensorDataHeader);
