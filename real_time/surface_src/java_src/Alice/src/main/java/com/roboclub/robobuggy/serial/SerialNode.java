@@ -40,6 +40,7 @@ public abstract class SerialNode implements Node {
 		}
 	
 		try {
+			System.out.println("sending " + bytes);
 			serial_output.write(bytes);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

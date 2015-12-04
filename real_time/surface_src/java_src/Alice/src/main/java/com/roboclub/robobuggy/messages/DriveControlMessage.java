@@ -40,6 +40,10 @@ public class DriveControlMessage extends BaseMessage implements Message {
 		return (short)(angle*1000.0);
 	}
 	
+	public int getAngleInt() {
+		return (int) (angle * 1000.0);
+	}
+	
 	/**{@inheritDoc}*/
 	@Override
 	public String toLogString() {

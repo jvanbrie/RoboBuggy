@@ -47,7 +47,7 @@ public class RBSMNode extends PeriodicSerialNode implements Node
 	private final int OFFSET = -200;
 
 	//Stored commanded values
-	private short commandedAngle = 0;
+	private int commandedAngle = 0;
 	private boolean commandedBrakeEngaged = true;
 
 	// accumulated
@@ -103,7 +103,7 @@ public class RBSMNode extends PeriodicSerialNode implements Node
 				new MessageListener() {
 			@Override
 			public void actionPerformed(String topicName, Message m) {
-				commandedAngle = ((DriveControlMessage)m).getAngleShort();
+				commandedAngle = ((DriveControlMessage)m).getAngleInt();
 			}
 		});
 		messageSub_brakes = new Subscriber(SensorChannel.BRAKE_CTRL.getMsgPath(),
@@ -279,6 +279,7 @@ public class RBSMNode extends PeriodicSerialNode implements Node
 	@Override
 	protected void update() {
 		RBSMessage msg = new RBSMessage(commandedAngle, commandedBrakeEngaged);
+		System.out.println("rbsmnode sending " + commandedAngle);
 		send(msg.getMessageBytes());
 	}
 	
@@ -287,10 +288,10 @@ public class RBSMNode extends PeriodicSerialNode implements Node
 	 */
 	private class RBSMessage {
 		
-		private static final byte HEADER = RBSerialMessage.RBSM_MID_MEGA_COMMAND;
+		private static final byte HEADER = RBSerialMessage.RBSM_MID_MEGA_STEER_ANGLE;//.RBSM_MID_MEGA_COMMAND;
 		private static final byte FOOTER = RBSerialMessage.FOOTER;
 		
-		private short angle;
+		private int angle;
 		private boolean brakesEngaged;
 		
 		/**
@@ -298,7 +299,7 @@ public class RBSMNode extends PeriodicSerialNode implements Node
 		 * @param angle desired commanded angle in degrees*1000
 		 * @param brakesEngaged desired brake state
 		 */
-		private RBSMessage(short angle, boolean brakesEngaged) {
+		private RBSMessage(int angle, boolean brakesEngaged) {
 			this.angle = angle;
 			this.brakesEngaged = brakesEngaged;
 		}
@@ -310,10 +311,10 @@ public class RBSMNode extends PeriodicSerialNode implements Node
 		private byte[] getMessageBytes() {
 			byte[] bytes = new byte[6];
 			bytes[0] = HEADER;
-			bytes[1] = (byte)((angle >> 8)&0xFF);
-			bytes[2] = (byte)(angle);
-			bytes[3] = (byte)((brakesEngaged)?1:0);
-			bytes[4] = (byte)(0xc0);
+			bytes[1] = (byte)((angle >> 24)&0xFF);
+			bytes[2] = (byte)((angle >> 16)&0xFF);
+			bytes[3] = (byte)((angle >> 8)&0xFF);
+			bytes[4] = (byte)(angle & 0xFF);
 			bytes[5] = FOOTER;
 			return bytes;
 		}

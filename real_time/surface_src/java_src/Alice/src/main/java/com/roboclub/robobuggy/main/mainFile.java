@@ -14,6 +14,7 @@ import com.roboclub.robobuggy.ros.SensorChannel;
 import com.roboclub.robobuggy.ros.Subscriber;
 import com.roboclub.robobuggy.sensors.SensorManager;
 import com.roboclub.robobuggy.simulation.SensorPlayer;
+import com.roboclub.robobuggy.tests.SerialMessagingTest;
 import com.roboclub.robobuggy.ui.Gui;
 
 public class mainFile {
@@ -63,6 +64,15 @@ public class mainFile {
                 e.printStackTrace();
                 return;
             }
+            
+            try {
+            	Thread.sleep(3000);
+            	System.out.println("starting serial msg test");
+				SerialMessagingTest.main(null);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 //        } else {
 //        	
 //        }   
