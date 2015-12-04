@@ -22,7 +22,7 @@ public class BrakeControlMessage extends BaseMessage implements Message {
 	 * @param brakeEngagged
 	 */
 	public BrakeControlMessage(Date timestamp, boolean brakeEngaged) {
-		super(SensorChannel.BRAKE_CTRL.getMsgPath(), RobobuggyDateFormatter.getFormattedRobobuggyDateAsString(timestamp));
+		super(SensorChannel.BRAKE_CTRL.getMsgPath(), RobobuggyDateFormatter.getRobobuggyDateAsString(timestamp));
 		addParamToSensorData(brakeEngaged_key, new JsonPrimitive(brakeEngaged));
 	}
 	

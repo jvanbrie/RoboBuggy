@@ -24,7 +24,7 @@ public class BrakeMessage extends BaseMessage implements Message {
 
 
 	public BrakeMessage(Date timestamp, boolean brake_is_down) {
-		super(SensorChannel.BRAKE.getMsgPath(), RobobuggyDateFormatter.getFormattedRobobuggyDateAsString(timestamp));
+		super(SensorChannel.BRAKE.getMsgPath(), RobobuggyDateFormatter.getRobobuggyDateAsString(timestamp));
 	}
 	
 	public boolean getBrakesDown() {

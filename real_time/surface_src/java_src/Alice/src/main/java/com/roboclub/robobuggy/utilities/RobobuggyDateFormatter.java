@@ -25,7 +25,7 @@ public class RobobuggyDateFormatter {
 		}	
 	}
 	
-	public static String getFormattedRobobuggyDateAsString(Date date) {
+	public static String getRobobuggyDateAsString(Date date) {
 		return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date());
 	}
 	

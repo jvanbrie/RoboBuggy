@@ -6,21 +6,16 @@ import java.io.PrintStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Hashtable;
 import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import com.orsoncharts.util.json.JSONObject;
-import com.roboclub.robobuggy.main.config;
-import com.roboclub.robobuggy.messages.GuiLoggingButtonMessage;
-import com.roboclub.robobuggy.nodes.GpsNode;
-import com.roboclub.robobuggy.nodes.ImuNode;
-import com.roboclub.robobuggy.nodes.LoggingNode;
-import com.roboclub.robobuggy.nodes.RBSMNode;
+import com.google.gson.JsonObject;
+import com.roboclub.robobuggy.messages.BaseMessage;
 import com.roboclub.robobuggy.ros.Message;
 import com.roboclub.robobuggy.ros.MessageListener;
 import com.roboclub.robobuggy.ros.SensorChannel;
 import com.roboclub.robobuggy.ros.Subscriber;
-import com.roboclub.robobuggy.serial.SerialNode;
 import com.roboclub.robobuggy.utilities.RobobuggyDateFormatter;
 
 /**
@@ -40,20 +35,18 @@ public final class SensorLogger {
 		
 		String name = "\"name\": \"Robobuggy Data Logs\",";
 		String schema_version = "\"schema_version\": 1.0,";
-		String date_recorded = "\"date_recorded\": \"" + RobobuggyDateFormatter.getFormattedRobobuggyDateAsString(new Date()) + "\",";
+		String date_recorded = "\"date_recorded\": \"" + RobobuggyDateFormatter.getRobobuggyDateAsString(new Date()) + "\",";
 		String swVersion = "\"software_version\": \"" + getCurrentSoftwareVersion() + "\",";
 		String sensorDataHeader = "\"sensor_data\": [";
 		stream.println("{" + "\n    " + name + "\n    " + schema_version + "\n    " + date_recorded + "\n    " + swVersion + "\n    " + sensorDataHeader);
 		
 		Thread logging_thread = new Thread() {
-			int logButtonHits = 0;
-			int gpsHits = 0;
-			int imuHits = 0;
-			int encoderHits = 0;
-			int brakeHits = 0;
-			int steeringHits = 0;
+			
+			private Hashtable<SensorChannel, Integer> dataBreakdown;
+			
 			
 			public void run() {
+				
 				while (true) {
 					try {
 						String line = ret.take();
@@ -61,12 +54,12 @@ public final class SensorLogger {
 							break;
 						}
 						if (line.contains("STOP")) {
-							stream.println("        " + LoggingNode.translatePeelMessageToJObject(line).toJSONString());
+							stream.println("        " + line);
 							logButtonHits++;
 							stream.println("    ],\n    \"data_breakdown\" : " + getDataBreakdown() + "\n}");
 							break;
 						}
-						stream.println("        " + parseData(line) + ",");
+						stream.println("        " + line + ",");
 					} catch (InterruptedException e) {
 						//TODO add to messages 
 						e.printStackTrace();
@@ -74,50 +67,11 @@ public final class SensorLogger {
 				}
 			}
 
-			private String parseData(String line) {
-				// TODO Auto-generated method stub
-				String sensor = line.substring(line.indexOf("/") + 1, line.indexOf(","));				
-				JSONObject sensorEntryObject;
-
-				switch (sensor) {
-				case "imu":
-					sensorEntryObject = ImuNode.translatePeelMessageToJObject(line);
-					imuHits++;
-					break;
-				
-				case "gps":
-					sensorEntryObject = GpsNode.translatePeelMessageToJObject(line);
-					gpsHits++;
-					break;
-					
-				case "steering":
-				case "fp_hash":
-				case "commanded_steering":
-					steeringHits++;
-				case "encoder":
-					sensorEntryObject = RBSMNode.translatePeelMessageToJObject(line);
-					encoderHits++;
-					break;
-					
-				case "logging_button":
-					sensorEntryObject = LoggingNode.translatePeelMessageToJObject(line);
-					logButtonHits++;
-					break;
-
-				default:
-					//put brakes in here?
-					sensorEntryObject = new JSONObject();
-					sensorEntryObject.put("Unknown Sensor:", sensor);
-					break;
-				}
-				
-				return sensorEntryObject.toJSONString();
-			}
 
 			@SuppressWarnings("unchecked")
 			private String getDataBreakdown() {
 				// TODO Auto-generated method stub
-				JSONObject dataBreakdownObj = new JSONObject();
+				JsonObject dataBreakdownObj = new JSONObject();
 				
 				dataBreakdownObj.put("logging_button", logButtonHits);
 				dataBreakdownObj.put("gps", gpsHits);
@@ -172,7 +126,7 @@ public final class SensorLogger {
 				new Subscriber(channel.getMsgPath(), new MessageListener() {
 					@Override
 					public void actionPerformed(String topicName, Message m) {
-						_logQueue.offer(topicName + "," + m.toLogString());
+						_logQueue.offer(((BaseMessage)m).toLogString());
 					}
 				}));
 		}

@@ -39,7 +39,7 @@ public class EncoderMeasurement extends BaseMessage implements Message {
 	
 	//logs the number of ticks received since last time as well
 	public EncoderMeasurement(Date timestamp, double dataWord, double distance, double velocity, double accel) {
-		super(SensorChannel.ENCODER.getMsgPath(), RobobuggyDateFormatter.getFormattedRobobuggyDateAsString(timestamp));
+		super(SensorChannel.ENCODER.getMsgPath(), RobobuggyDateFormatter.getRobobuggyDateAsString(timestamp));
 		addParamToSensorData(dataWord_key, new JsonPrimitive(dataWord));
 		addParamToSensorData(distance_key, new JsonPrimitive(distance));
 		addParamToSensorData(velocity_key, new JsonPrimitive(velocity));

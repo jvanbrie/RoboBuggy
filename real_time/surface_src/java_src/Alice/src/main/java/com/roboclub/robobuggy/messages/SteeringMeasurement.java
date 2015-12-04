@@ -1,29 +1,25 @@
 package com.roboclub.robobuggy.messages;
 
 import java.util.Date;
+
+import com.google.gson.JsonPrimitive;
 import com.roboclub.robobuggy.ros.Message;
+import com.roboclub.robobuggy.ros.SensorChannel;
+import com.roboclub.robobuggy.utilities.RobobuggyDateFormatter;
 
 public class SteeringMeasurement extends BaseMessage implements Message {
-	public int angle;
-	private Date timestamp;
 	
-	public SteeringMeasurement(int angle) {
-		this.timestamp = new Date();
-		this.angle = angle;
+	public static final String angle_key = "angle";
+	
+	
+	public SteeringMeasurement(Date timestamp, int angle) {
+		super(SensorChannel.STEERING.getMsgPath(), RobobuggyDateFormatter.getRobobuggyDateAsString(timestamp));
+		
+		addParamToSensorData(angle_key, new JsonPrimitive(angle));
 	}
 	
-	@Override
-	public String toLogString() {
-		String s = super.formatter.format(timestamp);
-		return s + ',' + Double.toString(angle);
-	}
-
-	@Override
-	public Message fromLogString(String str) {
-		String delims = ",";
-		String[] ar = str.split(delims);
-		timestamp = try_to_parse_date(ar[0]);
-		angle = Integer.parseInt(ar[1]);
-		return new SteeringMeasurement(angle);
+	
+	public int getSteering() {
+		return getParamFromSensorData(angle_key).getAsInt();
 	}
 }

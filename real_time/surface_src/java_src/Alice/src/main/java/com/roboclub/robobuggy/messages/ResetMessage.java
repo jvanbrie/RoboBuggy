@@ -11,16 +11,4 @@ public class ResetMessage implements Message {
 		this.timestamp = new Date();
 	}
 
-	@Override
-	public String toLogString() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Message fromLogString(String str) {
-		// TODO Auto-generated method stub
-		return null;
-		
-	}
 }

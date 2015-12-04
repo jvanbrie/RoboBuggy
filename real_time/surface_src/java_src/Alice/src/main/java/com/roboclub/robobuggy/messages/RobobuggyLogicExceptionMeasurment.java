@@ -1,42 +1,33 @@
 package com.roboclub.robobuggy.messages;
 
+import java.util.Date;
+
+import com.google.gson.JsonPrimitive;
 import com.roboclub.robobuggy.main.MessageLevel;
 import com.roboclub.robobuggy.ros.Message;
+import com.roboclub.robobuggy.ros.SensorChannel;
+import com.roboclub.robobuggy.utilities.RobobuggyDateFormatter;
 
 public class RobobuggyLogicExceptionMeasurment extends BaseMessage implements Message{
-	private String message;
-	private MessageLevel level;
 	
-	public RobobuggyLogicExceptionMeasurment(String message,MessageLevel level) {
-		this.message = message;
-		this.level = level;
+	public static final String message_key = "message";
+	public static final String level_key = "level";
+	
+	public RobobuggyLogicExceptionMeasurment(Date timestamp, String message, MessageLevel level) {
+		super(SensorChannel.LOGIC_EXCEPTION.getMsgPath(), RobobuggyDateFormatter.getRobobuggyDateAsString(timestamp));
+		
+		addParamToSensorData(message_key, new JsonPrimitive(message));
+		addParamToSensorData(level_key, new JsonPrimitive(level.toString()));
+	}
+	
+	public String getMessage() {
+		return getParamFromSensorData(message_key).getAsString();
+	}
+	
+	public MessageLevel getMessageLevel() {
+		return MessageLevel.valueOf(getParamFromSensorData(level_key).getAsString());
 	}
 
 	
-	@Override
-	public String toLogString() {
-		return level.toString() + "\t"+message;
-	}
-
-	@Override
-	public Message fromLogString(String str) {
-		int splitPoint = str.indexOf("\t");
-		if(splitPoint <0 ){
-			//error 
-			return null;
-		}else{
-			String thisLevel_str = str.substring(0, splitPoint);
-			MessageLevel thisLevel = null;
-			if(thisLevel_str.equals(MessageLevel.EXCEPTION.toString())){
-				thisLevel = MessageLevel.EXCEPTION;
-			}else if(thisLevel_str.equals(MessageLevel.NOTE.toString())){
-				thisLevel = MessageLevel.NOTE;
-			}else if(thisLevel_str.equals(MessageLevel.WARNING.toString())){
-				thisLevel = MessageLevel.WARNING;
-			}
-			String thisMessage = str.substring(splitPoint, str.length());
-			return new RobobuggyLogicExceptionMeasurment(thisMessage, thisLevel);
-		}
-	}
 
 }

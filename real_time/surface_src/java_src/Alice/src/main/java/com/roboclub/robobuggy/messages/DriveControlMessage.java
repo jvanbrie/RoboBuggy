@@ -22,7 +22,7 @@ public class DriveControlMessage extends BaseMessage implements Message {
 	 * @param brakeEngagged
 	 */
 	public DriveControlMessage(Date timestamp, double angle) {
-		super(SensorChannel.DRIVE_CTRL.getMsgPath(), RobobuggyDateFormatter.getFormattedRobobuggyDateAsString(timestamp));
+		super(SensorChannel.DRIVE_CTRL.getMsgPath(), RobobuggyDateFormatter.getRobobuggyDateAsString(timestamp));
 		addParamToSensorData(angle_key, new JsonPrimitive(angle));
 	}
 	

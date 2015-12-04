@@ -1,7 +1,11 @@
 package com.roboclub.robobuggy.messages;
 
 import java.util.Date;
+
+import com.google.gson.JsonPrimitive;
 import com.roboclub.robobuggy.ros.Message;
+import com.roboclub.robobuggy.ros.SensorChannel;
+import com.roboclub.robobuggy.utilities.RobobuggyDateFormatter;
 
 /**
  * @author ?
@@ -22,31 +26,16 @@ public class GuiLoggingButtonMessage extends BaseMessage implements Message {
 	
 	public static final String version_id = "gui_logging_buttonV0.0";
 
-	public Date timestamp;
-	public LoggingMessage lm; 
-	
-	// Makes an encoder measurement with the time of Now.
-	public GuiLoggingButtonMessage(LoggingMessage lm) {
-		this.lm = lm;
-		this.timestamp = new Date();
-	}
+	public static final String loggingMessage_key = "logging_status"; 
 
 	public GuiLoggingButtonMessage(Date timestamp, LoggingMessage lm) {
-		this.timestamp = timestamp;
-		this.lm = lm;
+		super(SensorChannel.GUI_LOGGING_BUTTON.getMsgPath(), RobobuggyDateFormatter.getRobobuggyDateAsString(timestamp));
+		
+		addParamToSensorData(loggingMessage_key, new JsonPrimitive(lm.toString()));
+	}
+	
+	public LoggingMessage getLoggingStatus() {
+		return LoggingMessage.valueOf(getParamFromSensorData(loggingMessage_key).getAsString());
 	}
 
-	@Override
-	public String toLogString() {
-		String s = super.formatter.format(timestamp);
-		return s + ',' + lm.toString();
-	}
-
-	@Override
-	public Message fromLogString(String str) {
-		String[] ar = str.split(",");
-		Date d = try_to_parse_date(ar[0]);
-		LoggingMessage lm = LoggingMessage.valueOf(ar[1]);
-		return new GuiLoggingButtonMessage(timestamp, lm);
-	}
 }

@@ -1,8 +1,11 @@
 package com.roboclub.robobuggy.messages;
 
-import java.text.ParseException;
 import java.util.Date;
+
+import com.google.gson.JsonPrimitive;
 import com.roboclub.robobuggy.ros.Message;
+import com.roboclub.robobuggy.ros.SensorChannel;
+import com.roboclub.robobuggy.utilities.RobobuggyDateFormatter;
 
 /**
  * @author ?
@@ -19,41 +22,29 @@ public class ImuMeasurement extends BaseMessage implements Message {
 
 	public static final String version_id = "imuV0.0";
 
-	public Date timestamp;
+	public static final String yaw_key = "yaw";
+	public static final String pitch_key = "pitch";
+	public static final String roll_key = "roll";
 
-	public double yaw;
-	public double pitch;
-	public double roll;
 
-	public ImuMeasurement(double y, double p, double r) {
-		this.timestamp = new Date();
-		this.yaw = y;
-		this.pitch = p;
-		this.roll = r;
+	public ImuMeasurement(Date timestamp, double yaw, double pitch, double roll) {
+		super(SensorChannel.IMU.getMsgPath(), RobobuggyDateFormatter.getRobobuggyDateAsString(timestamp));
+		
+		addParamToSensorData(yaw_key, new JsonPrimitive(yaw));
+		addParamToSensorData(pitch_key, new JsonPrimitive(pitch));
+		addParamToSensorData(roll_key, new JsonPrimitive(roll));
+	}
+	
+	public double getYaw() {
+		return getParamFromSensorData(yaw_key).getAsDouble();
+	}
+	
+	public double getPitch() {
+		return getParamFromSensorData(pitch_key).getAsDouble();
+	}
+	
+	public double getRoll() {
+		return getParamFromSensorData(roll_key).getAsDouble();
 	}
 
-	public String toLogString() {
-		String s = super.formatter.format(timestamp);
-		return s + "," + Double.toString(yaw) + "," 
-				+ Double.toString(pitch) + "," 
-				+ Double.toString(roll);
-	}
-
-	public Message fromLogString(String str) {
-		String delims = ",";
-		String[] ar = str.split(delims);
-
-		// Creating SimpleDateFormat with yyyyMMdd format e.g."20110914"
-		String yyyyMMdd = ar[0];
-		try {
-			timestamp = super.formatter.parse(yyyyMMdd);
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-
-		Double y = Double.parseDouble(ar[1]);
-		Double p = Double.parseDouble(ar[2]);
-		Double r = Double.parseDouble(ar[3]);
-		return new ImuMeasurement(y, p, r);
-	}
 }

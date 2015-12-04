@@ -38,9 +38,9 @@ public class GpsMeasurement extends BaseMessage implements Message {
 	public GpsMeasurement(Date messageTimestamp, Date gpsTimestamp, double latitude, boolean north, double longitude,
 			boolean west, int quality_value, int num_satellites, double horizontal_dilution_of_precision, double antenna_altitude, double rawGPSLat, double rawGPSLong) {
 		
-		super(SensorChannel.GPS.getMsgPath(), RobobuggyDateFormatter.getFormattedRobobuggyDateAsString(messageTimestamp));
+		super(SensorChannel.GPS.getMsgPath(), RobobuggyDateFormatter.getRobobuggyDateAsString(messageTimestamp));
 		
-		addParamToSensorData(gps_timestamp_key, new JsonPrimitive(RobobuggyDateFormatter.getFormattedRobobuggyDateAsString(gpsTimestamp)));
+		addParamToSensorData(gps_timestamp_key, new JsonPrimitive(RobobuggyDateFormatter.getRobobuggyDateAsString(gpsTimestamp)));
 		addParamToSensorData(latitude_key, new JsonPrimitive(latitude));
 		addParamToSensorData(longitude_key, new JsonPrimitive(longitude));
 		addParamToSensorData(lat_dir_key, new JsonPrimitive(north));

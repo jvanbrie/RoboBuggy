@@ -12,7 +12,7 @@ public class FingerPrintMessage extends BaseMessage implements Message
 	public static final String fp_hash_key = "fp_hash";
 	
 	public FingerPrintMessage(Date tStamp, int hash) {
-		super(SensorChannel.FP_HASH.getMsgPath(), RobobuggyDateFormatter.getFormattedRobobuggyDateAsString(tStamp));
+		super(SensorChannel.FP_HASH.getMsgPath(), RobobuggyDateFormatter.getRobobuggyDateAsString(tStamp));
 		addParamToSensorData(fp_hash_key, new JsonPrimitive(hash));
 	}
 	
