@@ -198,6 +198,7 @@ public class RBSMNode extends PeriodicSerialNode implements Node
 		
 		RBSerialMessage message = rbp.getMessage();
 		byte headerByte = message.getHeaderByte();
+		System.out.println("inside rbsmnode peel");
 		switch (headerByte)
 		{
 			case RBSerialMessage.ENC_TICK_SINCE_RESET:
@@ -220,8 +221,11 @@ public class RBSMNode extends PeriodicSerialNode implements Node
 				System.out.println(message.getDataWord());
 				messagePub_fp.publish(new FingerPrintMessage(message.getDataWord()));
 				break;
+			case RBSerialMessage.RBSM_MID_ERROR:
+				System.out.println("rbsm error " + message.getDataWord());
+				break;
 			default: //Unhandled or invalid RBSM message header was received.
-				new RobobuggyLogicException("Invalid RBSM message header\n", MessageLevel.NOTE);
+				new RobobuggyLogicException("Invalid RBSM message header: " + headerByte, MessageLevel.NOTE);
 				break;
 		}
 
@@ -295,7 +299,7 @@ public class RBSMNode extends PeriodicSerialNode implements Node
 		private boolean brakesEngaged;
 		
 		/**
-		 * Create a new RBSMessage object to send to the Arduino
+		 * Create a new RBSMessage object to send to the Arduino 
 		 * @param angle desired commanded angle in degrees*1000
 		 * @param brakesEngaged desired brake state
 		 */

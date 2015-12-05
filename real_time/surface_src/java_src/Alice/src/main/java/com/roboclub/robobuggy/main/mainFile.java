@@ -65,14 +65,13 @@ public class mainFile {
                 return;
             }
             
-            try {
-            	Thread.sleep(3000);
-            	System.out.println("starting serial msg test");
-				SerialMessagingTest.main(null);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+//            try {
+//            	System.out.println("starting serial msg test");
+//				SerialMessagingTest.main(null);
+//			} catch (InterruptedException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
 //        } else {
 //        	
 //        }   
