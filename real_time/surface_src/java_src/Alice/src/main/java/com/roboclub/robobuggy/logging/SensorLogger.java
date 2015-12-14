@@ -96,6 +96,7 @@ public final class SensorLogger {
 					break;
 					
 				case "steering":
+				case "fp_hash":
 				case "commanded_steering":
 					steeringHits++;
 				case "encoder":
@@ -110,7 +111,8 @@ public final class SensorLogger {
 
 				default:
 					//put brakes in here?
-					sensorEntryObject = SerialNode.translatePeelMessageToJObject(line);
+					sensorEntryObject = new JSONObject();
+					sensorEntryObject.put("Unknown Sensor:", sensor);
 					break;
 				}
 				

@@ -15,6 +15,7 @@ import com.roboclub.robobuggy.calculatedNodes.CalculatedNodeEnum;
 import com.roboclub.robobuggy.calculatedNodes.NodeCalculator;
 import com.roboclub.robobuggy.main.MessageLevel;
 import com.roboclub.robobuggy.main.RobobuggyLogicException;
+import com.roboclub.robobuggy.main.Robot;
 import com.roboclub.robobuggy.nodes.GpsNode;
 import com.roboclub.robobuggy.nodes.ImuNode;
 import com.roboclub.robobuggy.nodes.LoggingNode;
@@ -89,7 +90,8 @@ public class SensorManager {
 			}
 			break;
 		case RBSM:
-			RBSMNode rbsm = new RBSMNode(sensor[0], sensor[1]);
+
+			RBSMNode rbsm = new RBSMNode(sensor[0], sensor[1], Robot.COMMAND_PERIOD);
 			boolean rbsmNodeCreatedProperly = rbsm.setSerialPort(connect(port, rbsm.baudRate()));
 			if(rbsmNodeCreatedProperly){
 				realSensors.put(portKey, rbsm);
