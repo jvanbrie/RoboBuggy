@@ -6,12 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
-import org.apache.commons.logging.Log;
-
-import com.orsoncharts.util.json.JSONObject;
-import com.google.api.services.drive.Drive.Files;
 import com.google.api.services.drive.model.ChildList;
-import com.google.api.services.drive.model.ParentReference;
 import com.roboclub.robobuggy.logging.LogDataType;
 import com.roboclub.robobuggy.main.MessageLevel;
 import com.roboclub.robobuggy.main.RobobuggyLogicException;

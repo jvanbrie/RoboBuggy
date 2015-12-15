@@ -20,14 +20,12 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
-import javax.swing.filechooser.FileNameExtensionFilter;
 
 import com.roboclub.robobuggy.logging.RobotLogger;
+import com.roboclub.robobuggy.logging.autoLogging.autoLogging;
 import com.roboclub.robobuggy.main.MessageLevel;
 import com.roboclub.robobuggy.main.RobobuggyLogicException;
 import com.roboclub.robobuggy.main.Robot;
-import com.roboclub.robobuggy.logging.RobotLogger;
-import com.roboclub.robobuggy.logging.autoLogging.autoLogging;
 import com.roboclub.robobuggy.main.config;
 import com.roboclub.robobuggy.messages.GuiLoggingButtonMessage;
 import com.roboclub.robobuggy.ros.Publisher;
