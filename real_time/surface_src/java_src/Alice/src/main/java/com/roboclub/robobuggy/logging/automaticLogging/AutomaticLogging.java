@@ -1,4 +1,4 @@
-package com.roboclub.robobuggy.logging.autoLogging;
+package com.roboclub.robobuggy.logging.automaticLogging;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -41,7 +41,7 @@ import com.roboclub.robobuggy.main.config;
  *
  */
 
-public class autoLogging {	
+public class AutomaticLogging {	
 
 	private Hashtable<String, LogDataType> logData;
 	private Thread logThread = null;
@@ -49,12 +49,12 @@ public class autoLogging {
 	//on google drive every file and folder is given a unique identifying string 
 	private String DriveStorageFolder_id;
 	private File localFolderPath;
-	private static autoLogging autoLogger = null;
+	private static AutomaticLogging autoLogger = null;
 	
-	public static autoLogging startAutoLogger(File whereToSave,String DriveStorageFolder_id){
+	public static AutomaticLogging startAutoLogger(File whereToSave,String DriveStorageFolder_id){
 		if(autoLogger== null){
 			try {
-				autoLogger = new autoLogging( whereToSave, DriveStorageFolder_id);
+				autoLogger = new AutomaticLogging( whereToSave, DriveStorageFolder_id);
 			} catch (IOException e) {
 				new RobobuggyLogicException("error while creating autologger", MessageLevel.EXCEPTION);
 			}
@@ -64,7 +64,7 @@ public class autoLogging {
 		return autoLogger;
 	}
 	
-	public static autoLogging getLogger(){
+	public static AutomaticLogging getLogger(){
 		if(autoLogger==null){
 			 new RobobuggyLogicException("you need to start the auto logger before using it", MessageLevel.EXCEPTION);
 		}
@@ -77,7 +77,7 @@ public class autoLogging {
 	 * @param DriveStorageFolder_id
 	 * @throws IOException
 	 */
-	private autoLogging(File whereToSave,String DriveStorageFolder_id) throws IOException{
+	private AutomaticLogging(File whereToSave,String DriveStorageFolder_id) throws IOException{
 		logData = new Hashtable<String, LogDataType>();
 		setWhereToSave(whereToSave);
 		setServerFolderId(DriveStorageFolder_id);

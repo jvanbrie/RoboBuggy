@@ -1,14 +1,10 @@
 package com.roboclub.robobuggy.main;
 
-import java.io.File;
 import gnu.io.CommPortIdentifier;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.List;
-import java.util.StringTokenizer;
 
 import com.roboclub.robobuggy.logging.RobotLogger;
 import com.roboclub.robobuggy.nodes.RealNodeEnum;
@@ -66,7 +62,6 @@ public class mainFile {
         }
         
         // Starts the robot
-//        if(config.DATA_PLAY_BACK_DEFAULT){
             try {           
             	Robot.getInstance();
                 bringup_sim();

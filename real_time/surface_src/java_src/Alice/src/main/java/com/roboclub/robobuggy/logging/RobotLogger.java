@@ -11,7 +11,7 @@ import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 import java.util.logging.StreamHandler;
 
-import com.roboclub.robobuggy.logging.autoLogging.autoLogging;
+import com.roboclub.robobuggy.logging.automaticLogging.AutomaticLogging;
 import com.roboclub.robobuggy.main.config;
 
 /**
@@ -38,7 +38,7 @@ public final class RobotLogger {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			autoLogging autoLoger = autoLogging.startAutoLogger(config.LOCAL_FOLDER_STORAGE_FOLDER,config.DRIVE_STORAGE_FOLDER_ID);
+			AutomaticLogging autoLoger = AutomaticLogging.startAutoLogger(config.LOCAL_FOLDER_STORAGE_FOLDER,config.DRIVE_STORAGE_FOLDER_ID);
 			autoLoger.startLogSync();
 		}
 		return instance;
@@ -56,7 +56,7 @@ public final class RobotLogger {
 				instance.message.removeHandler(handlers[i]);
 			}
 		}
-		autoLogging autoLogger = autoLogging.getLogger();
+		AutomaticLogging autoLogger = AutomaticLogging.getLogger();
 		try {
 			if(logFolder != null){
 				autoLogger.startTrackingLog(logFolder);

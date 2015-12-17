@@ -6,7 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import com.roboclub.robobuggy.logging.autoLogging.autoLogging;
+import com.roboclub.robobuggy.logging.automaticLogging.AutomaticLogging;
 import com.roboclub.robobuggy.main.config;
 import com.orsoncharts.util.json.JSONObject;
 import com.roboclub.robobuggy.messages.BaseMessage;

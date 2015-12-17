@@ -1,4 +1,4 @@
-package com.roboclub.robobuggy.logging.autoLogging;
+package com.roboclub.robobuggy.logging.automaticLogging;
 
 /*
  * Modified by Trevor Decker

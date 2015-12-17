@@ -7,7 +7,7 @@ import org.opencv.core.Core;
 
 import com.roboclub.robobuggy.localization.KalmanFilter;
 import com.roboclub.robobuggy.logging.RobotLogger;
-import com.roboclub.robobuggy.logging.autoLogging.autoLogging;
+import com.roboclub.robobuggy.logging.automaticLogging.AutomaticLogging;
 import com.roboclub.robobuggy.messages.EncoderMeasurement;
 import com.roboclub.robobuggy.messages.GpsMeasurement;
 import com.roboclub.robobuggy.messages.ImuMeasurement;

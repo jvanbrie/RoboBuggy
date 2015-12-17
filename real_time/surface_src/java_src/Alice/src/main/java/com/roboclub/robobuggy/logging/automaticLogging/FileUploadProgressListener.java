@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.roboclub.robobuggy.logging.autoLogging;
+package com.roboclub.robobuggy.logging.automaticLogging;
 
 import com.google.api.client.googleapis.media.MediaHttpUploader;
 import com.google.api.client.googleapis.media.MediaHttpUploaderProgressListener;

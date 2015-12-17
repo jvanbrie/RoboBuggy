@@ -14,6 +14,8 @@ import java.util.Arrays;
 //add meta data to image 
 //make stuff work on the real buggy 
 
+
+
 import com.orsoncharts.util.json.JSONObject;
 import com.orsoncharts.util.json.parser.JSONParser;
 import com.orsoncharts.util.json.parser.ParseException;
@@ -148,10 +150,12 @@ public class config {
 	}
 	//includes all of the jni libraries that we need to be able to use all of our libraries
 	public static boolean setupJNI() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException{
-	       String pathToAdd =  "library";
-
+	    		   addToJNIPath("library");                 //for rxtx 
+	    		   addToJNIPath("../../opencv/build/lib");  //for open cv
+	    		   return true;
+	}
 	       
-	       
+	public static boolean addToJNIPath(String pathToAdd) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException{
 	       final Field usrPathsField = ClassLoader.class.getDeclaredField("usr_paths");
 	       usrPathsField.setAccessible(true);
 

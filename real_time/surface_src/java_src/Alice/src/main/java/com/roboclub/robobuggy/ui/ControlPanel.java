@@ -22,7 +22,7 @@ import javax.swing.SwingConstants;
 import javax.swing.Timer;
 
 import com.roboclub.robobuggy.logging.RobotLogger;
-import com.roboclub.robobuggy.logging.autoLogging.autoLogging;
+import com.roboclub.robobuggy.logging.automaticLogging.AutomaticLogging;
 import com.roboclub.robobuggy.main.MessageLevel;
 import com.roboclub.robobuggy.main.RobobuggyLogicException;
 import com.roboclub.robobuggy.main.Robot;
@@ -111,7 +111,7 @@ public class ControlPanel extends JPanel {
 				Robot.isLogging = true;
 				timer.start();
 				
-				autoLogging autoLoger = autoLogging.getLogger();
+				AutomaticLogging autoLoger = AutomaticLogging.getLogger();
 				autoLoger.stopLogSync();
 				RobotLogger.CreateLog();
 				logging_button_pub.publish(new GuiLoggingButtonMessage(GuiLoggingButtonMessage.LoggingMessage.START));

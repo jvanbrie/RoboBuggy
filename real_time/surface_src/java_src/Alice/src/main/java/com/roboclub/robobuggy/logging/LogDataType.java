@@ -14,7 +14,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 import com.orsoncharts.util.json.JSONObject;
-import com.roboclub.robobuggy.logging.autoLogging.ServerCommunication;
+import com.roboclub.robobuggy.logging.automaticLogging.ServerCommunication;
 import com.roboclub.robobuggy.main.MessageLevel;
 import com.roboclub.robobuggy.main.RobobuggyLogicException;
 
