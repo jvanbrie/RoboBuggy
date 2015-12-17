@@ -1,9 +1,7 @@
 package com.roboclub.robobuggy.simulation;
 
 import java.awt.image.BufferedImage;
-import java.awt.image.ColorModel;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -23,7 +21,6 @@ import com.roboclub.robobuggy.messages.GuiLoggingButtonMessage.LoggingMessage;
 import com.roboclub.robobuggy.messages.ImuMeasurement;
 import com.roboclub.robobuggy.messages.SteeringMeasurement;
 import com.roboclub.robobuggy.messages.VisionMeasurement;
-import com.roboclub.robobuggy.nodes.VisionNode;
 import com.roboclub.robobuggy.ros.Publisher;
 import com.roboclub.robobuggy.ros.SensorChannel;
 import com.roboclub.robobuggy.utilities.RobobuggyDateFormatter;
@@ -76,7 +73,6 @@ public class SensorPlayer implements Runnable {
 	
 	@Override
 	public void run() {
-		// TODO Auto-generated method stub
 		
 		System.out.println("Starting to read from file!");
 		try {
@@ -95,124 +91,127 @@ public class SensorPlayer implements Runnable {
 				
 				JSONObject sensor = (JSONObject)senObj;
 				
-				Date sensorTimestamp = RobobuggyDateFormatter.formatRobobuggyDate((String) sensor.get("timestamp"));
-				long currentSensorTimeInMillis = sensorTimestamp.getTime();
-				long currentTime = new Date().getTime();
+				String timeStamp_str = (String) sensor.get("timestamp");
+				System.out.println(timeStamp_str);
+				if(timeStamp_str == null){
+					new RobobuggyLogicException("time stamp for log was null", MessageLevel.WARNING);
+				}else{
+					Date sensorTimestamp = RobobuggyDateFormatter.formatRobobuggyDate(timeStamp_str);
+					long currentSensorTimeInMillis = sensorTimestamp.getTime();
+					long currentTime = new Date().getTime();
 
-				//grab the first sensors time for reference
-				if(sensorStartTimeInMilis == 0){
-					sensorStartTimeInMilis = currentSensorTimeInMillis;
-				}
-				long sensorTime_fromStart = currentSensorTimeInMillis -sensorStartTimeInMilis; 
+					//grab the first sensors time for reference
+					if(sensorStartTimeInMilis == 0){
+						sensorStartTimeInMilis = currentSensorTimeInMillis;
+					}
+					long sensorTime_fromStart = currentSensorTimeInMillis -sensorStartTimeInMilis; 
 
-				long PLAY_BACK_SPEED = 1;
-				long realTime_fromStart = PLAY_BACK_SPEED*(currentTime - realTimeStart);				
-				long sleepTime = realTime_fromStart - sensorTime_fromStart;
-				//greater then 10000 is a hack to just print values that are 10 seconds away since this is a bug
-				if(sleepTime < 0 && sleepTime > -10000){
-					Thread.sleep(-sleepTime/PLAY_BACK_SPEED);
-				}
-				//prevTimeInMillis = currentSensorTimeInMillis;
+					long PLAY_BACK_SPEED = 1;
+					long realTime_fromStart = PLAY_BACK_SPEED*(currentTime - realTimeStart);				
+					long sleepTime = realTime_fromStart - sensorTime_fromStart;
+					//greater then 10000 is a hack to just print values that are 10 seconds away since this is a bug
+					if(sleepTime < 0 && sleepTime > -10000){
+						Thread.sleep(-sleepTime/PLAY_BACK_SPEED);
+					}
+					//prevTimeInMillis = currentSensorTimeInMillis;
 			
-				String sensorName = (String) sensor.get("name");
+					String sensorName = (String) sensor.get("name");
 				
-				JSONObject sensorParams = (JSONObject) sensor.get("params");
+					JSONObject sensorParams = (JSONObject) sensor.get("params");
 				
-				switch(sensorName) {
-					case "Vision":		
-						BufferedImage image = vReader.readImage();
-		    			visionPub.publish(new VisionMeasurement(image, "playback", 0));
-						break;
-					case "IMU":
-						double yaw = (double) sensorParams.get("yaw");
-						double pitch = (double) sensorParams.get("pitch");
-						double roll = (double) sensorParams.get("roll");
+					switch(sensorName) {
+						case "Vision":		
+							BufferedImage image = vReader.readImage();
+							visionPub.publish(new VisionMeasurement(image, "playback", 0));
+							break;
+						case "IMU":
+							double yaw = (double) sensorParams.get("yaw");
+							double pitch = (double) sensorParams.get("pitch");
+							double roll = (double) sensorParams.get("roll");
 						
-						imuPub.publish(new ImuMeasurement(yaw, pitch, roll));
+							imuPub.publish(new ImuMeasurement(yaw, pitch, roll));			
+							break;
 						
-						break;
+						case "GPS":
 						
-					case "GPS":
-						
-						double latitude = (double) sensorParams.get("latitude");
-						double longitude = (double) sensorParams.get("longitude");
-						String latDir = (String) sensorParams.get("lat_direction");
-						String longDir = (String) sensorParams.get("long_direction");
-						boolean north = latDir.equals("N");
-						boolean west = longDir.equals("W");
+							double latitude = (double) sensorParams.get("latitude");
+							double longitude = (double) sensorParams.get("longitude");
+							String latDir = (String) sensorParams.get("lat_direction");
+							String longDir = (String) sensorParams.get("long_direction");
+							boolean north = latDir.equals("N");
+							boolean west = longDir.equals("W");
 
-						String gpsTimestampString = (String) sensor.get("timestamp");
-						Date gpsTimestamp = RobobuggyDateFormatter.formatRobobuggyDate(gpsTimestampString);
-						int qualityValue = Integer.valueOf((String) sensorParams.get("gps_quality"));
-						int numSatellites = Integer.valueOf((String) sensorParams.get("num_satellites"));
-						double hdop = (double) sensorParams.get("HDOP");
-						double antennaAlt = (double) sensorParams.get("antenna_altitude");
-						double rawLat = (double) sensorParams.get("raw_gps_lat");
-						double rawLon = (double) sensorParams.get("raw_gps_lon");
+							String gpsTimestampString = (String) sensor.get("timestamp");
+							Date gpsTimestamp = RobobuggyDateFormatter.formatRobobuggyDate(gpsTimestampString);
+							int qualityValue = Integer.valueOf((String) sensorParams.get("gps_quality"));
+							int numSatellites = Integer.valueOf((String) sensorParams.get("num_satellites"));
+							double hdop = (double) sensorParams.get("HDOP");
+							double antennaAlt = (double) sensorParams.get("antenna_altitude");
+							double rawLat = (double) sensorParams.get("raw_gps_lat");
+							double rawLon = (double) sensorParams.get("raw_gps_lon");
 						
-						gpsPub.publish(new GpsMeasurement(gpsTimestamp, latitude, north, longitude, west, qualityValue, numSatellites, hdop, antennaAlt, rawLat, rawLon));
+							gpsPub.publish(new GpsMeasurement(gpsTimestamp, latitude, north, longitude, west, qualityValue, numSatellites, hdop, antennaAlt, rawLat, rawLon));
 						
-						break;
+							break;
 						
-					case "logging button":
+						case "logging button":
 						
-						String loggingStatus = (String) sensorParams.get("logging_status");
-						GuiLoggingButtonMessage.LoggingMessage loggingMessage = LoggingMessage.STOP;
+							String loggingStatus = (String) sensorParams.get("logging_status");
+							GuiLoggingButtonMessage.LoggingMessage loggingMessage = LoggingMessage.STOP;
 						
-						switch (loggingStatus) {
+							switch (loggingStatus) {
 						
-							case "start":
-								loggingMessage = LoggingMessage.START;
-								break;
+								case "start":
+									loggingMessage = LoggingMessage.START;
+									break;
 								
-							case "stop":
-								loggingMessage = LoggingMessage.STOP;
-								break;
+								case "stop":
+									loggingMessage = LoggingMessage.STOP;
+									break;
 								
-							default:
-								new RobobuggyLogicException("Unknown status in the log!", MessageLevel.EXCEPTION);
-								break;
+								default:
+									new RobobuggyLogicException("Unknown status in the log!", MessageLevel.EXCEPTION);
+									break;
 						
-						}
-						loggingButtonPub.publish(new GuiLoggingButtonMessage(loggingMessage));
+							}
+							loggingButtonPub.publish(new GuiLoggingButtonMessage(loggingMessage));
 						
-						break;
+							break;
 						
-					case "Steering":
+						case "Steering":
 						
-						double steeringAngle = (double) sensorParams.get("angle");
-						steeringPub.publish(new SteeringMeasurement((int) steeringAngle));
+							double steeringAngle = (double) sensorParams.get("angle");
+							steeringPub.publish(new SteeringMeasurement((int) steeringAngle));
 						
-						break;
+							break;
 						
-					case "Encoder":
+						case "Encoder":
 						
-						double dataword = (double) sensorParams.get("dataword");
-						double distance = (double) sensorParams.get("distance");
-						System.out.println(sensorParams.get("distance"));
-						double velocity = sensorParams.get("velocity") != null ? (double) sensorParams.get("velocity") : 0;
-						Double accel = sensorParams.get("acceleration") != null ? (double) sensorParams.get("acceleration") : 0;
+							double dataword = (double) sensorParams.get("dataword");
+							double distance = (double) sensorParams.get("distance");
+							System.out.println(sensorParams.get("distance"));
+							double velocity = sensorParams.get("velocity") != null ? (double) sensorParams.get("velocity") : 0;
+							Double accel = sensorParams.get("acceleration") != null ? (double) sensorParams.get("acceleration") : 0;
 						
-						String timestampString = (String) sensor.get("timestamp");
-						Date timestamp = RobobuggyDateFormatter.formatRobobuggyDate(timestampString);
+							String timestampString = (String) sensor.get("timestamp");
+							Date timestamp = RobobuggyDateFormatter.formatRobobuggyDate(timestampString);
 						
-						encoderPub.publish(new EncoderMeasurement(timestamp, dataword, distance, velocity, accel));
+							encoderPub.publish(new EncoderMeasurement(timestamp, dataword, distance, velocity, accel));
 						
-						break;
+							break;
 						
-					case "Brake":
-						//we don't log brakes yet!
-						//https://www.youtube.com/watch?v=UKDDu_0NsEk
-						break;
+						case "Brake":
+							//we don't log brakes yet!
+							//https://www.youtube.com/watch?v=UKDDu_0NsEk
+							break;
 						
-					default:
-						new RobobuggyLogicException("Found an unsupported sensor in the logs!", MessageLevel.WARNING);
-						break;
+						default:
+							new RobobuggyLogicException("Found an unsupported sensor in the logs!", MessageLevel.WARNING);
+							break;
 				
+					}
+					new RobobuggyLogicException("sent out data from " + sensorName, MessageLevel.NOTE);
 				}
-				
-			new RobobuggyLogicException("sent out data from " + sensorName, MessageLevel.NOTE);
-				
 			}
 			Robot.isPlayBack = false;
 
