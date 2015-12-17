@@ -2,6 +2,8 @@ package com.roboclub.robobuggy.nodes;
 
 import java.util.Date;
 
+import com.orsoncharts.util.json.JSONObject;
+import com.roboclub.robobuggy.main.Robot;
 import com.roboclub.robobuggy.messages.TimeMessage;
 import com.roboclub.robobuggy.ros.Publisher;
 import com.roboclub.robobuggy.ros.SensorChannel;
@@ -27,9 +29,26 @@ public class ClockNode extends PeriodicNode{
 
 	@Override
 	protected void update() {
-		msgPub.publish(new TimeMessage(new Date()));
-		//TODO send time messaage 
+		//needs to be in if statement to stop the current clock from fighting with the palyback clock 
+    	if(!Robot.isPlayBack){
+    		msgPub.publish(new TimeMessage(new Date()));
+    	}
 		
+	}
+
+	public static JSONObject translatePeelMessageToJObject(String line) {
+		JSONObject data = new JSONObject();
+		JSONObject params = new JSONObject();
+		String[] ypr = line.split(",");
+
+		data.put("name", "clock");
+		params.put("time", ypr[2]);
+		data.put("params", params);
+		data.put("timestamp",ypr[1]);
+
+
+
+		return data;
 	}
 
 }

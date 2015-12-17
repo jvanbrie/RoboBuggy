@@ -20,6 +20,7 @@ import com.roboclub.robobuggy.messages.GuiLoggingButtonMessage;
 import com.roboclub.robobuggy.messages.GuiLoggingButtonMessage.LoggingMessage;
 import com.roboclub.robobuggy.messages.ImuMeasurement;
 import com.roboclub.robobuggy.messages.SteeringMeasurement;
+import com.roboclub.robobuggy.messages.TimeMessage;
 import com.roboclub.robobuggy.messages.VisionMeasurement;
 import com.roboclub.robobuggy.ros.Publisher;
 import com.roboclub.robobuggy.ros.SensorChannel;
@@ -37,6 +38,7 @@ public class SensorPlayer implements Runnable {
 	private Publisher steeringPub;
 	private Publisher loggingButtonPub;
 	private Publisher visionPub;
+	private Publisher clockPub;
 	
 	private VideoReader vReader;
 
@@ -49,6 +51,7 @@ public class SensorPlayer implements Runnable {
 		steeringPub = new Publisher(SensorChannel.STEERING.getMsgPath());
 		loggingButtonPub = new Publisher(SensorChannel.GUI_LOGGING_BUTTON.getMsgPath());
 		visionPub = new Publisher(SensorChannel.VISION.getMsgPath());
+		clockPub = new Publisher(SensorChannel.CLOCK.getMsgPath());
 		
 		System.out.println("initializing the SensorPlayer");
 		Robot.isPlayBack = true;
@@ -90,7 +93,6 @@ public class SensorPlayer implements Runnable {
 			for(Object senObj : sensorDataArray) {
 				
 				JSONObject sensor = (JSONObject)senObj;
-				
 				String timeStamp_str = (String) sensor.get("timestamp");
 				if(timeStamp_str == null){
 					new RobobuggyLogicException("time stamp for log was null", MessageLevel.WARNING);
@@ -111,13 +113,13 @@ public class SensorPlayer implements Runnable {
 					//greater then 10000 is a hack to just print values that are 10 seconds away since this is a bug
 					if(sleepTime < 0 && sleepTime > -10000){
 						Thread.sleep(-sleepTime/PLAY_BACK_SPEED);
-					}
+					} 
 					//prevTimeInMillis = currentSensorTimeInMillis;
 			
 					String sensorName = (String) sensor.get("name");
 				
 					JSONObject sensorParams = (JSONObject) sensor.get("params");
-				
+					System.out.println("sensorName:"+sensorName);
 					switch(sensorName) {
 						case "Vision":		
 							BufferedImage image = vReader.readImage();
@@ -152,7 +154,14 @@ public class SensorPlayer implements Runnable {
 							gpsPub.publish(new GpsMeasurement(gpsTimestamp, latitude, north, longitude, west, qualityValue, numSatellites, hdop, antennaAlt, rawLat, rawLon));
 						
 							break;
-						
+							
+						case "clock":
+							System.out.println("clock playback");
+							String time_str = (String) sensorParams.get("time");
+							System.out.println(sensorParams.toString());
+							System.out.println(time_str);
+							clockPub.publish(new TimeMessage(new Date(Long.parseLong(time_str))));
+							break;
 						case "logging button":
 						
 							String loggingStatus = (String) sensorParams.get("logging_status");

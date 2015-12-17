@@ -12,6 +12,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import com.orsoncharts.util.json.JSONObject;
 import com.roboclub.robobuggy.main.config;
 import com.roboclub.robobuggy.messages.GuiLoggingButtonMessage;
+import com.roboclub.robobuggy.nodes.ClockNode;
 import com.roboclub.robobuggy.nodes.GpsNode;
 import com.roboclub.robobuggy.nodes.ImuNode;
 import com.roboclub.robobuggy.nodes.LoggingNode;
@@ -78,7 +79,7 @@ public final class SensorLogger {
 			private String parseData(String line) {
 				// TODO Auto-generated method stub
 				String sensor = line.substring(line.indexOf("/") + 1, line.indexOf(","));				
-				JSONObject sensorEntryObject;
+				JSONObject sensorEntryObject = null;
 
 				switch (sensor) {
 				case "vision":
@@ -96,9 +97,14 @@ public final class SensorLogger {
 					break;
 					
 				case "steering":
+					//TODO
+					break;
 				case "fp_hash":
+					//TODO
+					break;
 				case "commanded_steering":
 					steeringHits++;
+					break;
 				case "encoder":
 					sensorEntryObject = RBSMNode.translatePeelMessageToJObject(line);
 					encoderHits++;
@@ -108,6 +114,12 @@ public final class SensorLogger {
 					sensorEntryObject = LoggingNode.translatePeelMessageToJObject(line);
 					logButtonHits++;
 					break;
+					
+				case "clock":
+					System.out.println("clock"+line);
+					sensorEntryObject = ClockNode.translatePeelMessageToJObject(line);
+					break;
+					
 
 				default:
 					//put brakes in here?

@@ -13,6 +13,7 @@ import com.roboclub.robobuggy.messages.GpsMeasurement;
 import com.roboclub.robobuggy.messages.ImuMeasurement;
 import com.roboclub.robobuggy.messages.RobobuggyLogicExceptionMeasurment;
 import com.roboclub.robobuggy.messages.SteeringMeasurement;
+import com.roboclub.robobuggy.messages.TimeMessage;
 import com.roboclub.robobuggy.messages.VisionMeasurement;
 import com.roboclub.robobuggy.messages.WheelAngleCommand;
 import com.roboclub.robobuggy.nodes.ClockNode;
@@ -53,7 +54,6 @@ public class Robot implements RosMaster {
 	private Robot() {
 		isLogging = false;
 		isPlayBack = false;
-	       System.out.println("here we go");
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);  //note this can only be called once, is to allow open cv calls
         //System.out.println(System.getProperties());
 		sensorList = new ArrayList<>();
@@ -84,7 +84,13 @@ public class Robot implements RosMaster {
 		//Init clock
 		ClockNode clock = new ClockNode(SensorChannel.CLOCK);
 		sensorList.add(clock);
-		
+
+		new Subscriber(SensorChannel.CLOCK.getMsgPath(), new MessageListener() {
+			@Override
+			public void actionPerformed(String topicName, Message m) {
+				updateClock((TimeMessage)m);
+			}
+		});		
 		// Initialize Sensor
 		if (config.GPS_DEFAULT) {
 			System.out.println("Initializing GPS Serial Connection");
@@ -213,6 +219,10 @@ public class Robot implements RosMaster {
 		// TODO update planner
 	}
 
+	private void updateClock(TimeMessage m){
+		//System.out.println("new time message:"+m.getDate());
+	}
+	
 	private void updateEnc(EncoderMeasurement m) {
 		// TODO update planner
 	}

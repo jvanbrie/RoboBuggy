@@ -1,6 +1,5 @@
 package com.roboclub.robobuggy.ui;
 
-//TODO have clock update based on published time message 
 
 import java.awt.Color;
 import java.awt.Font;
@@ -28,8 +27,12 @@ import com.roboclub.robobuggy.main.RobobuggyLogicException;
 import com.roboclub.robobuggy.main.Robot;
 import com.roboclub.robobuggy.main.config;
 import com.roboclub.robobuggy.messages.GuiLoggingButtonMessage;
+import com.roboclub.robobuggy.messages.TimeMessage;
+import com.roboclub.robobuggy.ros.Message;
+import com.roboclub.robobuggy.ros.MessageListener;
 import com.roboclub.robobuggy.ros.Publisher;
 import com.roboclub.robobuggy.ros.SensorChannel;
+import com.roboclub.robobuggy.ros.Subscriber;
 import com.roboclub.robobuggy.simulation.SensorPlayer;
 
 /**
@@ -51,8 +54,6 @@ public class ControlPanel extends JPanel {
 	private static JButton play_btn;
 	private static JButton loadLog_btn;
 	private JFormattedTextField time_lbl;
-	private static Date startTime;
-	private static Timer timer;
 
 	SensorSwitch gps_switch;
 	SensorSwitch vision_switch;
@@ -66,13 +67,6 @@ public class ControlPanel extends JPanel {
 	
 	public ControlPanel() {
 		logging_button_pub = new Publisher(Gui.GuiPubSubTopics.GUI_LOG_BUTTON_UPDATED.toString());
-		
-		timer = new Timer(10, new timerHandler());// updates every .01 seconds
-		timer.setDelay(100);
-		timer.setRepeats(true); // timer needs to be setup before startpause_btn
-
-		//should be the time that we start the system at 
-		startTime = new Date();
 		
 		this.setBorder(BorderFactory.createLineBorder(Color.black));
 		this.setLayout(new GridBagLayout());
@@ -88,14 +82,19 @@ public class ControlPanel extends JPanel {
 		
 		gbc.gridy = 1;
 		addSensorSwitchPanel(gbc);
-	}
-
-	private class timerHandler implements ActionListener {
-		@Override
-		public void actionPerformed(ActionEvent ae) {
-			Date currentTime = new Date();
-			time_lbl.setValue(currentTime.getTime() - startTime.getTime()+ TIME_ZONE_OFFSET);
+		
+		
+		//listens to clock messages to update the time
+		new Subscriber(SensorChannel.CLOCK.getMsgPath(), new MessageListener() {
+			@Override
+			public void actionPerformed(String topicName, Message m) {
+				updateClock((TimeMessage)m);
+			}
+		});		
 		}
+	
+	private void updateClock(TimeMessage m){
+		time_lbl.setValue(m.getTime() + TIME_ZONE_OFFSET);
 	}
 
 	private class PlayButtonHandler implements ActionListener {
@@ -109,13 +108,11 @@ public class ControlPanel extends JPanel {
 				play_btn.setBackground(Color.RED);
 				play_btn.setText("STOP");
 				Robot.isLogging = true;
-				timer.start();
 				
 				AutomaticLogging autoLoger = AutomaticLogging.getLogger();
 				autoLoger.stopLogSync();
 				RobotLogger.CreateLog();
 				logging_button_pub.publish(new GuiLoggingButtonMessage(GuiLoggingButtonMessage.LoggingMessage.START));
-				startTime = new Date();
 			} else {
 				System.out.println("System Paused");
 				play_btn.setBackground(Color.GREEN);
@@ -124,7 +121,6 @@ public class ControlPanel extends JPanel {
 				
 				RobotLogger.CloseLog();
 				logging_button_pub.publish(new GuiLoggingButtonMessage(GuiLoggingButtonMessage.LoggingMessage.STOP));
-				timer.stop();
 			}
 		}
 	}
@@ -199,7 +195,6 @@ public class ControlPanel extends JPanel {
 		time_lbl.setFont(new Font("sanserif", Font.PLAIN, 50));
 		time_lbl.setEditable(false);
 		time_lbl.setColumns(7);
-		time_lbl.setValue(startTime);
 
 		gbc_panel.weightx = 1;
 		gbc_panel.fill = GridBagConstraints.BOTH;

@@ -1,15 +1,7 @@
 package com.roboclub.robobuggy.nodes;
 
 import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-
-import com.roboclub.robobuggy.logging.automaticLogging.AutomaticLogging;
-import com.roboclub.robobuggy.main.config;
 import com.orsoncharts.util.json.JSONObject;
-import com.roboclub.robobuggy.messages.BaseMessage;
 import com.roboclub.robobuggy.messages.GuiLoggingButtonMessage;
 import com.roboclub.robobuggy.ros.Message;
 import com.roboclub.robobuggy.ros.MessageListener;

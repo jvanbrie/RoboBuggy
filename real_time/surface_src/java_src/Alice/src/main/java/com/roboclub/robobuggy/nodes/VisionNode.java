@@ -1,16 +1,8 @@
 package com.roboclub.robobuggy.nodes;
 
-import java.awt.Point;
 import java.awt.image.BufferedImage;
-import java.awt.image.ColorModel;
-import java.awt.image.DataBufferByte;
-import java.awt.image.Raster;
-import java.awt.image.WritableRaster;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
-import java.nio.ByteBuffer;
 
 import javax.swing.JFrame;
 
@@ -111,6 +103,7 @@ public class VisionNode extends PeriodicNode  {
     	       		}
     	        		
     	        	}
+    	    	//to stop camera from fighting with play back video feed
     	    	if(!Robot.isPlayBack){
     	    		msgPub.publish(new VisionMeasurement(image,"cam",count));
     	    	}

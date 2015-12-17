@@ -33,7 +33,8 @@ public class TimeMessage  extends BaseMessage implements Message{
 	
 	@Override
 	public String toLogString() {
-		return Long.toString(time);
+		String s = super.formatter.format(new Date(time));
+		return s + ","+Long.toString(time);
 	}
 
 	@Override
