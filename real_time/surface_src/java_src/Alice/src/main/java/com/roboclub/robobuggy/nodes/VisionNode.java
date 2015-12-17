@@ -77,8 +77,10 @@ public class VisionNode extends PeriodicNode  {
 		System.out.println("Closing camera");
         camera.release();
 
-       vWriter.close();
-		
+       if(vWriter != null){
+    	   vWriter.close();
+       }
+       
 		return false;
 	}
 	@Override

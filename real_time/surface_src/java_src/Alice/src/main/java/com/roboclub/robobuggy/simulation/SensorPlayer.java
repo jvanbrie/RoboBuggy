@@ -92,7 +92,6 @@ public class SensorPlayer implements Runnable {
 				JSONObject sensor = (JSONObject)senObj;
 				
 				String timeStamp_str = (String) sensor.get("timestamp");
-				System.out.println(timeStamp_str);
 				if(timeStamp_str == null){
 					new RobobuggyLogicException("time stamp for log was null", MessageLevel.WARNING);
 				}else{
