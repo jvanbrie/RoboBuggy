@@ -101,7 +101,6 @@ public class VisionNode extends PeriodicNode  {
     	       			// TODO Auto-generated catch block
     	       			e.printStackTrace();
     	       		}
-    	        		
     	        	}
     	    	//to stop camera from fighting with play back video feed
     	    	if(!Robot.isPlayBack){

@@ -25,7 +25,7 @@ public class VideoReader {
 	
 	//for reading images
 		public  BufferedImage readImage(){
-	    			int readBytes;
+	    			int readBytes = -1;
 					try {
 						//reads 4 bytes for the image size
 						byte[]b1 = new byte[4];
@@ -50,8 +50,39 @@ public class VideoReader {
 
 											
 		    			DataBufferByte Db = new DataBufferByte(b, imageByteSize);
+		    			byte[] data = Db.getData();
 		    			WritableRaster w = Raster.createInterleavedRaster(Db, width, height, 3 * width, 3, new int[]{0, 1, 2}, (Point) null);
 		    			BufferedImage newImage = new BufferedImage(CM, w, false, null);
+		    			for(int j = 0; j<width;j++){
+		    				for(int i =0;i<height;i++){
+		    					int rgb0 = data[i*4*width+j*4+0];
+		    					int rgb1 = data[i*4*width+j*4+1];
+		    					int rgb2 = data[i*4*width+j*4+2];
+		    					int rgb3 = data[i*4*width+j*4+3];
+		    					
+		    					//converts bytes form signed to unsigned
+		    					if(rgb0 < 0){
+		    						rgb0 = rgb0 + 256;
+		    					}
+		    					if(rgb1 < 0){
+		    						rgb1 = rgb1+256;
+		    					}
+		    					if(rgb2 < 0){
+		    						rgb2 = rgb2+256;
+		    					}
+		    					if(rgb3 < 0){
+		    						rgb3 = rgb3+256;
+		    					}
+		    					int r = 0;
+		    					 r = r | rgb3;
+		    					 r = r | (rgb2<<8);
+		    					 r = r | (rgb1<<16);
+		    					 r = r | (rgb0<<24);		
+		    					
+				    			newImage.setRGB(j, i, r);
+		    				}
+		    			}
+		    			
 		    			return newImage;
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
