@@ -13,15 +13,12 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public class VideoReader {
-	//final static int IMAGE_BYTE_SIZE =  2764800;  //TODO get ride of magic number
 	static ColorModel CM;
 	FileInputStream inputStream; 
 	
 	public VideoReader(String videoFile) throws FileNotFoundException{
 		inputStream	= new FileInputStream(videoFile);	
 	}
-
-	
 	
 	//for reading images
 		public  BufferedImage readImage(){
@@ -42,18 +39,11 @@ public class VideoReader {
 						System.arraycopy(b, 4, heightBytes,0, heightBytes.length);
 						System.arraycopy(b, 8, imageBytes,0, imageByteSize);
 						int width = toInt(widthBytes);
-						int height = toInt(heightBytes);
-//						ColorSpace.CS_sRGB
-						ColorModel CM = new ComponentColorModel(ColorSpace.getInstance(ColorSpace.CS_LINEAR_RGB), false, false, 1, 0) ;
-
-
-
-											
+						int height = toInt(heightBytes);									
 		    			DataBufferByte Db = new DataBufferByte(b, imageByteSize);
 		    			byte[] data = Db.getData();
-		    			WritableRaster w = Raster.createInterleavedRaster(Db, width, height, 3 * width, 3, new int[]{0, 1, 2}, (Point) null);
-		    			BufferedImage newImage = new BufferedImage(CM, w, false, null);
-		    			for(int j = 0; j<width;j++){
+		    			BufferedImage newImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+						for(int j = 0; j<width;j++){
 		    				for(int i =0;i<height;i++){
 		    					int rgb0 = data[i*4*width+j*4+0];
 		    					int rgb1 = data[i*4*width+j*4+1];
@@ -77,8 +67,7 @@ public class VideoReader {
 		    					 r = r | rgb3;
 		    					 r = r | (rgb2<<8);
 		    					 r = r | (rgb1<<16);
-		    					 r = r | (rgb0<<24);		
-		    					
+		    					 r = r | (rgb0<<24);	
 				    			newImage.setRGB(j, i, r);
 		    				}
 		    			}

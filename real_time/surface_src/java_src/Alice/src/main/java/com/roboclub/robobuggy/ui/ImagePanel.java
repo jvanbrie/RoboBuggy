@@ -3,6 +3,7 @@ package com.roboclub.robobuggy.ui;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
@@ -29,10 +30,17 @@ public class ImagePanel extends JPanel{
 		@Override
 		public void actionPerformed(String topicName, Message m) {
 			VisionMeasurement vm = (VisionMeasurement)m;
-			img = vm.getBuffredImage();		
+			img = vm.getBuffredImage();	
 			repaint();
 		}
 	});
+	}
+	
+	//helper function which scales img to fit the display size
+	public void resizeIMG(){
+		Image img2 =  img.getScaledInstance(frameWidth, frameHeight, BufferedImage.SCALE_SMOOTH);
+		img = new BufferedImage(frameWidth, frameHeight, img.getType());
+		img.getGraphics().drawImage(img2, 0, 0 , null);
 	}
 	
 	public boolean setup(){
