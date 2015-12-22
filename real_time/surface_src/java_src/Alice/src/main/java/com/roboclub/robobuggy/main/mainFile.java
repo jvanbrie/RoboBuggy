@@ -10,6 +10,7 @@ import com.roboclub.robobuggy.logging.RobotLogger;
 import com.roboclub.robobuggy.nodes.RealNodeEnum;
 import com.roboclub.robobuggy.ros.SensorChannel;
 import com.roboclub.robobuggy.sensors.SensorManager;
+import com.roboclub.robobuggy.ui.ComputerVisionUI;
 import com.roboclub.robobuggy.ui.Gui;
 
 
@@ -59,6 +60,7 @@ public class mainFile {
         if(config.GUI_ON)
         {
             Gui.getInstance();
+            ComputerVisionUI.getInstance();
         }
         
         // Starts the robot

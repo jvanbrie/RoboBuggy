@@ -11,6 +11,7 @@ public enum SensorChannel {
 	DRIVE_CTRL("drive_ctrl"),
 	BRAKE_CTRL("commanded brake"),
 	VISION("vision"),
+	IMAGE_CLASSIFICATION("imageClassification"),
 	ENCODER("encoder"),
 	AUTO("auto"),
 	GUI_LOGGING_BUTTON("logging_button"),

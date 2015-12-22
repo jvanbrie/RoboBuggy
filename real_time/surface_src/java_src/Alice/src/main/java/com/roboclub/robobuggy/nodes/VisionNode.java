@@ -25,9 +25,7 @@ import com.roboclub.robobuggy.vision.testOpenCvLinking;
  * @author Trevor Decker
  *
  */
-public class VisionNode extends PeriodicNode  {
-
-	
+public class VisionNode extends PeriodicNode  {	
     BufferedImage image;
     private boolean setup = false;
 	testOpenCvLinking t;
@@ -48,8 +46,9 @@ public class VisionNode extends PeriodicNode  {
 
 
 	public VisionNode(SensorChannel sensor) {
-		super(100); //runs the update at 10Hz
-
+		//super(100); //runs the update at 10Hz
+		super(1000);
+		
 		msgPub = new Publisher(sensor.getMsgPath());
 		statePub = new Publisher(sensor.getStatePath());
 		
@@ -59,7 +58,8 @@ public class VisionNode extends PeriodicNode  {
 		
 	public boolean setup(){
         t = new testOpenCvLinking();
-        camera = new VideoCapture(0);
+    //    camera = new VideoCapture(0);
+        camera = new VideoCapture("raceDay.mp4");
         frame = new Mat();
         return true;
 	}
@@ -112,8 +112,7 @@ public class VisionNode extends PeriodicNode  {
 
 	
 	public static JSONObject translatePeelMessageToJObject(String message) {
-		// TODO Auto-generated method stub
-		
+		// TODO Auto-generated method stub	
 		// message has it organized as yaw pitch roll
 		JSONObject data = new JSONObject();
 		JSONObject params = new JSONObject();

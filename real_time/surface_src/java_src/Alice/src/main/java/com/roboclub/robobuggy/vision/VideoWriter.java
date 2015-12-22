@@ -47,50 +47,6 @@ public class VideoWriter {
 			}
 		}
 		
-		/*
-		//function for converting byte stream of image to rgb ints
-		for(int j = 0;j<image.getWidth();j++){
-			for(int i = 0;i<image.getHeight();i++){
-				int r = 0;
-				int a = newimageData[i*4*image.getWidth()+j*4+0];
-				int b = newimageData[i*4*image.getWidth()+j*4+1];
-				int c = newimageData[i*4*image.getWidth()+j*4+2];
-				int d = newimageData[i*4*image.getWidth()+j*4+3];
-				
-				//converts bytes form signed to unsigned
-				if(a < 0){
-					a = a + 256;
-				}
-				if(b < 0){
-					b = b+256;
-				}
-				if(c < 0){
-					c = c+256;
-				}
-				if(d < 0){
-					d = d+256;
-				}
-				
-				 r = r | d;
-				 r = r | (c<<8);
-				 r = r | (b<<16);
-				 r = r | (a<<24);			
-				if(thisImageRGB[j][i] != r){
-					System.out.println("we have a problem");
-					System.out.println(a +","+b+","+c+","+d);
-					System.out.println(((thisImageRGB[j][i]>>24)&0xff) +","+((thisImageRGB[j][i]>>16)&0xff)+" "+((thisImageRGB[j][i]>>8)&0xff) +","+ ((thisImageRGB[j][i])&0xff));
-					System.out.println(thisImageRGB[j][i]);
-					System.out.println(r);
-				}
-			}
-		}
-		*/
-		
-		
-		
-		
-		
-		
 		BufferedImage image_to_save2=new BufferedImage(image.getWidth(),image.getHeight(),BufferedImage.TYPE_3BYTE_BGR);
 		image_to_save2.getGraphics().drawImage(image,0,0,null);
 		image = image_to_save2;

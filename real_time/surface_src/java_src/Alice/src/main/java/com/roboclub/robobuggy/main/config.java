@@ -155,6 +155,7 @@ public class config {
 	    		   return true;
 	}
 	       
+	//adds the path to a jni file so that it is accessible for jni calls 
 	public static boolean addToJNIPath(String pathToAdd) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException{
 	       final Field usrPathsField = ClassLoader.class.getDeclaredField("usr_paths");
 	       usrPathsField.setAccessible(true);

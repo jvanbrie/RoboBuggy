@@ -184,7 +184,6 @@ public class ControlPanel extends JPanel {
 		loadLog_btn.addActionListener(new LoadLogButtonHandler());
 		loadLog_btn.setEnabled(true);
 		loadLog_btn.setBackground(Color.BLUE);
-
 		
 		JLabel filename_lbl = new JLabel("File: ",
 				SwingConstants.CENTER);

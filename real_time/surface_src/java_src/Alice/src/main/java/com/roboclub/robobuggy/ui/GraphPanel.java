@@ -33,7 +33,7 @@ public class GraphPanel extends JPanel {
 		yaw = new AngleGraph("YAW");
 		
 		this.add(steering);
-		this.add(new ImagePanel());
+		this.add(new ImagePanel(200,200,SensorChannel.VISION.getMsgPath()));
 		this.add(pitch);
 		this.add(yaw);
 		

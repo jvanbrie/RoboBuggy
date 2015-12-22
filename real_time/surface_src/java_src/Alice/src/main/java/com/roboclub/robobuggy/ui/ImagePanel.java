@@ -21,12 +21,16 @@ public class ImagePanel extends JPanel{
 	BufferedImage img = null;
 	int frameWidth = 200;
 	int frameHeight = 200;
+	String topicToListenTo ="";
 	
 	
-	public ImagePanel() {
+	public ImagePanel(int width,int height,String topic) {
+		frameWidth = width;
+		frameHeight = height;
+		topicToListenTo = topic;
 
 	// Subscriber for vision updates
-	new Subscriber(SensorChannel.VISION.getMsgPath(), new MessageListener() {
+	new Subscriber(topicToListenTo, new MessageListener() {
 		@Override
 		public void actionPerformed(String topicName, Message m) {
 			VisionMeasurement vm = (VisionMeasurement)m;

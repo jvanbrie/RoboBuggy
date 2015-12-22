@@ -17,6 +17,7 @@ import com.roboclub.robobuggy.messages.TimeMessage;
 import com.roboclub.robobuggy.messages.VisionMeasurement;
 import com.roboclub.robobuggy.messages.WheelAngleCommand;
 import com.roboclub.robobuggy.nodes.ClockNode;
+import com.roboclub.robobuggy.nodes.ImageCalssificationNode;
 import com.roboclub.robobuggy.nodes.RBSMNode;
 import com.roboclub.robobuggy.nodes.GpsNode;
 import com.roboclub.robobuggy.nodes.ImuNode;
@@ -138,6 +139,8 @@ public class Robot implements RosMaster {
 		if (config.VISION_SYSTEM_DEFAULT) {
 			System.out.println("Initializing Vision System");
 			VisionNode vision = new VisionNode(SensorChannel.VISION);
+			ImageCalssificationNode imageClasfier = new ImageCalssificationNode(SensorChannel.IMAGE_CLASSIFICATION);
+
 			sensorList.add(vision);
 		
 			new Subscriber(SensorChannel.VISION.getMsgPath(), new MessageListener() {
