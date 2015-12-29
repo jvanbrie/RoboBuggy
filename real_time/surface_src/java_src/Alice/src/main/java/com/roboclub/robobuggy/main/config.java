@@ -16,6 +16,9 @@ import java.util.Arrays;
 
 
 
+
+import org.opencv.core.Core;
+
 import com.orsoncharts.util.json.JSONObject;
 import com.orsoncharts.util.json.parser.JSONParser;
 import com.orsoncharts.util.json.parser.ParseException;
@@ -26,6 +29,8 @@ import com.orsoncharts.util.json.parser.ParseException;
 public class config {
 	public static boolean IN_OFFLINE_MODE = true;  //if true then try to connect to the server otherwise do not  
 
+	public final static String LOGO_PATH = "images/rc_logo.png";
+	public final static String SUPER_PIXEL_TRAINING_DATA_PATH = "data/learning/superPixels";
 	
 	// port index of the front camera
 	public static int FRONT_CAM_INDEX = 2;
@@ -64,7 +69,23 @@ public class config {
 	//for turning indvidual cams on and off
 	public static  boolean FRONT_CAM_ON = false;
 	public static  boolean REAR_CAM_ON = false;
-	public static  boolean OVERLOOK_CAM_ON = false;
+	
+	//the location of each cam relative to the robots base frame 
+	static double th = -0.00;   //TODO calibrate
+	public static double FRONT_CAM_XX = 1.0;
+	public static double FRONT_CAM_XY = 0.0;
+	public static double FRONT_CAM_XZ = 0.0;
+	public static double FRONT_CAM_X_TRANSLATION = 0.0;
+	public static double FRONT_CAM_YX = 0.0;
+	public static double FRONT_CAM_YY = Math.cos(th);
+	public static double FRONT_CAM_YZ = -Math.sin(th);
+	public static double FRONT_CAM_Y_TRANSLATION = 1.5;
+	public static double FRONT_CAM_ZX = 0.0;
+	public static double FRONT_CAM_ZY = Math.sin(th);
+	public static double FRONT_CAM_ZZ = Math.cos(th);
+	public static double FRONT_CAM_Z_TRANSLATION = 0.0;
+	
+	
 	
 	//where to save files in logs
 	public static String LOG_FILE_LOCATION = "LOG_FILES";
@@ -152,6 +173,7 @@ public class config {
 	public static boolean setupJNI() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException{
 	    		   addToJNIPath("library");                 //for rxtx 
 	    		   addToJNIPath("../../opencv/build/lib");  //for open cv
+	    		   System.loadLibrary(Core.NATIVE_LIBRARY_NAME);  //note this can only be called once, is to allow open cv calls
 	    		   return true;
 	}
 	       

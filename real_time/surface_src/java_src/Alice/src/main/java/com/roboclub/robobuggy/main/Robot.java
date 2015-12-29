@@ -17,11 +17,15 @@ import com.roboclub.robobuggy.messages.TimeMessage;
 import com.roboclub.robobuggy.messages.VisionMeasurement;
 import com.roboclub.robobuggy.messages.WheelAngleCommand;
 import com.roboclub.robobuggy.nodes.ClockNode;
+import com.roboclub.robobuggy.nodes.CreateOverHeadView;
 import com.roboclub.robobuggy.nodes.ImageCalssificationNode;
+import com.roboclub.robobuggy.nodes.InterestingPointExtractionNode;
 import com.roboclub.robobuggy.nodes.RBSMNode;
 import com.roboclub.robobuggy.nodes.GpsNode;
 import com.roboclub.robobuggy.nodes.ImuNode;
+import com.roboclub.robobuggy.nodes.SuperPixelNode;
 import com.roboclub.robobuggy.nodes.VisionNode;
+import com.roboclub.robobuggy.nodes.VisualOdomatryNode;
 import com.roboclub.robobuggy.ros.ActuatorChannel;
 import com.roboclub.robobuggy.ros.Message;
 import com.roboclub.robobuggy.ros.MessageListener;
@@ -55,7 +59,6 @@ public class Robot implements RosMaster {
 	private Robot() {
 		isLogging = false;
 		isPlayBack = false;
-		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);  //note this can only be called once, is to allow open cv calls
         //System.out.println(System.getProperties());
 		sensorList = new ArrayList<>();
 		kf = new KalmanFilter();
@@ -139,8 +142,12 @@ public class Robot implements RosMaster {
 		if (config.VISION_SYSTEM_DEFAULT) {
 			System.out.println("Initializing Vision System");
 			VisionNode vision = new VisionNode(SensorChannel.VISION);
-			ImageCalssificationNode imageClasfier = new ImageCalssificationNode(SensorChannel.IMAGE_CLASSIFICATION);
-
+			CreateOverHeadView overHeadNode = new CreateOverHeadView(SensorChannel.OVER_HEAD_IMAGE);
+			SuperPixelNode superPixels = new SuperPixelNode(SensorChannel.SUPER_PIXEL);
+		    ImageCalssificationNode imageClasfier = new ImageCalssificationNode(SensorChannel.IMAGE_CLASSIFICATION);
+		//	VisualOdomatryNode vo = new VisualOdomatryNode(SensorChannel.VISUAL_ODOMATRY);
+		//	InterestingPointExtractionNode intrest = new InterestingPointExtractionNode(SensorChannel.INTERESTING_POINTS);
+			
 			sensorList.add(vision);
 		
 			new Subscriber(SensorChannel.VISION.getMsgPath(), new MessageListener() {

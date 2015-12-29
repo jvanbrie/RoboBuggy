@@ -19,6 +19,7 @@ import com.roboclub.robobuggy.ros.SensorChannel;
 import com.roboclub.robobuggy.sensors.SensorState;
 import com.roboclub.robobuggy.vision.VideoWriter;
 import com.roboclub.robobuggy.vision.testOpenCvLinking;
+import com.roboclub.robobuggy.vision.visionUtil;
 
 /**
  * Reads Images from a camera 
@@ -32,7 +33,6 @@ public class VisionNode extends PeriodicNode  {
 	VideoCapture camera;
 	Mat frame;
 	int count = 0;
-    JFrame w = null;
     boolean logDirSet = false;
     
     FileOutputStream f;
@@ -47,20 +47,18 @@ public class VisionNode extends PeriodicNode  {
 
 	public VisionNode(SensorChannel sensor) {
 		//super(100); //runs the update at 10Hz
-		super(1000);
+		super(100);
 		
 		msgPub = new Publisher(sensor.getMsgPath());
 		statePub = new Publisher(sensor.getStatePath());
-		
-		
-      
 	}	
 		
 	public boolean setup(){
         t = new testOpenCvLinking();
     //    camera = new VideoCapture(0);
-        camera = new VideoCapture("raceDay.mp4");
+        camera = new VideoCapture("GOPR0115.mp4");
         frame = new Mat();
+        
         return true;
 	}
 	
@@ -87,6 +85,9 @@ public class VisionNode extends PeriodicNode  {
           }else if (camera.read(frame)){
             	statePub.publish(new StateMessage(SensorState.ON));
     			image = t.MatToBufferedImage(frame);
+    			count++;
+    			System.out.println(count);
+    			BufferedImage image2 = visionUtil.resize(image, 200, 200);
     			//save the image 
     			
     			//will only create a video file when logfile is started
@@ -104,7 +105,7 @@ public class VisionNode extends PeriodicNode  {
     	        	}
     	    	//to stop camera from fighting with play back video feed
     	    	if(!Robot.isPlayBack){
-    	    		msgPub.publish(new VisionMeasurement(image,"cam",count));
+    	    		msgPub.publish(new VisionMeasurement(image2,"cam",count));
     	    	}
           }
     	}

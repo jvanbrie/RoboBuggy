@@ -7,7 +7,10 @@ import java.util.ArrayList;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
 
+
+
 //this class is based on the SLIC algorithm (supperpixel_PAMI2011-2)
+//NOTE this class is Trevors implemention that not currently being used
 public class SuperPixels {
 
 	private double Normilisation_spacial;
